@@ -1,0 +1,129 @@
+@import url('https://fonts.googleapis.com/css2?family=Rowdies:wght@300;400;700&family=Shrikhand&display=swap');
+
+
+body {
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4, #fbc2eb, #a6c1ee);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: column;
+    font-family: 'Rowdies', cursive;
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+    
+#seccion1 {
+        display: flex;
+        flex-direction: column; 
+        justify-content: center;
+        align-items: center;
+        gap: 30px; 
+    }
+    
+#presionar_boton{
+    font-family: 'Rowdies', cursive;
+    font-size: 30px;
+    background-color: transparent;
+    border: none;
+    color: #3B6790;
+        padding: 15px 32px;
+        text-align: center;
+text-shadow: #666 1px 1px 1px;
+    text-decoration: none;
+    display: inline-block;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 12px;
+    box-shadow: 0 9px #999;
+
+    
+}
+
+
+#boton_hi{
+    font-family: 'Rowdies', cursive;
+    font-size: 20px;
+    background-color: #f8d568;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 12px;
+    box-shadow: 0 9px #999;
+}
+#boton_hi:hover {background-color: #f8d568}
+#boton_hi:active {
+    background-color: #f8d568;
+    box-shadow: 0 5px #666;
+    transform: translateY(4px);
+} 
+
+#seccion2{
+    display: none;
+    justify-content: center;
+    align-items: center;    
+}
+
+#saludo{
+    font-family: 'Rowdies', cursive;
+    font-size: 30px;
+    background-color: transparent;
+    border: none;
+    color: #3B6790;
+    padding: 15px 32px;
+    text-align: center;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: flex;
+
+
+}
+
+#gift_gatitos{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+}
+
+@media screen and (max-width: 768px) {
+    body {
+        flex-direction: column; /* Asegura que todo se alinee en columna */
+        text-align: center; /* Centra el contenido */
+    }
+
+    #seccion1, #seccion2 {
+        flex-direction: column; /* Asegura que los elementos dentro se apilen en columna */
+        align-items: center;
+        text-align: center;
+    }
+
+    #boton_hi {
+        width: 80%; /* Hace que el botón ocupe más espacio en móviles */
+        max-width: 300px; /* Limita el tamaño máximo */
+    }
+
+    img {
+        max-width: 90%; /* Asegura que las imágenes se ajusten bien en pantallas pequeñas */
+        height: auto;
+    }
+}
