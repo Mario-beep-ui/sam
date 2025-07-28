@@ -867,8 +867,8 @@
         let isPlaying = false;
         let recognition = null;
         let recognizing = false;
+        let lastMessageWasVoice = false; 
 
-        // Inicializar reconocimiento de voz
         function inicializarReconocimientoVoz() {
             if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
                 recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
@@ -881,6 +881,7 @@
                     botonGrabar.classList.add('grabando');
                     indicadorVoz.style.display = 'block';
                     contenedorChat.scrollTop = contenedorChat.scrollHeight;
+                    lastMessageWasVoice = true; 
                 };
 
                 recognition.onresult = function(event) {
@@ -901,12 +902,15 @@
                 recognition.onerror = function(event) {
                     console.error('Error en reconocimiento de voz:', event.error);
                     detenerReconocimiento();
+                    lastMessageWasVoice = false; 
                 };
 
                 recognition.onend = function() {
                     detenerReconocimiento();
                     if (entradaUsuario.value.trim() !== '') {
                         manejarEnviarMensaje();
+                    } else {
+                        lastMessageWasVoice = false; 
                     }
                 };
             } else {
@@ -1055,9 +1059,7 @@
             return burbujaMensaje;
         }
 
-        // Función mejorada para control de voz con estado persistente
         function toggleSpeech(button, text) {
-            // Si hay una reproducción en curso, la detenemos
             if (currentUtterance && isPlaying) {
                 window.speechSynthesis.cancel();
                 currentUtterance = null;
@@ -1066,7 +1068,6 @@
                 return;
             }
             
-            // Si ya hay una reproducción pausada, la reanudamos
             if (currentUtterance && !isPlaying) {
                 window.speechSynthesis.resume();
                 button.innerHTML = '<i class="fas fa-pause"></i>';
@@ -1074,7 +1075,6 @@
                 return;
             }
 
-            // Si no hay reproducción, creamos una nueva
             if ('speechSynthesis' in window) {
                 button.innerHTML = '<i class="fas fa-pause"></i>';
                 currentUtterance = new SpeechSynthesisUtterance(text);
@@ -1094,6 +1094,7 @@
                     button.innerHTML = '<i class="fas fa-volume-up"></i>';
                     currentUtterance = null;
                     isPlaying = false;
+                    console.error('Error en la reproducción de voz.');
                 };
 
                 currentUtterance.onpause = () => {
@@ -1139,7 +1140,7 @@
             }, 2000);
         }
 
-        async function enviarMensajeAPI(mensajesAEnviar, temperatura = 0.7, maxTokens = 1000) {
+        async function enviarMensajeAPI(mensajesAEnviar, shouldSpeakAutomatically, temperatura = 0.7, maxTokens = 1000) {
             mostrarIndicadorEscribiendo();
             deshabilitarEntradaYBotones(true);
 
@@ -1243,6 +1244,12 @@
                 }
 
                 historialChat.push({ role: "assistant", content: respuestaCompleta });
+
+                if (shouldSpeakAutomatically) {
+                    const textToSpeak = burbujaMensaje.innerText;
+                    toggleSpeech(botonVoz, textToSpeak);
+                }
+
             } catch (error) {
                 console.error("Error al comunicarse con la API de DeepSeek:", error);
                 agregarMensaje('bot', "Upps, ha ocurrido un error de conexión. Verifica tu conexión o intenta de nuevo más tarde.");
@@ -1282,8 +1289,11 @@
             entradaUsuario.value = '';
             agregarMensaje('usuario', mensaje);
             historialChat.push({ role: "user", content: mensaje });
-            await enviarMensajeAPI(historialChat);
+            
+            await enviarMensajeAPI(historialChat, lastMessageWasVoice); 
+            
             entradaUsuario.focus();
+            lastMessageWasVoice = false; 
         }
 
         function alternarTema() {
@@ -1311,13 +1321,18 @@
 
         function manejarSugerencia(pregunta) {
             entradaUsuario.value = pregunta;
+            lastMessageWasVoice = false; 
             manejarEnviarMensaje();
         }
 
-        botonEnviar.addEventListener('click', manejarEnviarMensaje);
+        botonEnviar.addEventListener('click', () => {
+            lastMessageWasVoice = false; 
+            manejarEnviarMensaje();
+        });
 
         entradaUsuario.addEventListener('keypress', (e) => {
             if (e.key === 'Enter' && !botonEnviar.disabled) {
+                lastMessageWasVoice = false; 
                 manejarEnviarMensaje();
             }
         });
