@@ -144,6 +144,8 @@
             flex-direction: column;
             align-items: flex-start; /* Alineado a la izquierda */
             margin-right: auto; /* Empuja los controles a la derecha */
+            flex-shrink: 1; /* Permite que el título se encoja */
+            min-width: 0; /* Permite que el contenido se encoja por debajo de su tamaño intrínseco */
         }
 
         .cabecera .titulo h1 {
@@ -290,7 +292,7 @@
             align-items: center;
             position: sticky;
             bottom: 0;
-            z-index: 100;
+            z-index: 1000; /* Aumentado z-index */
             flex-shrink: 0;
         }
 
@@ -305,6 +307,10 @@
             outline: none;
             transition: all 0.3s ease;
             min-width: 150px;
+            position: relative; 
+            z-index: 1001; /* Aumentado z-index */
+            cursor: text; /* Indicar que es un campo de texto */
+            touch-action: manipulation; /* Mejorar la respuesta táctil */
         }
 
         #entrada-usuario:focus {
@@ -542,10 +548,12 @@
             opacity: 0;
             transition: opacity 0.3s ease-in-out;
             z-index: 1000;
+            pointer-events: none; /* Por defecto, no interactivo */
         }
 
         .copy-confirmation.show {
             opacity: 1;
+            pointer-events: auto; /* Se vuelve interactivo cuando está visible */
         }
 
         @media (max-width: 768px) {
@@ -569,6 +577,7 @@
                 justify-content: space-between; /* Espacio entre título y controles */
                 align-items: center;
                 padding: 12px 15px;
+                flex-wrap: nowrap; /* Evita que los elementos se envuelvan */
             }
 
             .cabecera .titulo {
@@ -577,16 +586,16 @@
             }
             
             .cabecera .titulo h1 {
-                font-size: 20px;
-                gap: 8px; /* Reducir el espacio entre el icono y el texto */
+                font-size: 18px; /* Ajuste para móviles */
+                gap: 5px; /* Reducir el espacio entre el icono y el texto */
             }
             
             .cabecera .titulo h1 i {
-                font-size: 24px; /* Ajustar tamaño del icono del título */
+                font-size: 20px; /* Ajustar tamaño del icono del título */
             }
 
             .cabecera .titulo .subtitle {
-                font-size: 14px;
+                font-size: 12px; /* Ajuste para móviles */
                 margin-top: 2px; /* Ajustar margen */
             }
 
@@ -595,6 +604,16 @@
                 margin-top: 0; /* Eliminar margen superior */
                 justify-content: flex-end; /* Alinear a la derecha */
                 width: auto; /* Ancho automático */
+                gap: 5px; /* Reducir el espacio entre los botones de control */
+            }
+
+            .selector-voz-container, #alternador-tema {
+                width: 36px; /* Ligeramente más pequeños para móviles */
+                height: 36px;
+            }
+
+            .selector-voz-container i, #alternador-tema i {
+                font-size: 16px; /* Iconos más pequeños para móviles */
             }
             
             #entrada-usuario {
@@ -640,11 +659,11 @@
             }
             
             .cabecera .titulo h1 {
-                font-size: 18px;
+                font-size: 16px; /* Más pequeño para pantallas muy pequeñas */
             }
             
             .cabecera .titulo .subtitle {
-                font-size: 12px;
+                font-size: 10px; /* Más pequeño para pantallas muy pequeñas */
             }
             
             .contenedor-chat {
@@ -829,6 +848,7 @@
                         console.warn('No se encontró ninguna voz en español. Se utilizará la voz predeterminada del sistema.');
                     }
                 }
+                console.log("Voces añadidas al selector:", Array.from(selectorVoz.options).map(opt => opt.textContent)); // Log para depuración
             };
             // Llama a getVoices para disparar el evento onvoiceschanged si ya están cargadas
             window.speechSynthesis.getVoices(); 
