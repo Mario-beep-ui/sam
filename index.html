@@ -40,6 +40,9 @@
             --color-timestamp: #A0A0A0;
             --color-alternador-tema: #FFFFFF;
             --color-hover-alternador-tema: #007BFF;
+            --fondo-boton-voz: rgba(0, 123, 255, 0.2); /* Nuevo */
+            --texto-boton-voz: #007BFF; /* Nuevo */
+            --sombra-hover-boton-voz: 0 2px 4px rgba(0, 123, 255, 0.3); /* Nuevo */
         }
 
         body.tema-claro {
@@ -75,6 +78,9 @@
             --color-timestamp: #666666;
             --color-alternador-tema: #FFFFFF;
             --color-hover-alternador-tema: #0056b3;
+            --fondo-boton-voz: rgba(0, 123, 255, 0.1); /* Nuevo */
+            --texto-boton-voz: #0056b3; /* Nuevo */
+            --sombra-hover-boton-voz: 0 2px 4px rgba(0, 123, 255, 0.15); /* Nuevo */
         }
 
         * {
@@ -367,11 +373,38 @@
             50% { transform: translateY(-5px); }
         }
 
+        .timestamp-container { /* Contenedor para timestamp y botón de voz */
+            display: flex;
+            align-items: center;
+            gap: 8px; /* Espacio entre la hora y el botón */
+            margin-top: 5px;
+        }
+
         .timestamp {
             font-size: 12px;
             opacity: 0.8;
-            margin-top: 5px;
             color: var(--color-timestamp);
+        }
+
+        .boton-voz { /* Estilos para el nuevo botón de voz */
+            background: var(--fondo-boton-voz);
+            color: var(--texto-boton-voz);
+            border: none;
+            width: 28px; /* La mitad del tamaño del botón de enviar (56px) */
+            height: 28px; /* La mitad del tamaño del botón de enviar (56px) */
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 14px; /* Ajustar tamaño del icono */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .boton-voz:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--sombra-hover-boton-voz);
         }
 
         #alternador-tema {
@@ -563,7 +596,10 @@
                 <div class="burbuja-mensaje burbuja-bot">
                     ¡Hola!, Soy una IA creada por Mario Vazquez.<br>¿En qué puedo ayudarte hoy?
                 </div>
-                <div class="timestamp">Ahora</div>
+                <div class="timestamp-container">
+                    <div class="timestamp">Ahora</div>
+                    <!-- El botón de voz se agregará dinámicamente aquí para las respuestas del bot -->
+                </div>
             </div>
             
             <div class="sugerencias">
@@ -611,26 +647,45 @@
             }
         ];
 
+        // Function to add a message to the chat display
         function agregarMensaje(rol, contenido, tipo = 'texto') {
             const divMensaje = document.createElement('div');
             divMensaje.className = `mensaje mensaje-${rol}`;
 
             const infoMensaje = document.createElement('div');
-            // CORRECCIÓN: Se corrigió el error tipográfico de 'infoMensje' a 'infoMensaje'.
             infoMensaje.className = 'info-mensaje';
 
             const burbujaMensaje = document.createElement('div');
             burbujaMensaje.className = `burbuja-mensaje burbuja-${rol}`;
             
+            // Render Markdown for bot messages
             if (rol === 'bot' && tipo === 'texto') {
                 burbujaMensaje.innerHTML = marked.parse(contenido);
             } else {
                 burbujaMensaje.innerHTML = contenido;
             }
 
+            const timestampContainer = document.createElement('div'); // New container for timestamp and speaker button
+            timestampContainer.className = 'timestamp-container';
+
             const timestamp = document.createElement('div');
             timestamp.className = 'timestamp';
             timestamp.textContent = obtenerHoraActual();
+            timestampContainer.appendChild(timestamp);
+
+            // Add speaker button for bot messages
+            if (rol === 'bot') {
+                const botonVoz = document.createElement('button');
+                botonVoz.className = 'boton-voz';
+                botonVoz.innerHTML = '<i class="fas fa-volume-up"></i>';
+                // Attach event listener to read the text content of the bot's message
+                botonVoz.addEventListener('click', () => {
+                    // Get the plain text from the bubble for speech synthesis
+                    const textToSpeak = burbujaMensaje.innerText; 
+                    leerTextoEnVozAlta(textToSpeak);
+                });
+                timestampContainer.appendChild(botonVoz);
+            }
 
             if (rol === 'usuario') {
                 infoMensaje.innerHTML = '<i class="fas fa-user"></i> Tú';
@@ -640,18 +695,33 @@
 
             divMensaje.appendChild(infoMensaje);
             divMensaje.appendChild(burbujaMensaje);
-            divMensaje.appendChild(timestamp);
+            divMensaje.appendChild(timestampContainer); // Append the new container
             contenedorChat.appendChild(divMensaje);
             contenedorChat.scrollTop = contenedorChat.scrollHeight;
             
             return burbujaMensaje;
         }
 
+        // Function to get current time
         function obtenerHoraActual() {
             const ahora = new Date();
             return `${ahora.getHours().toString().padStart(2, '0')}:${ahora.getMinutes().toString().padStart(2, '0')}`;
         }
 
+        // Function to read text aloud using Web Speech API
+        function leerTextoEnVozAlta(texto) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(texto);
+                utterance.lang = 'es-ES'; // Set language to Spanish
+                speechSynthesis.speak(utterance);
+            } else {
+                console.warn('La API de síntesis de voz no es compatible con este navegador.');
+                // Optionally, show a message to the user
+                // alert('Tu navegador no soporta la lectura de texto en voz alta.');
+            }
+        }
+
+        // Function to send message to DeepSeek API
         async function enviarMensajeAPI(mensajesAEnviar, temperatura = 0.7, maxTokens = 1000) {
             mostrarIndicadorEscribiendo();
             deshabilitarEntradaYBotones(true);
@@ -694,13 +764,24 @@
                 burbujaMensaje.className = 'burbuja-mensaje burbuja-bot';
                 burbujaMensaje.innerHTML = '';
 
+                const timestampContainer = document.createElement('div'); // New container for timestamp and speaker button
+                timestampContainer.className = 'timestamp-container';
+
                 const timestamp = document.createElement('div');
                 timestamp.className = 'timestamp';
                 timestamp.textContent = obtenerHoraActual();
+                timestampContainer.appendChild(timestamp);
+
+                const botonVoz = document.createElement('button'); // Create speaker button
+                botonVoz.className = 'boton-voz';
+                botonVoz.innerHTML = '<i class="fas fa-volume-up"></i>';
+                // Event listener will be added after content is fully received
+                timestampContainer.appendChild(botonVoz);
+
 
                 divMensaje.appendChild(infoMensaje);
                 divMensaje.appendChild(burbujaMensaje);
-                divMensaje.appendChild(timestamp);
+                divMensaje.appendChild(timestampContainer); // Append the new container
                 contenedorChat.appendChild(divMensaje);
 
                 contenedorChat.scrollTop = contenedorChat.scrollHeight;
@@ -731,6 +812,12 @@
                     }
                 }
 
+                // Attach event listener to speaker button after full response is received
+                botonVoz.addEventListener('click', () => {
+                    const textToSpeak = burbujaMensaje.innerText;
+                    leerTextoEnVozAlta(textToSpeak);
+                });
+
                 historialChat.push({ role: "assistant", content: respuestaCompleta });
             } catch (error) {
                 console.error("Error al comunicarse con la API de DeepSeek:", error);
@@ -741,15 +828,18 @@
             }
         }
 
+        // Function to show typing indicator
         function mostrarIndicadorEscribiendo() {
             indicadorEscribiendo.style.display = 'block';
             contenedorChat.scrollTop = contenedorChat.scrollHeight;
         }
 
+        // Function to hide typing indicator
         function ocultarIndicadorEscribiendo() {
             indicadorEscribiendo.style.display = 'none';
         }
 
+        // Function to disable/enable input and buttons
         function deshabilitarEntradaYBotones(deshabilitado) {
             entradaUsuario.disabled = deshabilitado;
             botonEnviar.disabled = deshabilitado;
@@ -758,11 +848,12 @@
             });
         }
 
+        // Function to handle sending message
         async function manejarEnviarMensaje() {
             const mensaje = entradaUsuario.value.trim();
             if (!mensaje) return;
             
-            // MEJORA: Eliminar las sugerencias después del primer mensaje.
+            // Remove suggestions after the first message
             const sugerenciasDiv = document.querySelector('.sugerencias');
             if (sugerenciasDiv) {
                 sugerenciasDiv.remove();
@@ -775,6 +866,7 @@
             entradaUsuario.focus();
         }
 
+        // Function to toggle theme
         function alternarTema() {
             if (cuerpo.classList.contains('tema-claro')) {
                 cuerpo.classList.remove('tema-claro');
@@ -787,6 +879,7 @@
             }
         }
 
+        // Function to load saved theme
         function cargarTema() {
             const temaGuardado = localStorage.getItem('tema');
             if (temaGuardado === 'claro') {
@@ -798,11 +891,13 @@
             }
         }
 
+        // Function to handle suggestion button click
         function manejarSugerencia(pregunta) {
             entradaUsuario.value = pregunta;
             manejarEnviarMensaje();
         }
 
+        // Event listeners
         botonEnviar.addEventListener('click', manejarEnviarMensaje);
 
         entradaUsuario.addEventListener('keypress', (e) => {
@@ -819,6 +914,7 @@
             });
         });
 
+        // Load theme and focus input on window load
         window.onload = () => {
             cargarTema();
             entradaUsuario.focus();
