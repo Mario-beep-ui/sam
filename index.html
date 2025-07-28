@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mar-IA</title>
+    <title>Mar-IA con Reconocimiento de Voz</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
@@ -46,6 +46,8 @@
             --fondo-boton-copiar: rgba(100, 100, 100, 0.2);
             --texto-boton-copiar: #CCCCCC;
             --sombra-hover-boton-copiar: 0 2px 4px rgba(100, 100, 100, 0.3);
+            --fondo-boton-grabar: #007BFF;
+            --fondo-boton-grabando: #ff4d4d;
         }
 
         body.tema-claro {
@@ -87,6 +89,8 @@
             --fondo-boton-copiar: rgba(200, 200, 200, 0.5);
             --texto-boton-copiar: #666666;
             --sombra-hover-boton-copiar: 0 2px 4px rgba(200, 200, 200, 0.7);
+            --fondo-boton-grabar: #007BFF;
+            --fondo-boton-grabando: #ff4d4d;
         }
 
         * {
@@ -351,6 +355,39 @@
             box-shadow: none;
         }
 
+        #boton-grabar {
+            background: var(--fondo-boton-grabar);
+            color: white;
+            border: none;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s ease-in-out;
+            flex-shrink: 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        #boton-grabar:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--sombra-hover-boton-enviar);
+        }
+
+        #boton-grabar.grabando {
+            background: var(--fondo-boton-grabando);
+            animation: pulsate 1.5s infinite;
+        }
+
+        @keyframes pulsate {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
         .indicador-escribiendo {
             display: none;
             padding: 10px 15px;
@@ -554,6 +591,26 @@
             pointer-events: auto;
         }
 
+        .indicador-voz {
+            display: none;
+            padding: 10px 15px;
+            background: var(--fondo-indicador-escribiendo);
+            border-radius: 20px;
+            margin: 10px 0;
+            width: fit-content;
+            color: var(--texto-burbuja-bot);
+            align-self: flex-start;
+            position: sticky;
+            bottom: 80px;
+            z-index: 50;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .indicador-voz i {
+            margin-right: 8px;
+            color: #ff4d4d;
+        }
+
         @media (max-width: 768px) {
             body {
                 padding: 10px;
@@ -620,7 +677,7 @@
                 border-radius: 24px;
             }
             
-            #boton-enviar {
+            #boton-enviar, #boton-grabar {
                 width: 50px;
                 height: 50px;
                 font-size: 18px;
@@ -628,6 +685,7 @@
             
             .contenedor-entrada {
                 padding: 10px;
+                gap: 8px;
             }
 
             .sugerencias {
@@ -687,7 +745,7 @@
                 border-radius: 20px;
             }
             
-            #boton-enviar {
+            #boton-enviar, #boton-grabar {
                 width: 45px;
                 height: 45px;
                 font-size: 16px;
@@ -695,6 +753,7 @@
             
             .contenedor-entrada {
                 padding: 8px;
+                gap: 6px;
             }
         }
 
@@ -729,7 +788,8 @@
                     <i class="fas fa-robot"></i> Mar-IA 
                 </div>
                 <div class="burbuja-mensaje burbuja-bot">
-                    ¡Hola!, Soy una IA creada por Mario Vazquez.<br>¿En qué puedo ayudarte hoy?
+                    ¡Hola!, Soy una IA creada por Mario Vazquez.<br>¿En qué puedo ayudarte hoy?<br><br>
+                    <strong>Nueva función:</strong> Ahora puedes enviar mensajes de voz usando el botón de micrófono junto al campo de texto.
                 </div>
                 <div class="timestamp-container">
                     <div class="timestamp">Ahora</div>
@@ -752,8 +812,15 @@
             <span></span>
             Mar-IA está escribiendo...
         </div>
+        
+        <div class="indicador-voz" id="indicador-voz">
+            <i class="fas fa-microphone-alt"></i> Escuchando... Habla ahora
+        </div>
 
         <div class="contenedor-entrada">
+            <button id="boton-grabar">
+                <i class="fas fa-microphone"></i>
+            </button>
             <input type="text" id="entrada-usuario" placeholder="Pregúntale a Mar-IA..." autocomplete="off">
             <button id="boton-enviar">
                 <i class="fas fa-paper-plane"></i>
@@ -770,7 +837,9 @@
         const contenedorChat = document.getElementById('contenedor-chat');
         const entradaUsuario = document.getElementById('entrada-usuario');
         const botonEnviar = document.getElementById('boton-enviar');
+        const botonGrabar = document.getElementById('boton-grabar');
         const indicadorEscribiendo = document.getElementById('indicador-escribiendo');
+        const indicadorVoz = document.getElementById('indicador-voz');
         const alternadorTema = document.getElementById('alternador-tema');
         const cuerpo = document.body;
         const copyConfirmation = document.getElementById('copyConfirmation');
@@ -783,7 +852,7 @@
             },
             {
                 role: "assistant",
-                content: "¡Hola!, Soy una IA creada por Mario Vazquez.<br>¿En qué puedo ayudarte hoy?"
+                content: "¡Hola!, Soy una IA creada por Mario Vazquez.<br>¿En qué puedo ayudarte hoy?<br><br><strong>Nueva función:</strong> Ahora puedes enviar mensajes de voz usando el botón de micrófono junto al campo de texto."
             }
         ];
 
@@ -791,6 +860,77 @@
         let allVoices = [];
         let currentUtterance = null;
         let isPlaying = false;
+        let recognition = null;
+        let recognizing = false;
+
+        // Inicializar reconocimiento de voz
+        function inicializarReconocimientoVoz() {
+            if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+                recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+                recognition.continuous = false;
+                recognition.interimResults = true;
+                recognition.lang = 'es-ES';
+
+                recognition.onstart = function() {
+                    recognizing = true;
+                    botonGrabar.classList.add('grabando');
+                    indicadorVoz.style.display = 'block';
+                    contenedorChat.scrollTop = contenedorChat.scrollHeight;
+                };
+
+                recognition.onresult = function(event) {
+                    let textoInterim = '';
+                    for (let i = event.resultIndex; i < event.results.length; ++i) {
+                        if (event.results[i].isFinal) {
+                            entradaUsuario.value = event.results[i][0].transcript;
+                        } else {
+                            textoInterim += event.results[i][0].transcript;
+                        }
+                    }
+                    
+                    if (textoInterim) {
+                        entradaUsuario.value = textoInterim;
+                    }
+                };
+
+                recognition.onerror = function(event) {
+                    console.error('Error en reconocimiento de voz:', event.error);
+                    detenerReconocimiento();
+                };
+
+                recognition.onend = function() {
+                    detenerReconocimiento();
+                    if (entradaUsuario.value.trim() !== '') {
+                        manejarEnviarMensaje();
+                    }
+                };
+            } else {
+                botonGrabar.disabled = true;
+                botonGrabar.title = "Reconocimiento de voz no soportado";
+                console.warn("El reconocimiento de voz no está soportado en este navegador.");
+            }
+        }
+
+        function iniciarReconocimiento() {
+            if (recognition && !recognizing) {
+                entradaUsuario.value = '';
+                recognition.start();
+            }
+        }
+
+        function detenerReconocimiento() {
+            recognizing = false;
+            botonGrabar.classList.remove('grabando');
+            indicadorVoz.style.display = 'none';
+        }
+
+        botonGrabar.addEventListener('click', function() {
+            if (recognizing) {
+                recognition.stop();
+            } else {
+                iniciarReconocimiento();
+            }
+        });
 
         function loadVoices() {
             window.speechSynthesis.onvoiceschanged = () => {
@@ -1104,6 +1244,7 @@
         function deshabilitarEntradaYBotones(deshabilitado) {
             entradaUsuario.disabled = deshabilitado;
             botonEnviar.disabled = deshabilitado;
+            botonGrabar.disabled = deshabilitado;
             document.querySelectorAll('.boton-sugerencia').forEach(boton => {
                 boton.disabled = deshabilitado;
             });
@@ -1172,6 +1313,7 @@
         window.onload = () => {
             cargarTema();
             entradaUsuario.focus();
+            inicializarReconocimientoVoz();
         };
     </script>
 </body>
