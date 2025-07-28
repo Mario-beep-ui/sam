@@ -133,16 +133,17 @@
             z-index: 100;
             border-bottom: 1px solid var(--borde-superior-entrada);
             display: flex;
-            flex-direction: column;
+            flex-direction: row; /* Cambiado a fila */
             align-items: center;
-            justify-content: center;
+            justify-content: space-between; /* Espacio entre los elementos */
             flex-shrink: 0;
         }
 
         .cabecera .titulo {
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: flex-start; /* Alineado a la izquierda */
+            margin-right: auto; /* Empuja los controles a la derecha */
         }
 
         .cabecera .titulo h1 {
@@ -167,11 +168,10 @@
         }
 
         .controles-cabecera {
-            position: absolute;
-            right: 20px;
-            display: flex; /* Añadido para alinear los controles */
-            align-items: center; /* Añadido para alinear los controles */
-            gap: 10px; /* Espacio entre los controles */
+            position: static; /* Cambiado a estático */
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .contenedor-chat {
@@ -436,11 +436,20 @@
             cursor: pointer;
             color: var(--color-alternador-tema);
             transition: color 0.3s ease;
-            padding: 0 10px;
+            padding: 0; /* Eliminado padding horizontal */
+            width: 40px; /* Tamaño fijo para que sea redondo */
+            height: 40px; /* Tamaño fijo para que sea redondo */
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            background: var(--fondo-boton-copiar); /* Fondo similar al de copiar */
         }
 
         #alternador-tema:hover {
             color: var(--color-hover-alternador-tema);
+            box-shadow: var(--sombra-hover-boton-copiar); /* Sombra similar al de copiar */
         }
 
         .selector-voz-container {
@@ -555,24 +564,37 @@
                 padding: 12px 15px;
             }
             
-            .burbuja-mensaje {
-                max-width: 90%;
-                padding: 10px 15px;
+            .cabecera {
+                flex-direction: row; /* Asegura que los elementos estén en fila */
+                justify-content: space-between; /* Espacio entre título y controles */
+                align-items: center;
+                padding: 12px 15px;
+            }
+
+            .cabecera .titulo {
+                margin-right: 10px; /* Pequeña separación del título a los controles */
+                align-items: flex-start;
             }
             
             .cabecera .titulo h1 {
                 font-size: 20px;
+                gap: 8px; /* Reducir el espacio entre el icono y el texto */
             }
             
-            .cabecera {
-                padding: 12px 15px;
+            .cabecera .titulo h1 i {
+                font-size: 24px; /* Ajustar tamaño del icono del título */
+            }
+
+            .cabecera .titulo .subtitle {
+                font-size: 14px;
+                margin-top: 2px; /* Ajustar margen */
             }
 
             .controles-cabecera {
-                position: static; /* Cambiar a estático para que fluya en el layout */
-                margin-top: 10px; /* Espacio debajo del título */
-                justify-content: center; /* Centrar los controles */
-                width: 100%;
+                position: static; /* Asegura que no haya posicionamiento absoluto */
+                margin-top: 0; /* Eliminar margen superior */
+                justify-content: flex-end; /* Alinear a la derecha */
+                width: auto; /* Ancho automático */
             }
             
             #entrada-usuario {
