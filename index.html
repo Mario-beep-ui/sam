@@ -133,19 +133,19 @@
             z-index: 100;
             border-bottom: 1px solid var(--borde-superior-entrada);
             display: flex;
-            flex-direction: row; /* Cambiado a fila */
+            flex-direction: row;
             align-items: center;
-            justify-content: space-between; /* Espacio entre los elementos */
+            justify-content: space-between;
             flex-shrink: 0;
         }
 
         .cabecera .titulo {
             display: flex;
             flex-direction: column;
-            align-items: flex-start; /* Alineado a la izquierda */
-            margin-right: auto; /* Empuja los controles a la derecha */
-            flex-shrink: 1; /* Permite que el título se encoja */
-            min-width: 0; /* Permite que el contenido se encoja por debajo de su tamaño intrínseco */
+            align-items: flex-start;
+            margin-right: auto;
+            flex-shrink: 1;
+            min-width: 0;
         }
 
         .cabecera .titulo h1 {
@@ -170,7 +170,7 @@
         }
 
         .controles-cabecera {
-            position: static; /* Cambiado a estático */
+            position: static;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -292,7 +292,7 @@
             align-items: center;
             position: sticky;
             bottom: 0;
-            z-index: 1000; /* Aumentado z-index */
+            z-index: 1000;
             flex-shrink: 0;
         }
 
@@ -308,9 +308,9 @@
             transition: all 0.3s ease;
             min-width: 150px;
             position: relative; 
-            z-index: 1001; /* Aumentado z-index */
-            cursor: text; /* Indicar que es un campo de texto */
-            touch-action: manipulation; /* Mejorar la respuesta táctil */
+            z-index: 1001;
+            cursor: text;
+            touch-action: manipulation;
         }
 
         #entrada-usuario:focus {
@@ -388,10 +388,10 @@
             50% { transform: translateY(-5px); }
         }
 
-        .timestamp-container { /* Contenedor para timestamp y botones */
+        .timestamp-container {
             display: flex;
             align-items: center;
-            gap: 8px; /* Espacio entre la hora y los botones */
+            gap: 8px;
             margin-top: 5px;
         }
 
@@ -401,13 +401,13 @@
             color: var(--color-timestamp);
         }
 
-        .boton-voz, .boton-copiar { /* Estilos para los botones de acción */
+        .boton-voz, .boton-copiar {
             border: none;
-            width: 28px; /* La mitad del tamaño del botón de enviar (56px) */
-            height: 28px; /* La mitad del tamaño del botón de enviar (56px) */
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 14px; /* Ajustar tamaño del icono */
+            font-size: 14px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -442,28 +442,28 @@
             cursor: pointer;
             color: var(--color-alternador-tema);
             transition: color 0.3s ease;
-            padding: 0; /* Eliminado padding horizontal */
-            width: 40px; /* Tamaño fijo para que sea redondo */
-            height: 40px; /* Tamaño fijo para que sea redondo */
+            padding: 0;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            background: var(--fondo-boton-copiar); /* Fondo similar al de copiar */
+            background: var(--fondo-boton-copiar);
         }
 
         #alternador-tema:hover {
             color: var(--color-hover-alternador-tema);
-            box-shadow: var(--sombra-hover-boton-copiar); /* Sombra similar al de copiar */
+            box-shadow: var(--sombra-hover-boton-copiar);
         }
 
         .selector-voz-container {
-            position: relative; /* Necesario para el posicionamiento absoluto del select */
-            width: 40px; /* Hacerlo redondo */
-            height: 40px; /* Hacerlo redondo */
+            position: relative;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            background: var(--fondo-boton-copiar); /* Reutilizar un fondo similar */
+            background: var(--fondo-boton-copiar);
             color: var(--texto-boton-copiar);
             display: flex;
             justify-content: center;
@@ -479,23 +479,22 @@
         }
 
         .selector-voz-container i {
-            font-size: 18px; /* Tamaño del icono */
-            z-index: 1; /* Asegurar que el icono esté por encima del select si es transparente */
+            font-size: 18px;
+            z-index: 1;
         }
 
         #selector-voz {
-            position: absolute; /* Posicionar sobre el contenedor */
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            opacity: 0; /* Hacerlo invisible */
+            opacity: 0;
             cursor: pointer;
-            z-index: 2; /* Asegurar que sea clickeable */
+            z-index: 2;
         }
 
         #selector-voz option {
-            /* Mantener opciones visibles cuando el desplegable esté abierto */
             opacity: 1;
             background: var(--fondo-campo-entrada);
             color: var(--texto-entrada);
@@ -534,7 +533,6 @@
             cursor: not-allowed;
         }
 
-        /* Mensaje de confirmación de copiado */
         .copy-confirmation {
             position: fixed;
             bottom: 20px;
@@ -548,12 +546,12 @@
             opacity: 0;
             transition: opacity 0.3s ease-in-out;
             z-index: 1000;
-            pointer-events: none; /* Por defecto, no interactivo */
+            pointer-events: none;
         }
 
         .copy-confirmation.show {
             opacity: 1;
-            pointer-events: auto; /* Se vuelve interactivo cuando está visible */
+            pointer-events: auto;
         }
 
         @media (max-width: 768px) {
@@ -573,47 +571,47 @@
             }
             
             .cabecera {
-                flex-direction: row; /* Asegura que los elementos estén en fila */
-                justify-content: space-between; /* Espacio entre título y controles */
+                flex-direction: row;
+                justify-content: space-between;
                 align-items: center;
                 padding: 12px 15px;
-                flex-wrap: nowrap; /* Evita que los elementos se envuelvan */
+                flex-wrap: nowrap;
             }
 
             .cabecera .titulo {
-                margin-right: 10px; /* Pequeña separación del título a los controles */
+                margin-right: 10px;
                 align-items: flex-start;
             }
             
             .cabecera .titulo h1 {
-                font-size: 18px; /* Ajuste para móviles */
-                gap: 5px; /* Reducir el espacio entre el icono y el texto */
+                font-size: 18px;
+                gap: 5px;
             }
             
             .cabecera .titulo h1 i {
-                font-size: 20px; /* Ajustar tamaño del icono del título */
+                font-size: 20px;
             }
 
             .cabecera .titulo .subtitle {
-                font-size: 12px; /* Ajuste para móviles */
-                margin-top: 2px; /* Ajustar margen */
+                font-size: 12px;
+                margin-top: 2px;
             }
 
             .controles-cabecera {
-                position: static; /* Asegura que no haya posicionamiento absoluto */
-                margin-top: 0; /* Eliminar margen superior */
-                justify-content: flex-end; /* Alinear a la derecha */
-                width: auto; /* Ancho automático */
-                gap: 5px; /* Reducir el espacio entre los botones de control */
+                position: static;
+                margin-top: 0;
+                justify-content: flex-end;
+                width: auto;
+                gap: 5px;
             }
 
             .selector-voz-container, #alternador-tema {
-                width: 36px; /* Ligeramente más pequeños para móviles */
+                width: 36px;
                 height: 36px;
             }
 
             .selector-voz-container i, #alternador-tema i {
-                font-size: 16px; /* Iconos más pequeños para móviles */
+                font-size: 16px;
             }
             
             #entrada-usuario {
@@ -659,11 +657,11 @@
             }
             
             .cabecera .titulo h1 {
-                font-size: 16px; /* Más pequeño para pantallas muy pequeñas */
+                font-size: 16px;
             }
             
             .cabecera .titulo .subtitle {
-                font-size: 10px; /* Más pequeño para pantallas muy pequeñas */
+                font-size: 10px;
             }
             
             .contenedor-chat {
@@ -735,7 +733,6 @@
                 </div>
                 <div class="timestamp-container">
                     <div class="timestamp">Ahora</div>
-                    <!-- Los botones de acción se agregarán dinámicamente aquí para las respuestas del bot -->
                 </div>
             </div>
             
@@ -764,7 +761,6 @@
         </div>
     </div>
 
-    <!-- Mensaje de confirmación de copiado -->
     <div id="copyConfirmation" class="copy-confirmation">
         ¡Copiado al portapapeles!
     </div>
@@ -778,7 +774,7 @@
         const alternadorTema = document.getElementById('alternador-tema');
         const cuerpo = document.body;
         const copyConfirmation = document.getElementById('copyConfirmation');
-        const selectorVoz = document.getElementById('selector-voz'); // Nuevo
+        const selectorVoz = document.getElementById('selector-voz');
 
         var historialChat = [ 
             {
@@ -791,15 +787,15 @@
             }
         ];
 
-        let spanishFemaleVoice = null; // Variable para almacenar la voz femenina seleccionada
-        let allVoices = []; // Almacenar todas las voces para referencia
+        let spanishFemaleVoice = null;
+        let allVoices = [];
+        let currentUtterance = null;
+        let isPlaying = false;
 
-        // Función para cargar las voces y seleccionar una voz femenina clara en español
         function loadVoices() {
-            // Espera a que las voces estén disponibles
             window.speechSynthesis.onvoiceschanged = () => {
                 allVoices = window.speechSynthesis.getVoices();
-                selectorVoz.innerHTML = ''; // Limpiar opciones existentes
+                selectorVoz.innerHTML = '';
 
                 const femaleSpanishVoices = allVoices.filter(voice =>
                     voice.lang.startsWith('es') && (
@@ -808,12 +804,11 @@
                         voice.name.toLowerCase().includes("sabina") ||
                         voice.name.toLowerCase().includes("helena") ||
                         voice.name.toLowerCase().includes("zira") ||
-                        voice.name.toLowerCase().includes("google") // Incluye voces de Google que podrían ser femeninas
+                        voice.name.toLowerCase().includes("google")
                     )
                 );
 
                 if (femaleSpanishVoices.length > 0) {
-                    // Ordenar para priorizar voces de Google y luego por nombre
                     femaleSpanishVoices.sort((a, b) => {
                         const aIsGoogle = a.name.includes('Google');
                         const bIsGoogle = b.name.includes('Google');
@@ -829,13 +824,9 @@
                         selectorVoz.appendChild(option);
                     });
 
-                    // Seleccionar la primera voz femenina como predeterminada
                     spanishFemaleVoice = femaleSpanishVoices[0];
                     selectorVoz.value = spanishFemaleVoice.name;
-                    console.log('Voz femenina en español seleccionada por defecto:', spanishFemaleVoice.name);
-
                 } else {
-                    // Fallback si no se encuentran voces femeninas específicas
                     spanishFemaleVoice = allVoices.find(voice => voice.lang.startsWith('es'));
                     if (spanishFemaleVoice) {
                         const option = document.createElement('option');
@@ -843,30 +834,19 @@
                         option.textContent = `${spanishFemaleVoice.name} (Predeterminada)`;
                         selectorVoz.appendChild(option);
                         selectorVoz.value = spanishFemaleVoice.name;
-                        console.warn('No se encontraron voces femeninas específicas en español. Se utilizará la primera voz en español disponible:', spanishFemaleVoice.name);
-                    } else {
-                        console.warn('No se encontró ninguna voz en español. Se utilizará la voz predeterminada del sistema.');
                     }
                 }
-                console.log("Voces añadidas al selector:", Array.from(selectorVoz.options).map(opt => opt.textContent)); // Log para depuración
             };
-            // Llama a getVoices para disparar el evento onvoiceschanged si ya están cargadas
             window.speechSynthesis.getVoices(); 
         }
 
-        // Event listener para el cambio de voz
         selectorVoz.addEventListener('change', () => {
             const selectedVoiceName = selectorVoz.value;
             spanishFemaleVoice = allVoices.find(voice => voice.name === selectedVoiceName);
-            if (spanishFemaleVoice) {
-                console.log('Voz seleccionada por el usuario:', spanishFemaleVoice.name);
-            }
         });
 
-        // Llama a la función para cargar las voces al inicio
         loadVoices();
 
-        // Función para agregar un mensaje a la visualización del chat
         function agregarMensaje(rol, contenido, tipo = 'texto') {
             const divMensaje = document.createElement('div');
             divMensaje.className = `mensaje mensaje-${rol}`;
@@ -877,14 +857,13 @@
             const burbujaMensaje = document.createElement('div');
             burbujaMensaje.className = `burbuja-mensaje burbuja-${rol}`;
             
-            // Renderizar Markdown para mensajes del bot
             if (rol === 'bot' && tipo === 'texto') {
                 burbujaMensaje.innerHTML = marked.parse(contenido);
             } else {
                 burbujaMensaje.innerHTML = contenido;
             }
 
-            const timestampContainer = document.createElement('div'); // Contenedor para timestamp y botones
+            const timestampContainer = document.createElement('div');
             timestampContainer.className = 'timestamp-container';
 
             const timestamp = document.createElement('div');
@@ -892,21 +871,18 @@
             timestamp.textContent = obtenerHoraActual();
             timestampContainer.appendChild(timestamp);
 
-            // Añadir botón de voz para mensajes del bot
             if (rol === 'bot') {
                 const botonVoz = document.createElement('button');
                 botonVoz.className = 'boton-voz';
                 botonVoz.innerHTML = '<i class="fas fa-volume-up"></i>';
                 botonVoz.title = 'Leer en voz alta';
-                // Adjuntar listener de evento para leer el contenido de texto del mensaje del bot
                 botonVoz.addEventListener('click', () => {
                     const textToSpeak = burbujaMensaje.innerText; 
-                    leerTextoEnVozAlta(textToSpeak);
+                    toggleSpeech(botonVoz, textToSpeak);
                 });
                 timestampContainer.appendChild(botonVoz);
             }
 
-            // Añadir botón de copiar para mensajes del bot y del usuario
             const botonCopiar = document.createElement('button');
             botonCopiar.className = 'boton-copiar';
             botonCopiar.innerHTML = '<i class="fas fa-copy"></i>';
@@ -917,11 +893,8 @@
             });
             timestampContainer.appendChild(botonCopiar);
 
-
             if (rol === 'usuario') {
                 infoMensaje.innerHTML = '<i class="fas fa-user"></i> Tú';
-                // Para los mensajes de usuario, el timestamp y el botón de copiar van al final del mensaje
-                // Por lo tanto, el timestampContainer se añade después de la burbuja en el mensaje de usuario
                 divMensaje.appendChild(burbujaMensaje);
                 divMensaje.appendChild(timestampContainer);
             } else {
@@ -930,38 +903,63 @@
                 divMensaje.appendChild(timestampContainer);
             }
 
-            divMensaje.prepend(infoMensaje); // Añadir infoMensaje al principio
+            divMensaje.prepend(infoMensaje);
             contenedorChat.appendChild(divMensaje);
             contenedorChat.scrollTop = contenedorChat.scrollHeight;
             
             return burbujaMensaje;
         }
 
-        // Función para obtener la hora actual
+        function toggleSpeech(button, text) {
+            if (currentUtterance && isPlaying) {
+                window.speechSynthesis.pause();
+                button.innerHTML = '<i class="fas fa-play"></i>';
+                isPlaying = false;
+                return;
+            }
+
+            if (currentUtterance && !isPlaying) {
+                window.speechSynthesis.resume();
+                button.innerHTML = '<i class="fas fa-pause"></i>';
+                isPlaying = true;
+                return;
+            }
+
+            if ('speechSynthesis' in window) {
+                button.innerHTML = '<i class="fas fa-pause"></i>';
+                currentUtterance = new SpeechSynthesisUtterance(text);
+                currentUtterance.lang = 'es-ES';
+                
+                if (spanishFemaleVoice) {
+                    currentUtterance.voice = spanishFemaleVoice;
+                }
+
+                currentUtterance.onend = () => {
+                    button.innerHTML = '<i class="fas fa-volume-up"></i>';
+                    currentUtterance = null;
+                    isPlaying = false;
+                };
+
+                currentUtterance.onerror = () => {
+                    button.innerHTML = '<i class="fas fa-volume-up"></i>';
+                    currentUtterance = null;
+                    isPlaying = false;
+                };
+
+                window.speechSynthesis.speak(currentUtterance);
+                isPlaying = true;
+            }
+        }
+
         function obtenerHoraActual() {
             const ahora = new Date();
             return `${ahora.getHours().toString().padStart(2, '0')}:${ahora.getMinutes().toString().padStart(2, '0')}`;
         }
 
-        // Función para leer texto en voz alta usando la API Web Speech
-        function leerTextoEnVozAlta(texto) {
-            if ('speechSynthesis' in window) {
-                const utterance = new SpeechSynthesisUtterance(texto);
-                utterance.lang = 'es-ES'; // Establecer idioma a español
-                if (spanishFemaleVoice) {
-                    utterance.voice = spanishFemaleVoice; // Usar la voz femenina seleccionada
-                }
-                speechSynthesis.speak(utterance);
-            } else {
-                console.warn('La API de síntesis de voz no es compatible con este navegador.');
-            }
-        }
-
-        // Función para copiar texto al portapapeles
         function copiarTextoAlPortapapeles(texto) {
             const textarea = document.createElement('textarea');
             textarea.value = texto;
-            textarea.style.position = 'fixed'; // Para evitar que el textarea afecte el diseño
+            textarea.style.position = 'fixed';
             textarea.style.opacity = 0;
             document.body.appendChild(textarea);
             textarea.select();
@@ -970,25 +968,20 @@
                 mostrarConfirmacionCopiado();
             } catch (err) {
                 console.error('Error al copiar el texto: ', err);
-                // Fallback para navegadores que no soportan execCommand o en caso de error
-                // Podrías mostrar un mensaje pidiendo al usuario que copie manualmente
             }
             document.body.removeChild(textarea);
         }
 
-        // Función para mostrar la confirmación de copiado
         function mostrarConfirmacionCopiado() {
             copyConfirmation.classList.add('show');
             setTimeout(() => {
                 copyConfirmation.classList.remove('show');
-            }, 2000); // Ocultar después de 2 segundos
+            }, 2000);
         }
 
-        // Función para enviar mensaje a la API de DeepSeek
         async function enviarMensajeAPI(mensajesAEnviar, temperatura = 0.7, maxTokens = 1000) {
-            console.log('enviarMensajeAPI: Iniciando...');
             mostrarIndicadorEscribiendo();
-            deshabilitarEntradaYBotones(true); // Deshabilita la entrada
+            deshabilitarEntradaYBotones(true);
 
             const payload = {
                 model: "deepseek-chat",
@@ -999,7 +992,6 @@
             };
 
             try {
-                console.log('enviarMensajeAPI: Realizando fetch a la API...');
                 const urlAPI = 'https://api.deepseek.com/v1/chat/completions';
                 const respuesta = await fetch(urlAPI, {
                     method: 'POST',
@@ -1029,7 +1021,7 @@
                 burbujaMensaje.className = 'burbuja-mensaje burbuja-bot';
                 burbujaMensaje.innerHTML = '';
 
-                const timestampContainer = document.createElement('div'); // Contenedor para timestamp y botones
+                const timestampContainer = document.createElement('div');
                 timestampContainer.className = 'timestamp-container';
 
                 const timestamp = document.createElement('div');
@@ -1037,22 +1029,29 @@
                 timestamp.textContent = obtenerHoraActual();
                 timestampContainer.appendChild(timestamp);
 
-                const botonVoz = document.createElement('button'); // Crear botón de voz
+                const botonVoz = document.createElement('button');
                 botonVoz.className = 'boton-voz';
                 botonVoz.innerHTML = '<i class="fas fa-volume-up"></i>';
                 botonVoz.title = 'Leer en voz alta';
+                botonVoz.addEventListener('click', () => {
+                    const textToSpeak = burbujaMensaje.innerText;
+                    toggleSpeech(botonVoz, textToSpeak);
+                });
                 timestampContainer.appendChild(botonVoz);
 
-                const botonCopiar = document.createElement('button'); // Crear botón de copiar
+                const botonCopiar = document.createElement('button');
                 botonCopiar.className = 'boton-copiar';
                 botonCopiar.innerHTML = '<i class="fas fa-copy"></i>';
                 botonCopiar.title = 'Copiar respuesta';
+                botonCopiar.addEventListener('click', () => {
+                    const textToCopy = burbujaMensaje.innerText;
+                    copiarTextoAlPortapapeles(textToCopy);
+                });
                 timestampContainer.appendChild(botonCopiar);
-
 
                 divMensaje.appendChild(infoMensaje);
                 divMensaje.appendChild(burbujaMensaje);
-                divMensaje.appendChild(timestampContainer); // Añadir el nuevo contenedor
+                divMensaje.appendChild(timestampContainer);
                 contenedorChat.appendChild(divMensaje);
 
                 contenedorChat.scrollTop = contenedorChat.scrollHeight;
@@ -1083,55 +1082,37 @@
                     }
                 }
 
-                // Adjuntar listeners de eventos a los botones después de recibir la respuesta completa
-                botonVoz.addEventListener('click', () => {
-                    const textToSpeak = burbujaMensaje.innerText;
-                    leerTextoEnVozAlta(textToSpeak);
-                });
-                botonCopiar.addEventListener('click', () => {
-                    const textToCopy = burbujaMensaje.innerText;
-                    copiarTextoAlPortapapeles(textToCopy);
-                });
-
                 historialChat.push({ role: "assistant", content: respuestaCompleta });
             } catch (error) {
                 console.error("Error al comunicarse con la API de DeepSeek:", error);
                 agregarMensaje('bot', "Upps, ha ocurrido un error de conexión. Verifica tu conexión o intenta de nuevo más tarde.");
             } finally {
-                console.log('enviarMensajeAPI: Finalizando y habilitando entrada.');
                 ocultarIndicadorEscribiendo();
-                deshabilitarEntradaYBotones(false); // Habilita la entrada
+                deshabilitarEntradaYBotones(false);
             }
         }
 
-        // Función para mostrar el indicador de escritura
         function mostrarIndicadorEscribiendo() {
             indicadorEscribiendo.style.display = 'block';
             contenedorChat.scrollTop = contenedorChat.scrollHeight;
         }
 
-        // Función para ocultar el indicador de escritura
         function ocultarIndicadorEscribiendo() {
             indicadorEscribiendo.style.display = 'none';
         }
 
-        // Función para deshabilitar/habilitar la entrada y los botones
         function deshabilitarEntradaYBotones(deshabilitado) {
-            console.log('deshabilitarEntradaYBotones llamado con:', deshabilitado);
             entradaUsuario.disabled = deshabilitado;
             botonEnviar.disabled = deshabilitado;
             document.querySelectorAll('.boton-sugerencia').forEach(boton => {
                 boton.disabled = deshabilitado;
             });
-            console.log('Estado de entradaUsuario.disabled:', entradaUsuario.disabled);
         }
 
-        // Función para manejar el envío de mensajes
         async function manejarEnviarMensaje() {
             const mensaje = entradaUsuario.value.trim();
             if (!mensaje) return;
             
-            // Eliminar las sugerencias después del primer mensaje
             const sugerenciasDiv = document.querySelector('.sugerencias');
             if (sugerenciasDiv) {
                 sugerenciasDiv.remove();
@@ -1144,7 +1125,6 @@
             entradaUsuario.focus();
         }
 
-        // Función para alternar el tema
         function alternarTema() {
             if (cuerpo.classList.contains('tema-claro')) {
                 cuerpo.classList.remove('tema-claro');
@@ -1157,7 +1137,6 @@
             }
         }
 
-        // Función para cargar el tema guardado
         function cargarTema() {
             const temaGuardado = localStorage.getItem('tema');
             if (temaGuardado === 'claro') {
@@ -1169,13 +1148,11 @@
             }
         }
 
-        // Función para manejar el clic en el botón de sugerencia
         function manejarSugerencia(pregunta) {
             entradaUsuario.value = pregunta;
             manejarEnviarMensaje();
         }
 
-        // Event listeners
         botonEnviar.addEventListener('click', manejarEnviarMensaje);
 
         entradaUsuario.addEventListener('keypress', (e) => {
@@ -1192,7 +1169,6 @@
             });
         });
 
-        // Cargar tema y enfocar la entrada al cargar la ventana
         window.onload = () => {
             cargarTema();
             entradaUsuario.focus();
