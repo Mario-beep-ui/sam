@@ -966,8 +966,9 @@
 
         // Función para enviar mensaje a la API de DeepSeek
         async function enviarMensajeAPI(mensajesAEnviar, temperatura = 0.7, maxTokens = 1000) {
+            console.log('enviarMensajeAPI: Iniciando...');
             mostrarIndicadorEscribiendo();
-            deshabilitarEntradaYBotones(true);
+            deshabilitarEntradaYBotones(true); // Deshabilita la entrada
 
             const payload = {
                 model: "deepseek-chat",
@@ -978,6 +979,7 @@
             };
 
             try {
+                console.log('enviarMensajeAPI: Realizando fetch a la API...');
                 const urlAPI = 'https://api.deepseek.com/v1/chat/completions';
                 const respuesta = await fetch(urlAPI, {
                     method: 'POST',
@@ -1076,8 +1078,9 @@
                 console.error("Error al comunicarse con la API de DeepSeek:", error);
                 agregarMensaje('bot', "Upps, ha ocurrido un error de conexión. Verifica tu conexión o intenta de nuevo más tarde.");
             } finally {
+                console.log('enviarMensajeAPI: Finalizando y habilitando entrada.');
                 ocultarIndicadorEscribiendo();
-                deshabilitarEntradaYBotones(false);
+                deshabilitarEntradaYBotones(false); // Habilita la entrada
             }
         }
 
@@ -1094,11 +1097,13 @@
 
         // Función para deshabilitar/habilitar la entrada y los botones
         function deshabilitarEntradaYBotones(deshabilitado) {
+            console.log('deshabilitarEntradaYBotones llamado con:', deshabilitado);
             entradaUsuario.disabled = deshabilitado;
             botonEnviar.disabled = deshabilitado;
             document.querySelectorAll('.boton-sugerencia').forEach(boton => {
                 boton.disabled = deshabilitado;
             });
+            console.log('Estado de entradaUsuario.disabled:', entradaUsuario.disabled);
         }
 
         // Función para manejar el envío de mensajes
