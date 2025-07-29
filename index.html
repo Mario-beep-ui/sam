@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mar-IA con OCR</title>
+    <title>Mar-IA con OCR Mejorado</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
@@ -108,7 +108,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 0; /* Ajustado a 0 para que el contenedor ocupe todo el espacio */
             color: var(--color-texto);
             transition: background 0.5s ease;
             background-image: radial-gradient(circle at 25% 25%, rgba(70,130,180,0.1) 0%, transparent 55%), radial-gradient(circle at 75% 75%, rgba(106,13,173,0.1) 0%, transparent 55%);
@@ -116,16 +116,16 @@
 
         .contenedor {
             width: 100%;
-            max-width: 1000px;
+            max-width: 100%; /* Ajustado a 100% para ocupar todo el ancho */
             background: var(--color-contenedor);
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            border-radius: 0; /* Ajustado a 0 para que ocupe las esquinas */
+            box-shadow: none; /* Eliminado el box-shadow para un look más limpio */
             overflow: hidden;
             border: 1px solid var(--borde-superior-entrada);
             display: flex;
             flex-direction: column;
-            height: 90vh;
-            min-height: 600px;
+            height: 100vh; /* Ajustado a 100vh para ocupar todo el alto */
+            min-height: auto; /* Ajustado a auto para mayor flexibilidad */
             position: relative;
         }
 
@@ -192,6 +192,8 @@
             gap: 15px;
             scroll-behavior: smooth;
             background-image: radial-gradient(circle at 10% 20%, rgba(106,13,173,0.03) 0%, transparent 20%), radial-gradient(circle at 90% 80%, rgba(70,130,180,0.03) 0%, transparent 20%);
+            /* padding-bottom will be set by JS */
+            transition: padding-bottom 0.3s ease-out;
         }
 
         .mensaje {
@@ -288,19 +290,29 @@
             font-size: 16px;
         }
 
+        /* Contenedor de entrada - Cambiado a fixed */
         .contenedor-entrada {
             display: flex;
-            flex-direction: column; /* Cambiado a columna */
+            flex-direction: column;
             padding: 15px;
             background: var(--fondo-entrada);
             border-top: 1px solid var(--borde-superior-entrada);
             gap: 10px;
             align-items: center;
-            position: sticky;
-            bottom: 0;
+            position: fixed; /* Changed from sticky to fixed */
+            left: 0;
+            right: 0;
+            bottom: 0; /* Will be adjusted by JS */
             z-index: 1000;
             flex-shrink: 0;
+            transition: bottom 0.3s ease-out, box-shadow 0.3s ease; /* Transition for bottom property */
+            width: 100%; /* Ensure it spans full width */
+            max-width: 1000px; /* Match main container max-width if needed, but fixed is relative to viewport */
+            margin: 0 auto; /* Center it if max-width is applied */
+            box-sizing: border-box; /* Include padding in width */
         }
+        
+        /* Removed .desplazado class, as positioning is now dynamic via JS */
 
         .contenedor-input-botones {
             display: flex;
@@ -309,11 +321,11 @@
             gap: 8px;
         }
 
-        .contenedor-botones-inferiores { /* Nuevo div para los botones de abajo */
+        .contenedor-botones-inferiores {
             display: flex;
             gap: 10px;
-            justify-content: flex-end; /* Alinea los botones a la derecha */
-            width: 100%; /* Ocupa todo el ancho disponible */
+            justify-content: flex-end;
+            width: 100%;
         }
 
         .contenedor-input {
@@ -451,7 +463,7 @@
             color: var(--texto-burbuja-bot);
             align-self: flex-start;
             position: sticky;
-            bottom: 80px;
+            bottom: 80px; /* Adjust if needed, relative to chat container */
             z-index: 50;
         }
 
@@ -654,7 +666,7 @@
             color: var(--texto-burbuja-bot);
             align-self: flex-start;
             position: sticky;
-            bottom: 80px;
+            bottom: 80px; /* Adjust if needed, relative to chat container */
             z-index: 50;
             animation: fadeIn 0.3s ease;
         }
@@ -687,8 +699,8 @@
         }
         
         .modal-ocr {
-            position: absolute;
-            bottom: 80px;
+            position: fixed; /* Changed from absolute to fixed relative to viewport */
+            bottom: calc(var(--input-area-height, 100px) + 20px); /* Position above input area */
             right: 20px; 
             background: var(--fondo-entrada);
             border-radius: 15px;
@@ -745,16 +757,15 @@
             display: none;
         }
         
-        /* Nuevos estilos para imágenes adjuntas */
         .contenedor-imagenes {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
-            margin-bottom: 10px; /* Margen inferior para separar del input */
+            margin-bottom: 10px;
             max-height: 100px;
             overflow-y: auto;
             padding: 5px;
-            width: 100%; /* Ocupa todo el ancho disponible */
+            width: 100%;
         }
         
         .imagen-adjunta {
@@ -813,14 +824,15 @@
 
         @media (max-width: 768px) {
             body {
-                padding: 10px;
+                padding: 0; /* Ajustado a 0 */
             }
             
             .contenedor {
-                height: 85vh;
-                min-height: 400px;
+                height: 100vh; /* Ajustado a 100vh */
+                min-height: auto; /* Ajustado a auto */
                 width: 100%;
-                border-radius: 15px;
+                border-radius: 0; /* Ajustado a 0 */
+                box-shadow: none; /* Eliminado */
             }
             
             .contenedor-chat {
@@ -906,13 +918,14 @@
 
         @media (max-width: 480px) {
             body {
-                padding: 5px;
+                padding: 0; /* Ajustado a 0 */
             }
             
             .contenedor {
-                height: 82vh;
-                min-height: 300px;
-                border-radius: 12px;
+                height: 100vh; /* Ajustado a 100vh */
+                min-height: auto; /* Ajustado a auto */
+                border-radius: 0; /* Ajustado a 0 */
+                box-shadow: none; /* Eliminado */
             }
             
             .cabecera {
@@ -975,7 +988,7 @@
 
         @media (max-height: 500px) {
             .contenedor {
-                height: 90vh;
+                height: 100vh; /* Ajustado a 100vh */
             }
         }
     </style>
@@ -1011,7 +1024,8 @@
                         <li>Usar el micrófono para hablarme</li>
                         <li>Subir imágenes con texto que quieras que analice</li>
                     </ol>
-                    ¡Prueba el nuevo botón "+" para subir imágenes!
+                    ¡Prueba el nuevo botón "+" para subir imágenes!<br><br>
+                    <strong>Nueva mejora:</strong> El área de entrada se desplazará automáticamente sobre el teclado.
                 </div>
                 <div class="timestamp-container">
                     <div class="timestamp">Ahora</div>
@@ -1036,13 +1050,11 @@
             <i class="fas fa-microphone-alt"></i> Escuchando... Habla ahora
         </div>
 
-        <div class="contenedor-entrada">
+        <div class="contenedor-entrada" id="contenedor-entrada">
             <input type="file" id="input-imagen" accept="image/*" multiple>
             <input type="file" id="input-camara" accept="image/*" capture="camera">
             
-            <!-- Div de imágenes adjuntas, ahora arriba del input de texto -->
             <div class="contenedor-imagenes" id="contenedor-imagenes">
-                <!-- Aquí se mostrarán las imágenes adjuntas -->
             </div>
 
             <div class="contenedor-input-botones">
@@ -1050,9 +1062,7 @@
                     <input type="text" id="entrada-usuario" placeholder="Pregúntale a Mar-IA..." autocomplete="off">
                 </div>
                 
-                <!-- Div de botones, ahora debajo del input de texto y con el botón de enviar -->
                 <div class="contenedor-botones-inferiores">
-                    <!-- Orden de derecha a izquierda: Más, Audio, Enviar -->
                     <button id="boton-mas" title="Subir imagen o tomar foto">
                         <i class="fas fa-plus"></i>
                     </button>
@@ -1104,6 +1114,7 @@
         const copyConfirmation = document.getElementById('copyConfirmation');
         const selectorVoz = document.getElementById('selector-voz');
         const contenedorImagenes = document.getElementById('contenedor-imagenes');
+        const contenedorEntrada = document.getElementById('contenedor-entrada');
 
         var historialChat = [ 
             {
@@ -1112,7 +1123,7 @@
             },
             {
                 role: "assistant",
-                content: "¡Hola! Soy Mar-IA, ahora con capacidad para leer texto de imágenes.<br><br>Puedes:<ol><li>Escribir tus preguntas</li><li>Usar el micrófono para hablarme</li><li>Subir imágenes con texto que quieras que analice</li></ol>¡Prueba el nuevo botón '+' para subir imágenes!"
+                content: "¡Hola! Soy Mar-IA, ahora con capacidad para leer texto de imágenes.<br><br>Puedes:<ol><li>Escribir tus preguntas</li><li>Usar el micrófono para hablarme</li><li>Subir imágenes con texto que quieras que analice</li></ol>¡Prueba el nuevo botón '+' para subir imágenes!<br><br><strong>Nueva mejora:</strong> El área de entrada se desplazará automáticamente sobre el teclado."
             }
         ];
 
@@ -1124,11 +1135,71 @@
         let recognizing = false;
         let lastMessageWasVoice = false; 
         let imagenesAdjuntas = [];
+        let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+        // Function to handle visual viewport resize (keyboard appearance/disappearance)
+        function manejarRedimensionamientoVisual() {
+            if (!isMobile || !window.visualViewport) return;
+
+            // Calculate the height of the virtual keyboard
+            const keyboardHeight = window.innerHeight - window.visualViewport.height;
+            
+            // Get the current height of the input container
+            const inputContainerHeight = contenedorEntrada.offsetHeight;
+
+            // Adjust the bottom position of the input container
+            contenedorEntrada.style.bottom = `${keyboardHeight}px`;
+            
+            // Adjust the padding-bottom of the chat container to make space for the input area
+            // Add a small extra margin for better spacing
+            contenedorChat.style.paddingBottom = `${inputContainerHeight + keyboardHeight + 15}px`;
+
+            // Scroll to the bottom of the chat to show the latest messages
+            contenedorChat.scrollTop = contenedorChat.scrollHeight;
+
+            // Adjust modal OCR position if open
+            if (modalOCR.style.display === 'flex') {
+                modalOCR.style.bottom = `${inputContainerHeight + keyboardHeight + 20}px`;
+            }
+        }
+
+        // Función para desplazar el contenedor de entrada (now calls the main resize handler)
+        function desplazarContenedorEntrada() {
+            manejarRedimensionamientoVisual();
+            // Add box shadow when input is focused and keyboard is likely open
+            contenedorEntrada.style.boxShadow = '0 -5px 20px rgba(0, 0, 0, 0.3)';
+        }
+
+        // Función para restaurar la posición del contenedor de entrada (now calls the main resize handler)
+        function restaurarContenedorEntrada() {
+            // Reset bottom to 0 and padding-bottom to its default
+            contenedorEntrada.style.bottom = '0px';
+            contenedorChat.style.paddingBottom = '15px'; // Reset to initial padding
+            contenedorEntrada.style.boxShadow = ''; // Remove shadow
+            // Ensure the chat scrolls to the bottom after restoration
+            contenedorChat.scrollTop = contenedorChat.scrollHeight;
+            // Reset modal OCR position
+            if (modalOCR.style.display === 'flex') {
+                modalOCR.style.bottom = `${contenedorEntrada.offsetHeight + 20}px`;
+            }
+        }
+
+        // ResizeObserver to react to changes in the input container's height (e.g., images added/removed)
+        const resizeObserver = new ResizeObserver(entries => {
+            for (let entry of entries) {
+                if (entry.target === contenedorEntrada) {
+                    // Re-run the visual resize handler to adjust chat padding
+                    manejarRedimensionamientoVisual();
+                }
+            }
+        });
 
         function inicializarOCR() {
             botonMas.addEventListener('click', () => {
                 modalOCR.style.display = 'flex';
                 overlay.style.display = 'block';
+                // Position modal relative to the current input container position
+                modalOCR.style.bottom = `${contenedorEntrada.offsetHeight + (window.innerHeight - window.visualViewport.height) + 20}px`;
             });
             
             overlay.addEventListener('click', () => {
@@ -1168,9 +1239,10 @@
                 mostrarImagenAdjunta(archivo);
             }
             
-            // Resetear inputs
             inputImagen.value = '';
             inputCamara.value = '';
+            // Trigger resize handling after images are added, as input container height might change
+            manejarRedimensionamientoVisual();
         }
         
         function mostrarImagenAdjunta(archivo) {
@@ -1211,16 +1283,14 @@
         }
         
         function eliminarImagenAdjunta(archivo, elemento) {
-            // Eliminar del array
             imagenesAdjuntas = imagenesAdjuntas.filter(img => img !== archivo);
-            
-            // Eliminar del DOM
             elemento.remove();
             
-            // Ocultar contenedor si no hay imágenes
             if (imagenesAdjuntas.length === 0) {
                 contenedorImagenes.style.display = 'none';
             }
+            // Trigger resize handling after images are removed
+            manejarRedimensionamientoVisual();
         }
         
         function formatearTamanioArchivo(bytes) {
@@ -1697,14 +1767,12 @@
                 sugerenciasDiv.remove();
             }
 
-            // Agregar mensaje de usuario
             let mensajeUsuario = mensaje;
             if (tieneImagenes) {
                 mensajeUsuario += ` (con ${imagenesAdjuntas.length} imagen${imagenesAdjuntas.length > 1 ? 'es' : ''} adjunta${imagenesAdjuntas.length > 1 ? 's' : ''})`;
             }
             agregarMensaje('usuario', mensajeUsuario);
             
-            // Procesar imágenes si las hay
             let textoImagenes = '';
             if (tieneImagenes) {
                 mostrarIndicadorEscribiendo();
@@ -1712,7 +1780,6 @@
                 ocultarIndicadorEscribiendo();
             }
             
-            // Construir el mensaje completo
             let mensajeCompleto = mensaje;
             if (textoImagenes) {
                 mensajeCompleto += `\n\n[Texto de imágenes adjuntas]:\n${textoImagenes}`;
@@ -1720,7 +1787,6 @@
             
             historialChat.push({ role: "user", content: mensajeCompleto });
             
-            // Limpiar después de enviar
             entradaUsuario.value = '';
             imagenesAdjuntas = [];
             contenedorImagenes.innerHTML = '';
@@ -1734,7 +1800,7 @@
 
         function alternarTema() {
             if (cuerpo.classList.contains('tema-claro')) {
-                cuerpo.classList.remove('tema-clado');
+                cuerpo.classList.remove('tema-claro');
                 alternadorTema.innerHTML = '<i class="fas fa-sun"></i>';
                 localStorage.setItem('tema', 'oscuro');
             } else {
@@ -1781,11 +1847,30 @@
             });
         });
 
+        // Eventos para desplazar el contenedor de entrada
+        entradaUsuario.addEventListener('focus', desplazarContenedorEntrada);
+        entradaUsuario.addEventListener('blur', restaurarContenedorEntrada);
+        
+        // Also restore when send button is clicked (in case focus is lost)
+        botonEnviar.addEventListener('click', restaurarContenedorEntrada);
+        botonGrabar.addEventListener('click', restaurarContenedorEntrada);
+        botonMas.addEventListener('click', restaurarContenedorEntrada);
+
+        // Listen for visual viewport resize events (crucial for virtual keyboard)
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener('resize', manejarRedimensionamientoVisual);
+        }
+
+        // Observe changes in the input container's size
+        resizeObserver.observe(contenedorEntrada);
+
         window.onload = () => {
             cargarTema();
-            entradaUsuario.focus();
             inicializarReconocimientoVoz();
             inicializarOCR();
+            entradaUsuario.focus();
+            // Initial adjustment in case of persistent keyboard or on page load
+            manejarRedimensionamientoVisual(); 
         };
     </script>
 </body>
