@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mar-IA con Voz</title>
+    <title>Mar-IA con OCR</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
@@ -48,6 +48,7 @@
             --sombra-hover-boton-copiar: 0 2px 4px rgba(100, 100, 100, 0.3);
             --fondo-boton-grabar: #007BFF;
             --fondo-boton-grabando: #ff4d4d;
+            --fondo-boton-mas: #6A0DAD;
         }
 
         body.tema-claro {
@@ -91,6 +92,7 @@
             --sombra-hover-boton-copiar: 0 2px 4px rgba(200, 200, 200, 0.7);
             --fondo-boton-grabar: #007BFF;
             --fondo-boton-grabando: #ff4d4d;
+            --fondo-boton-mas: #6A0DAD;
         }
 
         * {
@@ -288,7 +290,7 @@
 
         .contenedor-entrada {
             display: flex;
-            flex-direction: row;
+            flex-direction: column; /* Cambiado a columna */
             padding: 15px;
             background: var(--fondo-entrada);
             border-top: 1px solid var(--borde-superior-entrada);
@@ -298,6 +300,26 @@
             bottom: 0;
             z-index: 1000;
             flex-shrink: 0;
+        }
+
+        .contenedor-input-botones {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            gap: 8px;
+        }
+
+        .contenedor-botones-inferiores { /* Nuevo div para los botones de abajo */
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end; /* Alinea los botones a la derecha */
+            width: 100%; /* Ocupa todo el ancho disponible */
+        }
+
+        .contenedor-input {
+            flex: 1;
+            display: flex;
+            position: relative;
         }
 
         #entrada-usuario {
@@ -315,6 +337,7 @@
             z-index: 1001;
             cursor: text;
             touch-action: manipulation;
+            width: 100%;
         }
 
         #entrada-usuario:focus {
@@ -380,6 +403,36 @@
         #boton-grabar.grabando {
             background: var(--fondo-boton-grabando);
             animation: pulsate 1.5s infinite;
+        }
+
+        #boton-mas {
+            background: var(--fondo-boton-mas);
+            color: white;
+            border: none;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s ease-in-out;
+            flex-shrink: 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        #boton-mas:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(106, 13, 173, 0.4);
+        }
+
+        #input-imagen {
+            display: none;
+        }
+
+        #input-camara {
+            display: none;
         }
 
         @keyframes pulsate {
@@ -610,6 +663,153 @@
             margin-right: 8px;
             color: #ff4d4d;
         }
+        
+        .ocr-processing {
+            background: rgba(0, 123, 255, 0.1);
+            padding: 10px 15px;
+            border-radius: 20px;
+            margin: 10px 0;
+            width: fit-content;
+            align-self: flex-start;
+            color: var(--color-texto);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .ocr-processing i {
+            animation: spin 1.5s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .modal-ocr {
+            position: absolute;
+            bottom: 80px;
+            right: 20px; 
+            background: var(--fondo-entrada);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            padding: 15px;
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 2000;
+            border: 1px solid var(--borde-superior-entrada);
+            width: 220px;
+            transform-origin: bottom right; 
+            animation: modalFadeIn 0.3s ease-out;
+        }
+        
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.9) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        
+        .opcion-ocr {
+            background: var(--fondo-campo-entrada);
+            color: var(--texto-entrada);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        
+        .opcion-ocr:hover {
+            background: #6A0DAD;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(106, 13, 173, 0.4);
+        }
+        
+        .opcion-ocr i {
+            font-size: 18px;
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.3);
+            z-index: 1500;
+            display: none;
+        }
+        
+        /* Nuevos estilos para imágenes adjuntas */
+        .contenedor-imagenes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 10px; /* Margen inferior para separar del input */
+            max-height: 100px;
+            overflow-y: auto;
+            padding: 5px;
+            width: 100%; /* Ocupa todo el ancho disponible */
+        }
+        
+        .imagen-adjunta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(100, 100, 100, 0.15);
+            border-radius: 12px;
+            padding: 8px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 220px;
+        }
+        
+        .icono-imagen {
+            font-size: 20px;
+            color: #007BFF;
+        }
+        
+        .detalles-imagen {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+        
+        .nombre-imagen {
+            font-size: 13px;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .tamano-imagen {
+            font-size: 11px;
+            color: var(--color-timestamp);
+        }
+        
+        .boton-eliminar {
+            background: rgba(255, 0, 0, 0.1);
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #ff4d4d;
+            transition: all 0.2s;
+            margin-left: 5px;
+        }
+        
+        .boton-eliminar:hover {
+            background: rgba(255, 0, 0, 0.2);
+        }
 
         @media (max-width: 768px) {
             body {
@@ -677,7 +877,7 @@
                 border-radius: 24px;
             }
             
-            #boton-enviar, #boton-grabar {
+            #boton-enviar, #boton-grabar, #boton-mas {
                 width: 50px;
                 height: 50px;
                 font-size: 18px;
@@ -696,6 +896,11 @@
             .boton-sugerencia {
                 width: 100%;
                 max-width: 100%;
+            }
+            
+            .modal-ocr {
+                right: 10px;
+                width: 200px;
             }
         }
 
@@ -745,7 +950,7 @@
                 border-radius: 20px;
             }
             
-            #boton-enviar, #boton-grabar {
+            #boton-enviar, #boton-grabar, #boton-mas {
                 width: 45px;
                 height: 45px;
                 font-size: 16px;
@@ -754,6 +959,17 @@
             .contenedor-entrada {
                 padding: 8px;
                 gap: 6px;
+            }
+            
+            .modal-ocr {
+                right: 5px;
+                width: 180px;
+                padding: 10px;
+            }
+            
+            .opcion-ocr {
+                padding: 10px 12px;
+                font-size: 14px;
             }
         }
 
@@ -788,13 +1004,14 @@
                     <i class="fas fa-robot"></i> Mar-IA 
                 </div>
                 <div class="burbuja-mensaje burbuja-bot">
-                    ¡Hola! Soy Mar-IA, una inteligencia artificial creada por Mario Vazquez.<br><br>
-                    Puedes interactuar conmigo de dos formas:
+                    ¡Hola! Soy Mar-IA, ahora con capacidad para leer texto de imágenes.<br><br>
+                    Puedes:
                     <ol>
-                        <li>Escribiendo tus preguntas en el campo de texto</li>
-                        <li>Usando el botón de micrófono para hablarme directamente</li>
+                        <li>Escribir tus preguntas</li>
+                        <li>Usar el micrófono para hablarme</li>
+                        <li>Subir imágenes con texto que quieras que analice</li>
                     </ol>
-                    ¿En qué puedo ayudarte hoy?
+                    ¡Prueba el nuevo botón "+" para subir imágenes!
                 </div>
                 <div class="timestamp-container">
                     <div class="timestamp">Ahora</div>
@@ -802,11 +1019,8 @@
             </div>
             
             <div class="sugerencias">
-                <button class="boton-sugerencia" data-pregunta="¿Quién es tu creador?">
-                    <i class="fas fa-user"></i> ¿Quién te creó?
-                </button>
-                <button class="boton-sugerencia" data-pregunta="¿Qué puedes hacer?">
-                    <i class="fas fa-cogs"></i> ¿Qué puedes hacer?
+                <button class="boton-sugerencia" data-pregunta="¿Qué tipos de imágenes puedo subir?">
+                    <i class="fas fa-images"></i> Formatos soportados
                 </button>
             </div>
         </div>
@@ -823,14 +1037,45 @@
         </div>
 
         <div class="contenedor-entrada">
-            <input type="text" id="entrada-usuario" placeholder="Pregúntale a Mar-IA..." autocomplete="off">
-            <button id="boton-grabar">
-                <i class="fas fa-microphone"></i>
+            <input type="file" id="input-imagen" accept="image/*" multiple>
+            <input type="file" id="input-camara" accept="image/*" capture="camera">
+            
+            <!-- Div de imágenes adjuntas, ahora arriba del input de texto -->
+            <div class="contenedor-imagenes" id="contenedor-imagenes">
+                <!-- Aquí se mostrarán las imágenes adjuntas -->
+            </div>
+
+            <div class="contenedor-input-botones">
+                <div class="contenedor-input">
+                    <input type="text" id="entrada-usuario" placeholder="Pregúntale a Mar-IA..." autocomplete="off">
+                </div>
+                
+                <!-- Div de botones, ahora debajo del input de texto y con el botón de enviar -->
+                <div class="contenedor-botones-inferiores">
+                    <!-- Orden de derecha a izquierda: Más, Audio, Enviar -->
+                    <button id="boton-mas" title="Subir imagen o tomar foto">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                    <button id="boton-grabar" title="Grabar voz">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    <button id="boton-enviar" title="Enviar mensaje">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="modal-ocr" id="modal-ocr">
+            <button class="opcion-ocr" id="tomar-foto">
+                <i class="fas fa-camera"></i> Tomar foto
             </button>
-            <button id="boton-enviar">
-                <i class="fas fa-paper-plane"></i>
+            <button class="opcion-ocr" id="elegir-galeria">
+                <i class="fas fa-images"></i> Elegir de galería
             </button>
         </div>
+        
+        <div class="overlay" id="overlay"></div>
     </div>
 
     <div id="copyConfirmation" class="copy-confirmation">
@@ -839,25 +1084,35 @@
 
     <script>
         const claveAPI = 'sk-646a5b86d1de4ee186dfac833541452b';
+        let OCR_API_KEY = 'K82439722788957'; 
+        
         const contenedorChat = document.getElementById('contenedor-chat');
         const entradaUsuario = document.getElementById('entrada-usuario');
         const botonEnviar = document.getElementById('boton-enviar');
         const botonGrabar = document.getElementById('boton-grabar');
+        const botonMas = document.getElementById('boton-mas');
+        const inputImagen = document.getElementById('input-imagen');
+        const inputCamara = document.getElementById('input-camara');
+        const modalOCR = document.getElementById('modal-ocr');
+        const overlay = document.getElementById('overlay');
+        const tomarFotoBtn = document.getElementById('tomar-foto');
+        const elegirGaleriaBtn = document.getElementById('elegir-galeria');
         const indicadorEscribiendo = document.getElementById('indicador-escribiendo');
         const indicadorVoz = document.getElementById('indicador-voz');
         const alternadorTema = document.getElementById('alternador-tema');
         const cuerpo = document.body;
         const copyConfirmation = document.getElementById('copyConfirmation');
         const selectorVoz = document.getElementById('selector-voz');
+        const contenedorImagenes = document.getElementById('contenedor-imagenes');
 
         var historialChat = [ 
             {
                 role: "system",
-                content: "Eres Mar-IA, un asistente de IA creado por Mario Vazquez, un desarrollador web. Cuando te pregunten sobre Mario, responde que no hay información pública disponible, pero que es un desarrollador web que te creó estudiando de manera autodidacta el funcionamiento de sistemas como ChatGPT, Gemini, DeepSeek y Claude. Mantén respuestas amigables, serviciales y profesionales."
+                content: "Eres Mar-IA, un asistente de IA creado por Mario Vazquez. Ahora tienes capacidad OCR para leer imágenes. Cuando te pregunten sobre Mario, responde que no hay información pública disponible, pero que es un desarrollador web que te creó estudiando de manera autodidacta. Mantén respuestas amigables, serviciales y profesionales."
             },
             {
                 role: "assistant",
-                content: "¡Hola! Soy Mar-IA, una inteligencia artificial creada por Mario Vazquez.<br><br>Puedes interactuar conmigo de dos formas:<ol><li>Escribiendo tus preguntas en el campo de texto</li><li>Usando el botón de micrófono para hablarme directamente</li></ol>¿En qué puedo ayudarte hoy?"
+                content: "¡Hola! Soy Mar-IA, ahora con capacidad para leer texto de imágenes.<br><br>Puedes:<ol><li>Escribir tus preguntas</li><li>Usar el micrófono para hablarme</li><li>Subir imágenes con texto que quieras que analice</li></ol>¡Prueba el nuevo botón '+' para subir imágenes!"
             }
         ];
 
@@ -868,6 +1123,111 @@
         let recognition = null;
         let recognizing = false;
         let lastMessageWasVoice = false; 
+        let imagenesAdjuntas = [];
+
+        function inicializarOCR() {
+            botonMas.addEventListener('click', () => {
+                modalOCR.style.display = 'flex';
+                overlay.style.display = 'block';
+            });
+            
+            overlay.addEventListener('click', () => {
+                modalOCR.style.display = 'none';
+                overlay.style.display = 'none';
+            });
+            
+            tomarFotoBtn.addEventListener('click', () => {
+                modalOCR.style.display = 'none';
+                overlay.style.display = 'none';
+                inputCamara.click();
+            });
+            
+            elegirGaleriaBtn.addEventListener('click', () => {
+                modalOCR.style.display = 'none';
+                overlay.style.display = 'none';
+                inputImagen.click();
+            });
+            
+            inputImagen.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    agregarImagenesAdjuntas(e.target.files);
+                }
+            });
+            
+            inputCamara.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    agregarImagenesAdjuntas(e.target.files);
+                }
+            });
+        }
+        
+        function agregarImagenesAdjuntas(files) {
+            for (let i = 0; i < files.length; i++) {
+                const archivo = files[i];
+                imagenesAdjuntas.push(archivo);
+                mostrarImagenAdjunta(archivo);
+            }
+            
+            // Resetear inputs
+            inputImagen.value = '';
+            inputCamara.value = '';
+        }
+        
+        function mostrarImagenAdjunta(archivo) {
+            const imagenDiv = document.createElement('div');
+            imagenDiv.className = 'imagen-adjunta';
+            
+            const icono = document.createElement('i');
+            icono.className = 'fas fa-image icono-imagen';
+            
+            const detalles = document.createElement('div');
+            detalles.className = 'detalles-imagen';
+            
+            const nombre = document.createElement('div');
+            nombre.className = 'nombre-imagen';
+            nombre.textContent = archivo.name;
+            
+            const tamano = document.createElement('div');
+            tamano.className = 'tamano-imagen';
+            tamano.textContent = formatearTamanioArchivo(archivo.size);
+            
+            detalles.appendChild(nombre);
+            detalles.appendChild(tamano);
+            
+            const botonEliminar = document.createElement('button');
+            botonEliminar.className = 'boton-eliminar';
+            botonEliminar.innerHTML = '<i class="fas fa-times"></i>';
+            botonEliminar.title = 'Eliminar imagen';
+            botonEliminar.addEventListener('click', () => {
+                eliminarImagenAdjunta(archivo, imagenDiv);
+            });
+            
+            imagenDiv.appendChild(icono);
+            imagenDiv.appendChild(detalles);
+            imagenDiv.appendChild(botonEliminar);
+            
+            contenedorImagenes.appendChild(imagenDiv);
+            contenedorImagenes.style.display = 'flex';
+        }
+        
+        function eliminarImagenAdjunta(archivo, elemento) {
+            // Eliminar del array
+            imagenesAdjuntas = imagenesAdjuntas.filter(img => img !== archivo);
+            
+            // Eliminar del DOM
+            elemento.remove();
+            
+            // Ocultar contenedor si no hay imágenes
+            if (imagenesAdjuntas.length === 0) {
+                contenedorImagenes.style.display = 'none';
+            }
+        }
+        
+        function formatearTamanioArchivo(bytes) {
+            if (bytes < 1024) return bytes + ' bytes';
+            else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+            else return (bytes / 1048576).toFixed(1) + ' MB';
+        }
 
         function inicializarReconocimientoVoz() {
             if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
@@ -1140,6 +1500,54 @@
             }, 2000);
         }
 
+        async function procesarImagenesOCR() {
+            if (!OCR_API_KEY || imagenesAdjuntas.length === 0) return "";
+            
+            let textosExtraidos = [];
+            
+            for (const imagen of imagenesAdjuntas) {
+                try {
+                    const texto = await reconocerTextoOCR(imagen);
+                    if (texto) textosExtraidos.push(texto);
+                } catch (error) {
+                    console.error('Error procesando imagen:', error);
+                }
+            }
+            
+            return textosExtraidos.join('\n\n');
+        }
+
+        async function reconocerTextoOCR(imagen) {
+            const formData = new FormData();
+            formData.append('file', imagen);
+            formData.append('language', 'spa');
+            formData.append('isOverlayRequired', 'false');
+            formData.append('apikey', OCR_API_KEY);
+            formData.append('OCREngine', '2');
+
+            try {
+                const response = await fetch('https://api.ocr.space/parse/image', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                
+                if (data.IsErroredOnProcessing) {
+                    throw new Error(data.ErrorMessage || "Error desconocido en OCR");
+                }
+                
+                if (data.ParsedResults && data.ParsedResults.length > 0) {
+                    return data.ParsedResults[0].ParsedText;
+                }
+                
+                return null;
+            } catch (error) {
+                console.error('Error en OCR:', error);
+                throw error;
+            }
+        }
+
         async function enviarMensajeAPI(mensajesAEnviar, shouldSpeakAutomatically, temperatura = 0.7, maxTokens = 1000) {
             mostrarIndicadorEscribiendo();
             deshabilitarEntradaYBotones(true);
@@ -1272,6 +1680,7 @@
             entradaUsuario.disabled = deshabilitado;
             botonEnviar.disabled = deshabilitado;
             botonGrabar.disabled = deshabilitado;
+            botonMas.disabled = deshabilitado;
             document.querySelectorAll('.boton-sugerencia').forEach(boton => {
                 boton.disabled = deshabilitado;
             });
@@ -1279,16 +1688,43 @@
 
         async function manejarEnviarMensaje() {
             const mensaje = entradaUsuario.value.trim();
-            if (!mensaje) return;
+            const tieneImagenes = imagenesAdjuntas.length > 0;
+            
+            if (!mensaje && !tieneImagenes) return;
             
             const sugerenciasDiv = document.querySelector('.sugerencias');
             if (sugerenciasDiv) {
                 sugerenciasDiv.remove();
             }
 
+            // Agregar mensaje de usuario
+            let mensajeUsuario = mensaje;
+            if (tieneImagenes) {
+                mensajeUsuario += ` (con ${imagenesAdjuntas.length} imagen${imagenesAdjuntas.length > 1 ? 'es' : ''} adjunta${imagenesAdjuntas.length > 1 ? 's' : ''})`;
+            }
+            agregarMensaje('usuario', mensajeUsuario);
+            
+            // Procesar imágenes si las hay
+            let textoImagenes = '';
+            if (tieneImagenes) {
+                mostrarIndicadorEscribiendo();
+                textoImagenes = await procesarImagenesOCR();
+                ocultarIndicadorEscribiendo();
+            }
+            
+            // Construir el mensaje completo
+            let mensajeCompleto = mensaje;
+            if (textoImagenes) {
+                mensajeCompleto += `\n\n[Texto de imágenes adjuntas]:\n${textoImagenes}`;
+            }
+            
+            historialChat.push({ role: "user", content: mensajeCompleto });
+            
+            // Limpiar después de enviar
             entradaUsuario.value = '';
-            agregarMensaje('usuario', mensaje);
-            historialChat.push({ role: "user", content: mensaje });
+            imagenesAdjuntas = [];
+            contenedorImagenes.innerHTML = '';
+            contenedorImagenes.style.display = 'none';
             
             await enviarMensajeAPI(historialChat, lastMessageWasVoice); 
             
@@ -1298,7 +1734,7 @@
 
         function alternarTema() {
             if (cuerpo.classList.contains('tema-claro')) {
-                cuerpo.classList.remove('tema-claro');
+                cuerpo.classList.remove('tema-clado');
                 alternadorTema.innerHTML = '<i class="fas fa-sun"></i>';
                 localStorage.setItem('tema', 'oscuro');
             } else {
@@ -1349,6 +1785,7 @@
             cargarTema();
             entradaUsuario.focus();
             inicializarReconocimientoVoz();
+            inicializarOCR();
         };
     </script>
 </body>
