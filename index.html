@@ -2,97 +2,74 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mar-IA con OCR Mejorado</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
+    <title>Mar-IA</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         :root {
-            --color-fondo: #1A1A1A;
-            --color-contenedor: #2C2C2C;
-            --color-cabecera: #222222;
+            font-size: 62.5%; /* 1rem = 10px */
+            --color-fondo: #121212;
+            --color-contenedor: #1E1E1E;
+            --color-cabecera: #1E1E1E;
             --color-texto: #E0E0E0;
             --color-texto-cabecera: #FFFFFF;
-            --fondo-info-api: rgba(70, 130, 180, 0.1);
-            --borde-info-api: #4682B4;
-            --fondo-chat: #222222;
-            --fondo-burbuja-usuario: linear-gradient(135deg, #4A4A4A, #3A3A3A);
+            --fondo-chat: #121212;
+            --fondo-burbuja-usuario: linear-gradient(135deg, #5A5A5A, #4A4A4A);
             --texto-burbuja-usuario: #FFFFFF;
-            --fondo-burbuja-bot: #3A3A3A;
+            --fondo-burbuja-bot: #2C2C2C;
             --texto-burbuja-bot: #E0E0E0;
             --borde-burbuja-bot: rgba(255, 255, 255, 0.1);
-            --fondo-entrada: #222222;
-            --borde-superior-entrada: rgba(255, 255, 255, 0.05);
-            --fondo-campo-entrada: #3A3A3A;
+            --fondo-entrada: #1E1E1E;
+            --borde-superior-entrada: rgba(255, 255, 255, 0.1);
+            --fondo-campo-entrada: #2C2C2C;
             --texto-entrada: #FFFFFF;
             --texto-placeholder: #A0A0A0;
-            --sombra-foco-entrada: 0 0 0 2px rgba(0, 123, 255, 0.3);
-            --fondo-boton-enviar: #007BFF;
+            --sombra-foco-entrada: 0 0 0 2px rgba(128, 0, 128, 0.5);
+            --fondo-boton-enviar: #8A2BE2;
             --texto-boton-enviar: white;
-            --sombra-hover-boton-enviar: 0 4px 8px rgba(0, 123, 255, 0.4);
-            --fondo-deshabilitado-boton-enviar: rgba(0, 123, 255, 0.3);
-            --fondo-boton-caracteristica: #6A0DAD;
-            --texto-boton-caracteristica: white;
-            --sombra-hover-boton-caracteristica: 0 4px 8px rgba(106, 13, 173, 0.4);
-            --fondo-deshabilitado-boton-caracteristica: rgba(106, 13, 173, 0.3);
-            --fondo-indicador-escribiendo: #3A3A3A;
-            --punto-indicador-escribiendo: #E0E0E0;
+            --sombra-hover-boton-enviar: 0 4px 12px rgba(138, 43, 226, 0.5);
+            --fondo-deshabilitado-boton-enviar: rgba(138, 43, 226, 0.3);
+            --fondo-boton-accion: #2C2C2C;
+            --texto-boton-accion: #E0E0E0;
+            --fondo-boton-grabando: #E53935;
             --color-timestamp: #A0A0A0;
             --color-alternador-tema: #FFFFFF;
-            --color-hover-alternador-tema: #007BFF;
-            --fondo-boton-voz: rgba(0, 123, 255, 0.2);
-            --texto-boton-voz: #007BFF;
-            --sombra-hover-boton-voz: 0 2px 4px rgba(0, 123, 255, 0.3);
-            --fondo-boton-copiar: rgba(100, 100, 100, 0.2);
-            --texto-boton-copiar: #CCCCCC;
-            --sombra-hover-boton-copiar: 0 2px 4px rgba(100, 100, 100, 0.3);
-            --fondo-boton-grabar: #007BFF;
-            --fondo-boton-grabando: #ff4d4d;
-            --fondo-boton-mas: #6A0DAD;
+            --fondo-boton-control: #2C2C2C;
+            --fondo-adjunto: #2C2C2C;
+            --borde-adjunto: #444;
         }
 
         body.tema-claro {
-            --color-fondo: #E0F2F7;
+            --color-fondo: #F5F5F5;
             --color-contenedor: #FFFFFF;
-            --color-cabecera: #007BFF;
+            --color-cabecera: #FFFFFF;
             --color-texto: #333333;
-            --color-texto-cabecera: #FFFFFF;
-            --fondo-info-api: rgba(0, 123, 255, 0.1);
-            --borde-info-api: #007BFF;
-            --fondo-chat: #FFFFFF;
-            --fondo-burbuja-usuario: #007BFF;
+            --color-texto-cabecera: #333333;
+            --fondo-chat: #F5F5F5;
+            --fondo-burbuja-usuario: #8A2BE2;
             --texto-burbuja-usuario: #FFFFFF;
-            --fondo-burbuja-bot: #F0F8FF;
+            --fondo-burbuja-bot: #E9E9EB;
             --texto-burbuja-bot: #333333;
-            --borde-burbuja-bot: #ADD8E6;
-            --fondo-entrada: #F8F8F8;
-            --borde-superior-entrada: #CCCCCC;
-            --fondo-campo-entrada: #FFFFFF;
+            --borde-burbuja-bot: #D1D1D1;
+            --fondo-entrada: #FFFFFF;
+            --borde-superior-entrada: #E0E0E0;
+            --fondo-campo-entrada: #F0F0F0;
             --texto-entrada: #333333;
             --texto-placeholder: #666666;
-            --sombra-foco-entrada: 0 0 0 2px rgba(0, 123, 255, 0.3);
-            --fondo-boton-enviar: #007BFF;
+            --sombra-foco-entrada: 0 0 0 2px rgba(138, 43, 226, 0.3);
+            --fondo-boton-enviar: #8A2BE2;
             --texto-boton-enviar: #FFFFFF;
-            --sombra-hover-boton-enviar: 0 4px 8px rgba(0, 123, 255, 0.2);
-            --fondo-deshabilitado-boton-enviar: #B0C4DE;
-            --fondo-boton-caracteristica: #0056b3;
-            --texto-boton-caracteristica: #FFFFFF;
-            --sombra-hover-boton-caracteristica: 0 4px 8px rgba(0, 86, 179, 0.2);
-            --fondo-deshabilitado-boton-caracteristica: #B0C4DE;
-            --fondo-indicador-escribiendo: #F0F8FF;
-            --punto-indicador-escribiendo: #007BFF;
+            --sombra-hover-boton-enviar: 0 4px 12px rgba(138, 43, 226, 0.3);
+            --fondo-deshabilitado-boton-enviar: #D1B2FF;
+            --fondo-boton-accion: #E9E9EB;
+            --texto-boton-accion: #333333;
+            --fondo-boton-grabando: #D32F2F;
             --color-timestamp: #666666;
-            --color-alternador-tema: #FFFFFF;
-            --color-hover-alternador-tema: #0056b3;
-            --fondo-boton-voz: rgba(0, 123, 255, 0.1);
-            --texto-boton-voz: #0056b3;
-            --sombra-hover-boton-voz: 0 2px 4px rgba(0, 123, 255, 0.15);
-            --fondo-boton-copiar: rgba(200, 200, 200, 0.5);
-            --texto-boton-copiar: #666666;
-            --sombra-hover-boton-copiar: 0 2px 4px rgba(200, 200, 200, 0.7);
-            --fondo-boton-grabar: #007BFF;
-            --fondo-boton-grabando: #ff4d4d;
-            --fondo-boton-mas: #6A0DAD;
+            --color-alternador-tema: #333333;
+            --fondo-boton-control: #F0F0F0;
+            --fondo-adjunto: #F0F0F0;
+            --borde-adjunto: #DDD;
         }
 
         * {
@@ -100,1778 +77,827 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            height: 100%;
         }
 
         body {
             background: var(--color-fondo);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 0; /* Ajustado a 0 para que el contenedor ocupe todo el espacio */
             color: var(--color-texto);
-            transition: background 0.5s ease;
-            background-image: radial-gradient(circle at 25% 25%, rgba(70,130,180,0.1) 0%, transparent 55%), radial-gradient(circle at 75% 75%, rgba(106,13,173,0.1) 0%, transparent 55%);
+            font-size: 1.6rem;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
         }
 
         .contenedor {
-            width: 100%;
-            max-width: 100%; /* Ajustado a 100% para ocupar todo el ancho */
-            background: var(--color-contenedor);
-            border-radius: 0; /* Ajustado a 0 para que ocupe las esquinas */
-            box-shadow: none; /* Eliminado el box-shadow para un look más limpio */
-            overflow: hidden;
-            border: 1px solid var(--borde-superior-entrada);
             display: flex;
             flex-direction: column;
-            height: 100vh; /* Ajustado a 100vh para ocupar todo el alto */
-            min-height: auto; /* Ajustado a auto para mayor flexibilidad */
-            position: relative;
+            height: 100%;
+            width: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+            background: var(--color-contenedor);
         }
 
         .cabecera {
-            background: var(--color-cabecera);
-            color: var(--color-texto-cabecera);
-            padding: 15px 20px;
-            text-align: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            flex-shrink: 0;
+            padding: 1rem 1.5rem;
             border-bottom: 1px solid var(--borde-superior-entrada);
             display: flex;
-            flex-direction: row;
             align-items: center;
             justify-content: space-between;
-            flex-shrink: 0;
         }
 
         .cabecera .titulo {
             display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            margin-right: auto;
-            flex-shrink: 1;
-            min-width: 0;
+            align-items: center;
+            gap: 1rem;
         }
 
         .cabecera .titulo h1 {
-            font-size: 28px;
+            font-size: 1.8rem;
             margin: 0;
-            display: flex;
-            align-items: center;
-            gap: 15px;
         }
-
-        .cabecera .titulo h1 i {
-            color: #6A0DAD;
-            font-size: 32px;
+        
+        .cabecera .titulo i {
+            color: #8A2BE2;
+            font-size: 2rem;
         }
-
-        .cabecera .titulo .subtitle {
-            font-size: 16px;
+        
+        .cabecera .subtitle {
+            font-size: 1.2rem;
             opacity: 0.8;
-            margin-top: 5px;
             color: #aaa;
-            letter-spacing: 1px;
+            margin-top: 0.2rem;
         }
 
         .controles-cabecera {
-            position: static;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 1rem;
+        }
+        
+        .boton-control {
+            background: var(--fondo-boton-control);
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: var(--color-texto);
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background 0.2s;
+        }
+        .boton-control:hover {
+            background: var(--fondo-boton-accion);
+        }
+
+        .selector-voz-container {
+            position: relative;
+        }
+
+        #selector-voz {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            opacity: 0;
+            cursor: pointer;
         }
 
         .contenedor-chat {
             flex-grow: 1;
             overflow-y: auto;
-            padding: 15px 20px;
-            background: var(--fondo-chat);
+            padding: 2rem;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 2rem;
             scroll-behavior: smooth;
-            background-image: radial-gradient(circle at 10% 20%, rgba(106,13,173,0.03) 0%, transparent 20%), radial-gradient(circle at 90% 80%, rgba(70,130,180,0.03) 0%, transparent 20%);
-            /* padding-bottom will be set by JS */
-            transition: padding-bottom 0.3s ease-out;
         }
 
         .mensaje {
             display: flex;
             flex-direction: column;
+            max-width: 90%;
             animation: fadeIn 0.3s ease;
         }
 
-        .mensaje-usuario {
-            align-items: flex-end;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(1rem); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .mensaje-bot {
-            align-items: flex-start;
-        }
+        .mensaje-usuario { align-self: flex-end; align-items: flex-end; }
+        .mensaje-bot { align-self: flex-start; align-items: flex-start; }
 
         .burbuja-mensaje {
-            max-width: 85%;
-            padding: 12px 18px;
-            border-radius: 15px;
-            position: relative;
-            line-height: 1.5;
+            padding: 1.2rem 1.8rem;
+            border-radius: 1.8rem;
+            line-height: 1.6;
             word-wrap: break-word;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         .burbuja-usuario {
             background: var(--fondo-burbuja-usuario);
             color: var(--texto-burbuja-usuario);
-            border-bottom-right-radius: 5px;
+            border-bottom-right-radius: 0.5rem;
         }
 
         .burbuja-bot {
             background: var(--fondo-burbuja-bot);
             color: var(--texto-burbuja-bot);
-            border-bottom-left-radius: 5px;
             border: 1px solid var(--borde-burbuja-bot);
+            border-bottom-left-radius: 0.5rem;
+        }
+        
+        .burbuja-bot ul, .burbuja-bot ol { padding-left: 2rem; margin: 1rem 0; }
+        .burbuja-bot li { margin-bottom: 0.5rem; }
+        .burbuja-bot strong { font-weight: bold; }
+        .burbuja-bot pre { background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 0.8rem; overflow-x: auto; margin: 1rem 0; }
+        .burbuja-bot code { font-family: monospace; }
+        
+        .info-mensaje { display: flex; align-items: center; margin-bottom: 0.5rem; font-size: 1.4rem; color: var(--color-timestamp); gap: 0.8rem; }
+        .timestamp-container { display: flex; align-items: center; gap: 0.8rem; margin-top: 0.8rem; }
+        .timestamp { font-size: 1.2rem; color: var(--color-timestamp); }
+        .boton-accion-mensaje { background: none; border: none; width: 2.8rem; height: 2.8rem; border-radius: 50%; cursor: pointer; font-size: 1.4rem; display: flex; justify-content: center; align-items: center; color: var(--color-timestamp); transition: background 0.2s; }
+        .boton-accion-mensaje:hover { background: rgba(255,255,255,0.1); }
+
+        .contenedor-entrada-wrapper {
+            flex-shrink: 0;
+            padding: 1rem;
+            background: transparent;
         }
 
-        .burbuja-bot ul, .burbuja-bot ol {
-            padding-left: 20px;
-            margin: 10px 0;
-        }
-
-        .burbuja-bot li {
-            margin-bottom: 5px;
-        }
-
-        .burbuja-bot strong {
-            font-weight: bold;
-        }
-
-        .burbuja-bot em {
-            font-style: italic;
-        }
-
-        .burbuja-bot code {
-            background: rgba(0,0,0,0.1);
-            padding: 2px 5px;
-            border-radius: 4px;
-            font-family: monospace;
-        }
-
-        .burbuja-bot pre {
-            background: rgba(0,0,0,0.1);
-            padding: 10px;
-            border-radius: 8px;
-            overflow-x: auto;
-            margin: 10px 0;
-        }
-
-        .burbuja-bot blockquote {
-            border-left: 3px solid var(--borde-info-api);
-            padding-left: 10px;
-            margin: 10px 0;
-            color: var(--color-timestamp);
-        }
-
-        .info-mensaje {
-            display: flex;
-            align-items: center;
-            margin-bottom: 5px;
-            font-size: 14px;
-            color: var(--color-timestamp);
-        }
-
-        .info-mensaje i {
-            margin-right: 8px;
-            font-size: 16px;
-        }
-
-        /* Contenedor de entrada - Cambiado a fixed */
         .contenedor-entrada {
             display: flex;
             flex-direction: column;
-            padding: 15px;
+            gap: 1rem;
+            width: 100%;
             background: var(--fondo-entrada);
-            border-top: 1px solid var(--borde-superior-entrada);
-            gap: 10px;
-            align-items: center;
-            position: fixed; /* Changed from sticky to fixed */
-            left: 0;
-            right: 0;
-            bottom: 0; /* Will be adjusted by JS */
-            z-index: 1000;
-            flex-shrink: 0;
-            transition: bottom 0.3s ease-out, box-shadow 0.3s ease; /* Transition for bottom property */
-            width: 100%; /* Ensure it spans full width */
-            max-width: 1000px; /* Match main container max-width if needed, but fixed is relative to viewport */
-            margin: 0 auto; /* Center it if max-width is applied */
-            box-sizing: border-box; /* Include padding in width */
+            border: 1px solid var(--borde-superior-entrada);
+            border-radius: 2.4rem;
+            padding: 1rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
         
-        /* Removed .desplazado class, as positioning is now dynamic via JS */
-
-        .contenedor-input-botones {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            gap: 8px;
+        .contenedor-adjuntos {
+            display: none; /* Oculto por defecto */
+            overflow-x: auto;
+            overflow-y: hidden;
+            white-space: nowrap;
+            padding-bottom: 1rem;
+            scrollbar-width: thin;
         }
+        .contenedor-adjuntos::-webkit-scrollbar { height: 5px; }
+        .contenedor-adjuntos::-webkit-scrollbar-thumb { background: #555; border-radius: 10px; }
 
-        .contenedor-botones-inferiores {
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-            width: 100%;
+        .adjunto-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: var(--fondo-adjunto);
+            border: 1px solid var(--borde-adjunto);
+            border-radius: 1.2rem;
+            padding: 0.8rem 1.2rem;
+            max-width: 22rem;
+            margin-right: 1rem;
         }
+        
+        .icono-adjunto { font-size: 2rem; color: #8A2BE2; }
+        .detalles-adjunto { display: flex; flex-direction: column; min-width: 0; }
+        .nombre-adjunto { font-size: 1.3rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .tamano-adjunto { font-size: 1.1rem; color: var(--color-timestamp); }
+        .boton-eliminar { background: transparent; border: none; border-radius: 50%; width: 2.4rem; height: 2.4rem; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #aaa; transition: all 0.2s; }
+        .boton-eliminar:hover { color: #E53935; background: rgba(255, 0, 0, 0.1); }
 
-        .contenedor-input {
-            flex: 1;
-            display: flex;
-            position: relative;
+        .input-area {
+            background-color: var(--fondo-campo-entrada);
+            border: 1px solid var(--borde-adjunto);
+            border-radius: 2.4rem;
+            padding: 1rem 1.5rem;
+            transition: border-color 0.3s;
+        }
+        .input-area:focus-within {
+            border-color: #8A2BE2;
         }
 
         #entrada-usuario {
-            flex: 1;
-            padding: 15px 20px;
-            border: 1px solid transparent;
-            border-radius: 28px;
-            background: var(--fondo-campo-entrada);
-            color: var(--texto-entrada);
-            font-size: 16px;
-            outline: none;
-            transition: all 0.3s ease;
-            min-width: 150px;
-            position: relative; 
-            z-index: 1001;
-            cursor: text;
-            touch-action: manipulation;
             width: 100%;
+            flex-grow: 1;
+            border: none;
+            background: transparent;
+            color: var(--texto-entrada);
+            font-size: 1.6rem;
+            outline: none;
+            resize: none;
+            max-height: 15rem;
+            overflow-y: auto;
+            scrollbar-width: none;
+        }
+        #entrada-usuario::-webkit-scrollbar { display: none; }
+        #entrada-usuario::placeholder { color: var(--texto-placeholder); }
+
+        .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 1rem;
         }
 
-        #entrada-usuario:focus {
-            border-color: #007BFF;
-            box-shadow: var(--sombra-foco-entrada);
+        .boton-input {
+            background: var(--fondo-boton-accion);
+            color: var(--texto-boton-accion);
+            border: none;
+            width: 4.8rem;
+            height: 4.8rem;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
         }
-
-        #entrada-usuario::placeholder {
-            color: var(--texto-placeholder);
+        .boton-input:hover {
+            transform: scale(1.05);
         }
 
         #boton-enviar {
             background: var(--fondo-boton-enviar);
             color: var(--texto-boton-enviar);
-            border: none;
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: all 0.2s ease-in-out;
-            flex-shrink: 0;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
-
         #boton-enviar:hover {
-            transform: translateY(-2px);
+            transform: scale(1.1);
             box-shadow: var(--sombra-hover-boton-enviar);
         }
-
         #boton-enviar:disabled {
             background: var(--fondo-deshabilitado-boton-enviar);
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
         }
-
-        #boton-grabar {
-            background: var(--fondo-boton-grabar);
-            color: white;
-            border: none;
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: all 0.2s ease-in-out;
-            flex-shrink: 0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        #boton-grabar:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--sombra-hover-boton-enviar);
-        }
-
+        
         #boton-grabar.grabando {
             background: var(--fondo-boton-grabando);
             animation: pulsate 1.5s infinite;
         }
-
-        #boton-mas {
-            background: var(--fondo-boton-mas);
-            color: white;
-            border: none;
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: all 0.2s ease-in-out;
-            flex-shrink: 0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        #boton-mas:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(106, 13, 173, 0.4);
-        }
-
-        #input-imagen {
-            display: none;
-        }
-
-        #input-camara {
-            display: none;
-        }
-
-        @keyframes pulsate {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
+        @keyframes pulsate { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
 
         .indicador-escribiendo {
-            display: none;
-            padding: 10px 15px;
-            background: var(--fondo-indicador-escribiendo);
-            border-radius: 20px;
-            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.5rem;
+            background: var(--fondo-burbuja-bot);
+            border-radius: 1.8rem;
             width: fit-content;
             color: var(--texto-burbuja-bot);
             align-self: flex-start;
-            position: sticky;
-            bottom: 80px; /* Adjust if needed, relative to chat container */
-            z-index: 50;
-        }
-
-        .indicador-escribiendo span {
-            height: 10px;
-            width: 10px;
-            background: var(--punto-indicador-escribiendo);
-            border-radius: 50%;
-            display: inline-block;
-            margin: 0 2px;
-            animation: bounce 1.3s infinite;
-        }
-
-        .indicador-escribiendo span:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .indicador-escribiendo span:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-        }
-
-        .timestamp-container {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 5px;
-        }
-
-        .timestamp {
-            font-size: 12px;
-            opacity: 0.8;
-            color: var(--color-timestamp);
-        }
-
-        .boton-voz, .boton-copiar {
-            border: none;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 14px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: all 0.2s ease-in-out;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        .boton-voz {
-            background: var(--fondo-boton-voz);
-            color: var(--texto-boton-voz);
-        }
-
-        .boton-copiar {
-            background: var(--fondo-boton-copiar);
-            color: var(--texto-boton-copiar);
-        }
-
-        .boton-voz:hover {
-            transform: translateY(-1px);
-            box-shadow: var(--sombra-hover-boton-voz);
-        }
-        
-        .boton-copiar:hover {
-            transform: translateY(-1px);
-            box-shadow: var(--sombra-hover-boton-copiar);
-        }
-
-        #alternador-tema {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--color-alternador-tema);
-            transition: color 0.3s ease;
-            padding: 0;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            background: var(--fondo-boton-copiar);
-        }
-
-        #alternador-tema:hover {
-            color: var(--color-hover-alternador-tema);
-            box-shadow: var(--sombra-hover-boton-copiar);
-        }
-
-        .selector-voz-container {
-            position: relative;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--fondo-boton-copiar);
-            color: var(--texto-boton-copiar);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.2s ease-in-out;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        .selector-voz-container:hover {
-            transform: translateY(-1px);
-            box-shadow: var(--sombra-hover-boton-copiar);
-        }
-
-        .selector-voz-container i {
-            font-size: 18px;
-            z-index: 1;
-        }
-
-        #selector-voz {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            cursor: pointer;
-            z-index: 2;
-        }
-
-        #selector-voz option {
-            opacity: 1;
-            background: var(--fondo-campo-entrada);
-            color: var(--texto-entrada);
-        }
-
-        .sugerencias {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 15px;
-            justify-content: center;
-        }
-
-        .boton-sugerencia {
-            background: var(--fondo-boton-caracteristica);
-            color: var(--texto-boton-caracteristica);
-            border: none;
-            border-radius: 20px;
-            padding: 8px 16px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            flex: 1;
-            min-width: 120px;
-            max-width: 200px;
-            text-align: center;
-        }
-
-        .boton-sugerencia:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--sombra-hover-boton-caracteristica);
-        }
-
-        .boton-sugerencia:disabled {
-            background: var(--fondo-deshabilitado-boton-caracteristica);
-            cursor: not-allowed;
-        }
-
-        .copy-confirmation {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-size: 14px;
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-            z-index: 1000;
-            pointer-events: none;
-        }
-
-        .copy-confirmation.show {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .indicador-voz {
-            display: none;
-            padding: 10px 15px;
-            background: var(--fondo-indicador-escribiendo);
-            border-radius: 20px;
-            margin: 10px 0;
-            width: fit-content;
-            color: var(--texto-burbuja-bot);
-            align-self: flex-start;
-            position: sticky;
-            bottom: 80px; /* Adjust if needed, relative to chat container */
-            z-index: 50;
             animation: fadeIn 0.3s ease;
         }
+        .indicador-escribiendo .puntos span { height: 0.8rem; width: 0.8rem; background: var(--color-timestamp); border-radius: 50%; display: inline-block; margin: 0 0.2rem; animation: bounce 1.3s infinite; }
+        .indicador-escribiendo .puntos span:nth-child(2) { animation-delay: 0.2s; }
+        .indicador-escribiendo .puntos span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-0.5rem); } }
 
-        .indicador-voz i {
-            margin-right: 8px;
-            color: #ff4d4d;
-        }
-        
-        .ocr-processing {
-            background: rgba(0, 123, 255, 0.1);
-            padding: 10px 15px;
-            border-radius: 20px;
-            margin: 10px 0;
-            width: fit-content;
-            align-self: flex-start;
-            color: var(--color-texto);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .ocr-processing i {
-            animation: spin 1.5s linear infinite;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
         .modal-ocr {
-            position: fixed; /* Changed from absolute to fixed relative to viewport */
-            bottom: calc(var(--input-area-height, 100px) + 20px); /* Position above input area */
-            right: 20px; 
+            position: fixed;
+            bottom: 10rem;
+            left: 2rem;
             background: var(--fondo-entrada);
-            border-radius: 15px;
+            border-radius: 1.5rem;
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            padding: 15px;
+            padding: 1rem;
             display: none;
             flex-direction: column;
-            gap: 12px;
+            gap: 1rem;
             z-index: 2000;
             border: 1px solid var(--borde-superior-entrada);
-            width: 220px;
-            transform-origin: bottom right; 
-            animation: modalFadeIn 0.3s ease-out;
         }
         
-        @keyframes modalFadeIn {
-            from { opacity: 0; transform: scale(0.9) translateY(10px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
-        }
+        .opcion-ocr { background: var(--fondo-campo-entrada); color: var(--texto-entrada); border: none; border-radius: 1.2rem; padding: 1.2rem 1.5rem; display: flex; align-items: center; gap: 1.2rem; cursor: pointer; transition: all 0.2s; font-weight: 500; }
+        .opcion-ocr:hover { background: #8A2BE2; color: white; }
+        .opcion-ocr i { font-size: 1.8rem; }
         
-        .opcion-ocr {
-            background: var(--fondo-campo-entrada);
-            color: var(--texto-entrada);
-            border: none;
-            border-radius: 12px;
-            padding: 12px 15px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-weight: 500;
-        }
+        .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1500; display: none; }
         
-        .opcion-ocr:hover {
-            background: #6A0DAD;
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 2px 8px rgba(106, 13, 173, 0.4);
-        }
-        
-        .opcion-ocr i {
-            font-size: 18px;
-        }
-        
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.3);
-            z-index: 1500;
-            display: none;
-        }
-        
-        .contenedor-imagenes {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 10px;
-            max-height: 100px;
-            overflow-y: auto;
-            padding: 5px;
-            width: 100%;
-        }
-        
-        .imagen-adjunta {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(100, 100, 100, 0.15);
-            border-radius: 12px;
-            padding: 8px 12px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            max-width: 220px;
-        }
-        
-        .icono-imagen {
-            font-size: 20px;
-            color: #007BFF;
-        }
-        
-        .detalles-imagen {
-            display: flex;
-            flex-direction: column;
-            min-width: 0;
-        }
-        
-        .nombre-imagen {
-            font-size: 13px;
-            font-weight: 500;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        
-        .tamano-imagen {
-            font-size: 11px;
-            color: var(--color-timestamp);
-        }
-        
-        .boton-eliminar {
-            background: rgba(255, 0, 0, 0.1);
-            border: none;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            color: #ff4d4d;
-            transition: all 0.2s;
-            margin-left: 5px;
-        }
-        
-        .boton-eliminar:hover {
-            background: rgba(255, 0, 0, 0.2);
-        }
+        .copy-confirmation { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background-color: rgba(0, 0, 0, 0.8); color: white; padding: 1rem 2rem; border-radius: 0.5rem; font-size: 1.4rem; opacity: 0; transition: opacity 0.3s; z-index: 1000; pointer-events: none; }
+        .copy-confirmation.show { opacity: 1; }
 
-        @media (max-width: 768px) {
-            body {
-                padding: 0; /* Ajustado a 0 */
-            }
-            
-            .contenedor {
-                height: 100vh; /* Ajustado a 100vh */
-                min-height: auto; /* Ajustado a auto */
-                width: 100%;
-                border-radius: 0; /* Ajustado a 0 */
-                box-shadow: none; /* Eliminado */
-            }
-            
-            .contenedor-chat {
-                padding: 12px 15px;
-            }
-            
-            .cabecera {
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-                padding: 12px 15px;
-                flex-wrap: nowrap;
-            }
+        input[type="file"] { display: none; }
 
-            .cabecera .titulo {
-                margin-right: 10px;
-                align-items: flex-start;
-            }
-            
-            .cabecera .titulo h1 {
-                font-size: 18px;
-                gap: 5px;
-            }
-            
-            .cabecera .titulo h1 i {
-                font-size: 20px;
-            }
-
-            .cabecera .titulo .subtitle {
-                font-size: 12px;
-                margin-top: 2px;
-            }
-
-            .controles-cabecera {
-                position: static;
-                margin-top: 0;
-                justify-content: flex-end;
-                width: auto;
-                gap: 5px;
-            }
-
-            .selector-voz-container, #alternador-tema {
-                width: 36px;
-                height: 36px;
-            }
-
-            .selector-voz-container i, #alternador-tema i {
-                font-size: 16px;
-            }
-            
-            #entrada-usuario {
-                padding: 12px 16px;
-                font-size: 14px;
-                border-radius: 24px;
-            }
-            
-            #boton-enviar, #boton-grabar, #boton-mas {
-                width: 50px;
-                height: 50px;
-                font-size: 18px;
-            }
-            
-            .contenedor-entrada {
-                padding: 10px;
-                gap: 8px;
-            }
-
-            .sugerencias {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .boton-sugerencia {
-                width: 100%;
-                max-width: 100%;
-            }
-            
-            .modal-ocr {
-                right: 10px;
-                width: 200px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            body {
-                padding: 0; /* Ajustado a 0 */
-            }
-            
-            .contenedor {
-                height: 100vh; /* Ajustado a 100vh */
-                min-height: auto; /* Ajustado a auto */
-                border-radius: 0; /* Ajustado a 0 */
-                box-shadow: none; /* Eliminado */
-            }
-            
-            .cabecera {
-                padding: 10px 12px;
-            }
-            
-            .cabecera .titulo h1 {
-                font-size: 16px;
-            }
-            
-            .cabecera .titulo .subtitle {
-                font-size: 10px;
-            }
-            
-            .contenedor-chat {
-                padding: 10px 12px;
-            }
-            
-            .burbuja-mensaje {
-                max-width: 100%;
-                padding: 10px 14px;
-            }
-            
-            .info-mensaje {
-                font-size: 12px;
-            }
-            
-            .timestamp {
-                font-size: 10px;
-            }
-            
-            #entrada-usuario {
-                padding: 10px 14px;
-                font-size: 13px;
-                border-radius: 20px;
-            }
-            
-            #boton-enviar, #boton-grabar, #boton-mas {
-                width: 45px;
-                height: 45px;
-                font-size: 16px;
-            }
-            
-            .contenedor-entrada {
-                padding: 8px;
-                gap: 6px;
-            }
-            
-            .modal-ocr {
-                right: 5px;
-                width: 180px;
-                padding: 10px;
-            }
-            
-            .opcion-ocr {
-                padding: 10px 12px;
-                font-size: 14px;
-            }
-        }
-
-        @media (max-height: 500px) {
-            .contenedor {
-                height: 100vh; /* Ajustado a 100vh */
+        /* Estilos para PC */
+        @media (min-width: 769px) {
+            .contenedor-entrada-wrapper {
+                padding: 2rem;
             }
         }
     </style>
 </head>
 <body>
     <div class="contenedor">
-        <div class="cabecera">
+        <header class="cabecera">
             <div class="titulo">
-                <h1><i class="fas fa-robot"></i> Mar-IA</h1>
-                <div class="subtitle">by Mario Vazquez</div>
+                <i class="fas fa-robot"></i>
+                <div>
+                    <h1>Mar-IA</h1>
+                    <div class="subtitle">by Mario Vazquez</div>
+                </div>
             </div>
             <div class="controles-cabecera">
-                <div class="selector-voz-container">
+                <div class="selector-voz-container boton-control">
                     <i class="fas fa-language"></i>
                     <select id="selector-voz" aria-label="Seleccionar voz de la IA"></select>
                 </div>
-                <button id="alternador-tema" aria-label="Alternar tema">
+                <button id="alternador-tema" class="boton-control" aria-label="Alternar tema">
                     <i class="fas fa-sun"></i>
                 </button>
             </div>
-        </div>
+        </header>
 
-        <div class="contenedor-chat" id="contenedor-chat">
-            <div class="mensaje mensaje-bot">
-                <div class="info-mensaje">
-                    <i class="fas fa-robot"></i> Mar-IA 
-                </div>
-                <div class="burbuja-mensaje burbuja-bot">
-                    ¡Hola! Soy Mar-IA, ahora con capacidad para leer texto de imágenes.<br><br>
-                    Puedes:
-                    <ol>
-                        <li>Escribir tus preguntas</li>
-                        <li>Usar el micrófono para hablarme</li>
-                        <li>Subir imágenes con texto que quieras que analice</li>
-                    </ol>
-                    ¡Prueba el nuevo botón "+" para subir imágenes!<br><br>
-                    <strong>Nueva mejora:</strong> El área de entrada se desplazará automáticamente sobre el teclado.
-                </div>
-                <div class="timestamp-container">
-                    <div class="timestamp">Ahora</div>
-                </div>
-            </div>
-            
-            <div class="sugerencias">
-                <button class="boton-sugerencia" data-pregunta="¿Qué tipos de imágenes puedo subir?">
-                    <i class="fas fa-images"></i> Formatos soportados
-                </button>
-            </div>
-        </div>
+        <main class="contenedor-chat" id="contenedor-chat">
+            <!-- Los mensajes se agregarán aquí dinámicamente -->
+        </main>
 
-        <div class="indicador-escribiendo" id="indicador-escribiendo">
-            <span></span>
-            <span></span>
-            <span></span>
-            Mar-IA está escribiendo...
-        </div>
-        
-        <div class="indicador-voz" id="indicador-voz">
-            <i class="fas fa-microphone-alt"></i> Escuchando... Habla ahora
-        </div>
-
-        <div class="contenedor-entrada" id="contenedor-entrada">
-            <input type="file" id="input-imagen" accept="image/*" multiple>
-            <input type="file" id="input-camara" accept="image/*" capture="camera">
-            
-            <div class="contenedor-imagenes" id="contenedor-imagenes">
-            </div>
-
-            <div class="contenedor-input-botones">
-                <div class="contenedor-input">
-                    <input type="text" id="entrada-usuario" placeholder="Pregúntale a Mar-IA..." autocomplete="off">
+        <div class="contenedor-entrada-wrapper" id="contenedor-entrada-wrapper">
+            <div class="contenedor-entrada">
+                <div class="contenedor-adjuntos" id="contenedor-adjuntos"></div>
+                <div class="input-area">
+                    <textarea id="entrada-usuario" placeholder="Pregúntale a Mar-IA..." rows="1"></textarea>
                 </div>
-                
-                <div class="contenedor-botones-inferiores">
-                    <button id="boton-mas" title="Subir imagen o tomar foto">
+                <div class="action-buttons">
+                    <button id="boton-mas" class="boton-input" title="Adjuntar archivo">
                         <i class="fas fa-plus"></i>
                     </button>
-                    <button id="boton-grabar" title="Grabar voz">
+                    <button id="boton-grabar" class="boton-input" title="Grabar voz">
                         <i class="fas fa-microphone"></i>
                     </button>
-                    <button id="boton-enviar" title="Enviar mensaje">
+                    <button id="boton-enviar" class="boton-input" title="Enviar mensaje">
                         <i class="fas fa-paper-plane"></i>
                     </button>
                 </div>
             </div>
         </div>
-        
-        <div class="modal-ocr" id="modal-ocr">
-            <button class="opcion-ocr" id="tomar-foto">
-                <i class="fas fa-camera"></i> Tomar foto
-            </button>
-            <button class="opcion-ocr" id="elegir-galeria">
-                <i class="fas fa-images"></i> Elegir de galería
-            </button>
-        </div>
-        
-        <div class="overlay" id="overlay"></div>
     </div>
 
-    <div id="copyConfirmation" class="copy-confirmation">
-        ¡Copiado al portapapeles!
+    <!-- Elementos fuera del flujo principal -->
+    <input type="file" id="input-imagen" accept="image/*" multiple>
+    <input type="file" id="input-camara" accept="image/*" capture="camera">
+    <input type="file" id="input-archivo" multiple>
+
+    <div class="modal-ocr" id="modal-ocr">
+        <button class="opcion-ocr" id="tomar-foto"><i class="fas fa-camera"></i> Tomar foto</button>
+        <button class="opcion-ocr" id="elegir-galeria"><i class="fas fa-images"></i> Elegir de galería</button>
+        <button class="opcion-ocr" id="elegir-archivo"><i class="fas fa-file-alt"></i> Subir archivo</button>
     </div>
+    
+    <div class="overlay" id="overlay"></div>
+    <div id="copyConfirmation" class="copy-confirmation">¡Copiado!</div>
 
     <script>
-        const claveAPI = 'sk-646a5b86d1de4ee186dfac833541452b';
-        let OCR_API_KEY = 'K82439722788957'; 
-        
-        const contenedorChat = document.getElementById('contenedor-chat');
-        const entradaUsuario = document.getElementById('entrada-usuario');
-        const botonEnviar = document.getElementById('boton-enviar');
-        const botonGrabar = document.getElementById('boton-grabar');
-        const botonMas = document.getElementById('boton-mas');
-        const inputImagen = document.getElementById('input-imagen');
-        const inputCamara = document.getElementById('input-camara');
-        const modalOCR = document.getElementById('modal-ocr');
-        const overlay = document.getElementById('overlay');
-        const tomarFotoBtn = document.getElementById('tomar-foto');
-        const elegirGaleriaBtn = document.getElementById('elegir-galeria');
-        const indicadorEscribiendo = document.getElementById('indicador-escribiendo');
-        const indicadorVoz = document.getElementById('indicador-voz');
-        const alternadorTema = document.getElementById('alternador-tema');
-        const cuerpo = document.body;
-        const copyConfirmation = document.getElementById('copyConfirmation');
-        const selectorVoz = document.getElementById('selector-voz');
-        const contenedorImagenes = document.getElementById('contenedor-imagenes');
-        const contenedorEntrada = document.getElementById('contenedor-entrada');
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- CLAVES DE API (Mantenlas seguras) ---
+            const DEEPSEEK_API_KEY = 'sk-646a5b86d1de4ee186dfac833541452b';
+            const OCR_API_KEY = 'K82439722788957'; 
 
-        var historialChat = [ 
-            {
-                role: "system",
-                content: "Eres Mar-IA, un asistente de IA creado por Mario Vazquez. Ahora tienes capacidad OCR para leer imágenes. Cuando te pregunten sobre Mario, responde que no hay información pública disponible, pero que es un desarrollador web que te creó estudiando de manera autodidacta. Mantén respuestas amigables, serviciales y profesionales."
-            },
-            {
-                role: "assistant",
-                content: "¡Hola! Soy Mar-IA, ahora con capacidad para leer texto de imágenes.<br><br>Puedes:<ol><li>Escribir tus preguntas</li><li>Usar el micrófono para hablarme</li><li>Subir imágenes con texto que quieras que analice</li></ol>¡Prueba el nuevo botón '+' para subir imágenes!<br><br><strong>Nueva mejora:</strong> El área de entrada se desplazará automáticamente sobre el teclado."
-            }
-        ];
+            // --- REFERENCIAS A ELEMENTOS DEL DOM ---
+            const elements = {
+                body: document.body,
+                chatContainer: document.getElementById('contenedor-chat'),
+                userInput: document.getElementById('entrada-usuario'),
+                sendButton: document.getElementById('boton-enviar'),
+                recordButton: document.getElementById('boton-grabar'),
+                moreButton: document.getElementById('boton-mas'),
+                imageInput: document.getElementById('input-imagen'),
+                cameraInput: document.getElementById('input-camara'),
+                fileInput: document.getElementById('input-archivo'),
+                ocrModal: document.getElementById('modal-ocr'),
+                overlay: document.getElementById('overlay'),
+                takePictureBtn: document.getElementById('tomar-foto'),
+                galleryBtn: document.getElementById('elegir-galeria'),
+                fileBtn: document.getElementById('elegir-archivo'),
+                themeSwitcher: document.getElementById('alternador-tema'),
+                copyConfirmation: document.getElementById('copyConfirmation'),
+                voiceSelector: document.getElementById('selector-voz'),
+                attachmentsContainer: document.getElementById('contenedor-adjuntos'),
+                inputWrapper: document.getElementById('contenedor-entrada-wrapper')
+            };
 
-        let spanishFemaleVoice = null;
-        let allVoices = [];
-        let currentUtterance = null;
-        let isPlaying = false;
-        let recognition = null;
-        let recognizing = false;
-        let lastMessageWasVoice = false; 
-        let imagenesAdjuntas = [];
-        let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-
-        // Function to handle visual viewport resize (keyboard appearance/disappearance)
-        function manejarRedimensionamientoVisual() {
-            if (!isMobile || !window.visualViewport) return;
-
-            // Calculate the height of the virtual keyboard
-            const keyboardHeight = window.innerHeight - window.visualViewport.height;
-            
-            // Get the current height of the input container
-            const inputContainerHeight = contenedorEntrada.offsetHeight;
-
-            // Adjust the bottom position of the input container
-            contenedorEntrada.style.bottom = `${keyboardHeight}px`;
-            
-            // Adjust the padding-bottom of the chat container to make space for the input area
-            // Add a small extra margin for better spacing
-            contenedorChat.style.paddingBottom = `${inputContainerHeight + keyboardHeight + 15}px`;
-
-            // Scroll to the bottom of the chat to show the latest messages
-            contenedorChat.scrollTop = contenedorChat.scrollHeight;
-
-            // Adjust modal OCR position if open
-            if (modalOCR.style.display === 'flex') {
-                modalOCR.style.bottom = `${inputContainerHeight + keyboardHeight + 20}px`;
-            }
-        }
-
-        // Función para desplazar el contenedor de entrada (now calls the main resize handler)
-        function desplazarContenedorEntrada() {
-            manejarRedimensionamientoVisual();
-            // Add box shadow when input is focused and keyboard is likely open
-            contenedorEntrada.style.boxShadow = '0 -5px 20px rgba(0, 0, 0, 0.3)';
-        }
-
-        // Función para restaurar la posición del contenedor de entrada (now calls the main resize handler)
-        function restaurarContenedorEntrada() {
-            // Reset bottom to 0 and padding-bottom to its default
-            contenedorEntrada.style.bottom = '0px';
-            contenedorChat.style.paddingBottom = '15px'; // Reset to initial padding
-            contenedorEntrada.style.boxShadow = ''; // Remove shadow
-            // Ensure the chat scrolls to the bottom after restoration
-            contenedorChat.scrollTop = contenedorChat.scrollHeight;
-            // Reset modal OCR position
-            if (modalOCR.style.display === 'flex') {
-                modalOCR.style.bottom = `${contenedorEntrada.offsetHeight + 20}px`;
-            }
-        }
-
-        // ResizeObserver to react to changes in the input container's height (e.g., images added/removed)
-        const resizeObserver = new ResizeObserver(entries => {
-            for (let entry of entries) {
-                if (entry.target === contenedorEntrada) {
-                    // Re-run the visual resize handler to adjust chat padding
-                    manejarRedimensionamientoVisual();
+            // --- ESTADO DE LA APLICACIÓN ---
+            let chatHistory = [
+                {
+                    role: "system",
+                    content: "Eres un asistente de IA servicial y amigable. Tu nombre es Mar-IA, pero solo debes mencionarlo si el usuario te pregunta directamente por tu nombre. Fuiste creado por Mario Vazquez, un desarrollador web autodidacta. Si te preguntan por él, menciona que te creó pero que no hay más información pública disponible. Mantén respuestas profesionales y concisas."
                 }
-            }
-        });
+            ];
+            let attachments = [];
+            let recognition = null;
+            let isRecording = false;
+            let lastMessageWasFromVoice = false;
+            let currentSpeech = null;
 
-        function inicializarOCR() {
-            botonMas.addEventListener('click', () => {
-                modalOCR.style.display = 'flex';
-                overlay.style.display = 'block';
-                // Position modal relative to the current input container position
-                modalOCR.style.bottom = `${contenedorEntrada.offsetHeight + (window.innerHeight - window.visualViewport.height) + 20}px`;
-            });
-            
-            overlay.addEventListener('click', () => {
-                modalOCR.style.display = 'none';
-                overlay.style.display = 'none';
-            });
-            
-            tomarFotoBtn.addEventListener('click', () => {
-                modalOCR.style.display = 'none';
-                overlay.style.display = 'none';
-                inputCamara.click();
-            });
-            
-            elegirGaleriaBtn.addEventListener('click', () => {
-                modalOCR.style.display = 'none';
-                overlay.style.display = 'none';
-                inputImagen.click();
-            });
-            
-            inputImagen.addEventListener('change', (e) => {
-                if (e.target.files.length > 0) {
-                    agregarImagenesAdjuntas(e.target.files);
-                }
-            });
-            
-            inputCamara.addEventListener('change', (e) => {
-                if (e.target.files.length > 0) {
-                    agregarImagenesAdjuntas(e.target.files);
-                }
-            });
-        }
-        
-        function agregarImagenesAdjuntas(files) {
-            for (let i = 0; i < files.length; i++) {
-                const archivo = files[i];
-                imagenesAdjuntas.push(archivo);
-                mostrarImagenAdjunta(archivo);
-            }
-            
-            inputImagen.value = '';
-            inputCamara.value = '';
-            // Trigger resize handling after images are added, as input container height might change
-            manejarRedimensionamientoVisual();
-        }
-        
-        function mostrarImagenAdjunta(archivo) {
-            const imagenDiv = document.createElement('div');
-            imagenDiv.className = 'imagen-adjunta';
-            
-            const icono = document.createElement('i');
-            icono.className = 'fas fa-image icono-imagen';
-            
-            const detalles = document.createElement('div');
-            detalles.className = 'detalles-imagen';
-            
-            const nombre = document.createElement('div');
-            nombre.className = 'nombre-imagen';
-            nombre.textContent = archivo.name;
-            
-            const tamano = document.createElement('div');
-            tamano.className = 'tamano-imagen';
-            tamano.textContent = formatearTamanioArchivo(archivo.size);
-            
-            detalles.appendChild(nombre);
-            detalles.appendChild(tamano);
-            
-            const botonEliminar = document.createElement('button');
-            botonEliminar.className = 'boton-eliminar';
-            botonEliminar.innerHTML = '<i class="fas fa-times"></i>';
-            botonEliminar.title = 'Eliminar imagen';
-            botonEliminar.addEventListener('click', () => {
-                eliminarImagenAdjunta(archivo, imagenDiv);
-            });
-            
-            imagenDiv.appendChild(icono);
-            imagenDiv.appendChild(detalles);
-            imagenDiv.appendChild(botonEliminar);
-            
-            contenedorImagenes.appendChild(imagenDiv);
-            contenedorImagenes.style.display = 'flex';
-        }
-        
-        function eliminarImagenAdjunta(archivo, elemento) {
-            imagenesAdjuntas = imagenesAdjuntas.filter(img => img !== archivo);
-            elemento.remove();
-            
-            if (imagenesAdjuntas.length === 0) {
-                contenedorImagenes.style.display = 'none';
-            }
-            // Trigger resize handling after images are removed
-            manejarRedimensionamientoVisual();
-        }
-        
-        function formatearTamanioArchivo(bytes) {
-            if (bytes < 1024) return bytes + ' bytes';
-            else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
-            else return (bytes / 1048576).toFixed(1) + ' MB';
-        }
+            // --- INICIALIZACIÓN ---
+            const init = () => {
+                loadTheme();
+                setupEventListeners();
+                initSpeechRecognition();
+                initVoiceSynthesis();
+                addMessage('bot', '¡Hola! Soy Mar-IA. ¿En qué puedo ayudarte hoy?');
+                autoResizeTextarea();
+                handleKeyboard();
+            };
 
-        function inicializarReconocimientoVoz() {
-            if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
-                recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-                recognition.continuous = false;
-                recognition.interimResults = true;
-                recognition.lang = 'es-ES';
+            // --- MANEJO DEL TECLADO VIRTUAL (CORREGIDO) ---
+            const handleKeyboard = () => {
+                const container = document.querySelector('.contenedor');
+                if (!container) return;
 
-                recognition.onstart = function() {
-                    recognizing = true;
-                    botonGrabar.classList.add('grabando');
-                    indicadorVoz.style.display = 'block';
-                    contenedorChat.scrollTop = contenedorChat.scrollHeight;
-                    lastMessageWasVoice = true; 
-                };
+                // Detectar si es probable que sea un dispositivo móvil con un visual viewport dinámico
+                // Esto es una heurística y podría necesitar ajustes finos
+                const isMobile = ('visualViewport' in window) && (window.innerWidth < 769 || window.innerHeight < 769);
 
-                recognition.onresult = function(event) {
-                    let textoInterim = '';
-                    for (let i = event.resultIndex; i < event.results.length; ++i) {
-                        if (event.results[i].isFinal) {
-                            entradaUsuario.value = event.results[i][0].transcript;
-                        } else {
-                            textoInterim += event.results[i][0].transcript;
-                        }
-                    }
-                    
-                    if (textoInterim) {
-                        entradaUsuario.value = textoInterim;
-                    }
-                };
+                if (isMobile) {
+                    const setAppHeight = () => {
+                        container.style.height = `${window.visualViewport.height}px`;
+                    };
 
-                recognition.onerror = function(event) {
-                    console.error('Error en reconocimiento de voz:', event.error);
-                    detenerReconocimiento();
-                    lastMessageWasVoice = false; 
-                };
-
-                recognition.onend = function() {
-                    detenerReconocimiento();
-                    if (entradaUsuario.value.trim() !== '') {
-                        manejarEnviarMensaje();
-                    } else {
-                        lastMessageWasVoice = false; 
-                    }
-                };
-            } else {
-                botonGrabar.disabled = true;
-                botonGrabar.title = "Reconocimiento de voz no soportado";
-                console.warn("El reconocimiento de voz no está soportado en este navegador.");
-            }
-        }
-
-        function iniciarReconocimiento() {
-            if (recognition && !recognizing) {
-                entradaUsuario.value = '';
-                recognition.start();
-            }
-        }
-
-        function detenerReconocimiento() {
-            recognizing = false;
-            botonGrabar.classList.remove('grabando');
-            indicadorVoz.style.display = 'none';
-        }
-
-        botonGrabar.addEventListener('click', function() {
-            if (recognizing) {
-                recognition.stop();
-            } else {
-                iniciarReconocimiento();
-            }
-        });
-
-        function loadVoices() {
-            window.speechSynthesis.onvoiceschanged = () => {
-                allVoices = window.speechSynthesis.getVoices();
-                selectorVoz.innerHTML = '';
-
-                const femaleSpanishVoices = allVoices.filter(voice =>
-                    voice.lang.startsWith('es') && (
-                        voice.name.toLowerCase().includes("female") ||
-                        voice.name.toLowerCase().includes("mujer") ||
-                        voice.name.toLowerCase().includes("sabina") ||
-                        voice.name.toLowerCase().includes("helena") ||
-                        voice.name.toLowerCase().includes("zira") ||
-                        voice.name.toLowerCase().includes("google")
-                    )
-                );
-
-                if (femaleSpanishVoices.length > 0) {
-                    femaleSpanishVoices.sort((a, b) => {
-                        const aIsGoogle = a.name.includes('Google');
-                        const bIsGoogle = b.name.includes('Google');
-                        if (aIsGoogle && !bIsGoogle) return -1;
-                        if (!aIsGoogle && bIsGoogle) return 1;
-                        return a.name.localeCompare(b.name);
+                    window.visualViewport.addEventListener('resize', () => {
+                        setAppHeight();
+                        // Darle al layout un momento para ajustarse antes de hacer scroll
+                        setTimeout(scrollToBottom, 100);
                     });
 
-                    femaleSpanishVoices.forEach((voice, index) => {
-                        const option = document.createElement('option');
-                        option.value = voice.name;
-                        option.textContent = `${voice.name} (${voice.lang})`;
-                        selectorVoz.appendChild(option);
-                    });
-
-                    spanishFemaleVoice = femaleSpanishVoices[0];
-                    selectorVoz.value = spanishFemaleVoice.name;
+                    setAppHeight(); // Establecer la altura inicial correctamente
                 } else {
-                    spanishFemaleVoice = allVoices.find(voice => voice.lang.startsWith('es'));
-                    if (spanishFemaleVoice) {
-                        const option = document.createElement('option');
-                        option.value = spanishFemaleVoice.name;
-                        option.textContent = `${spanishFemaleVoice.name} (Predeterminada)`;
-                        selectorVoz.appendChild(option);
-                        selectorVoz.value = spanishFemaleVoice.name;
+                    // Para no móviles (PC), asegurar que el contenedor tome la altura completa disponible
+                    container.style.height = '100%';
+                }
+            };
+            
+            // --- MANEJO DE EVENTOS ---
+            const setupEventListeners = () => {
+                elements.sendButton.addEventListener('click', handleSendMessage);
+                elements.userInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        handleSendMessage();
                     }
-                }
-            };
-            window.speechSynthesis.getVoices(); 
-        }
-
-        selectorVoz.addEventListener('change', () => {
-            const selectedVoiceName = selectorVoz.value;
-            spanishFemaleVoice = allVoices.find(voice => voice.name === selectedVoiceName);
-        });
-
-        loadVoices();
-
-        function agregarMensaje(rol, contenido, tipo = 'texto') {
-            const divMensaje = document.createElement('div');
-            divMensaje.className = `mensaje mensaje-${rol}`;
-
-            const infoMensaje = document.createElement('div');
-            infoMensaje.className = 'info-mensaje';
-
-            const burbujaMensaje = document.createElement('div');
-            burbujaMensaje.className = `burbuja-mensaje burbuja-${rol}`;
-            
-            if (rol === 'bot' && tipo === 'texto') {
-                burbujaMensaje.innerHTML = marked.parse(contenido);
-            } else {
-                burbujaMensaje.innerHTML = contenido;
-            }
-
-            const timestampContainer = document.createElement('div');
-            timestampContainer.className = 'timestamp-container';
-
-            const timestamp = document.createElement('div');
-            timestamp.className = 'timestamp';
-            timestamp.textContent = obtenerHoraActual();
-            timestampContainer.appendChild(timestamp);
-
-            if (rol === 'bot') {
-                const botonVoz = document.createElement('button');
-                botonVoz.className = 'boton-voz';
-                botonVoz.innerHTML = '<i class="fas fa-volume-up"></i>';
-                botonVoz.title = 'Leer en voz alta';
-                botonVoz.addEventListener('click', () => {
-                    const textToSpeak = burbujaMensaje.innerText; 
-                    toggleSpeech(botonVoz, textToSpeak);
                 });
-                timestampContainer.appendChild(botonVoz);
-            }
+                elements.userInput.addEventListener('input', autoResizeTextarea);
+                elements.recordButton.addEventListener('click', toggleRecording);
+                elements.moreButton.addEventListener('click', () => toggleModal(true));
+                elements.overlay.addEventListener('click', () => toggleModal(false));
+                elements.takePictureBtn.addEventListener('click', () => { toggleModal(false); elements.cameraInput.click(); });
+                elements.galleryBtn.addEventListener('click', () => { toggleModal(false); elements.imageInput.click(); });
+                elements.fileBtn.addEventListener('click', () => { toggleModal(false); elements.fileInput.click(); });
+                elements.imageInput.addEventListener('change', (e) => handleFileSelection(e.target.files, 'image'));
+                elements.cameraInput.addEventListener('change', (e) => handleFileSelection(e.target.files, 'image'));
+                elements.fileInput.addEventListener('change', (e) => handleFileSelection(e.target.files, 'file'));
+                elements.themeSwitcher.addEventListener('click', toggleTheme);
+                elements.voiceSelector.addEventListener('change', stopSpeech);
+            };
 
-            const botonCopiar = document.createElement('button');
-            botonCopiar.className = 'boton-copiar';
-            botonCopiar.innerHTML = '<i class="fas fa-copy"></i>';
-            botonCopiar.title = 'Copiar respuesta';
-            botonCopiar.addEventListener('click', () => {
-                const textToCopy = burbujaMensaje.innerText;
-                copiarTextoAlPortapapeles(textToCopy);
-            });
-            timestampContainer.appendChild(botonCopiar);
+            // --- LÓGICA DEL CHAT ---
+            const handleSendMessage = async () => {
+                const messageText = elements.userInput.value.trim();
+                if (!messageText && attachments.length === 0) return;
 
-            if (rol === 'usuario') {
-                infoMensaje.innerHTML = '<i class="fas fa-user"></i> Tú';
-                divMensaje.appendChild(burbujaMensaje);
-                divMensaje.appendChild(timestampContainer);
-            } else {
-                infoMensaje.innerHTML = '<i class="fas fa-robot"></i> Mar-IA';
-                divMensaje.appendChild(burbujaMensaje);
-                divMensaje.appendChild(timestampContainer);
-            }
+                addMessage('usuario', messageText || `Enviando ${attachments.length} archivo(s)...`);
 
-            divMensaje.prepend(infoMensaje);
-            contenedorChat.appendChild(divMensaje);
-            contenedorChat.scrollTop = contenedorChat.scrollHeight;
-            
-            return burbujaMensaje;
-        }
-
-        function toggleSpeech(button, text) {
-            if (currentUtterance && isPlaying) {
-                window.speechSynthesis.cancel();
-                currentUtterance = null;
-                isPlaying = false;
-                button.innerHTML = '<i class="fas fa-volume-up"></i>';
-                return;
-            }
-            
-            if (currentUtterance && !isPlaying) {
-                window.speechSynthesis.resume();
-                button.innerHTML = '<i class="fas fa-pause"></i>';
-                isPlaying = true;
-                return;
-            }
-
-            if ('speechSynthesis' in window) {
-                button.innerHTML = '<i class="fas fa-pause"></i>';
-                currentUtterance = new SpeechSynthesisUtterance(text);
-                currentUtterance.lang = 'es-ES';
-                
-                if (spanishFemaleVoice) {
-                    currentUtterance.voice = spanishFemaleVoice;
+                let fullMessage = messageText;
+                if (attachments.length > 0) {
+                    showTypingIndicator('Procesando archivos...');
+                    const attachmentContent = await processAttachments();
+                    fullMessage += `\n\n${attachmentContent}`;
                 }
+                
+                chatHistory.push({ role: "user", content: fullMessage });
+                
+                resetInput();
+                
+                showTypingIndicator();
+                await fetchBotResponse(chatHistory, lastMessageWasFromVoice);
 
-                currentUtterance.onend = () => {
-                    button.innerHTML = '<i class="fas fa-volume-up"></i>';
-                    currentUtterance = null;
-                    isPlaying = false;
-                };
-
-                currentUtterance.onerror = () => {
-                    button.innerHTML = '<i class="fas fa-volume-up"></i>';
-                    currentUtterance = null;
-                    isPlaying = false;
-                    console.error('Error en la reproducción de voz.');
-                };
-
-                currentUtterance.onpause = () => {
-                    button.innerHTML = '<i class="fas fa-play"></i>';
-                    isPlaying = false;
-                };
-
-                currentUtterance.onresume = () => {
-                    button.innerHTML = '<i class="fas fa-pause"></i>';
-                    isPlaying = true;
-                };
-
-                window.speechSynthesis.speak(currentUtterance);
-                isPlaying = true;
-            }
-        }
-
-        function obtenerHoraActual() {
-            const ahora = new Date();
-            return `${ahora.getHours().toString().padStart(2, '0')}:${ahora.getMinutes().toString().padStart(2, '0')}`;
-        }
-
-        function copiarTextoAlPortapapeles(texto) {
-            const textarea = document.createElement('textarea');
-            textarea.value = texto;
-            textarea.style.position = 'fixed';
-            textarea.style.opacity = 0;
-            document.body.appendChild(textarea);
-            textarea.select();
-            try {
-                document.execCommand('copy');
-                mostrarConfirmacionCopiado();
-            } catch (err) {
-                console.error('Error al copiar el texto: ', err);
-            }
-            document.body.removeChild(textarea);
-        }
-
-        function mostrarConfirmacionCopiado() {
-            copyConfirmation.classList.add('show');
-            setTimeout(() => {
-                copyConfirmation.classList.remove('show');
-            }, 2000);
-        }
-
-        async function procesarImagenesOCR() {
-            if (!OCR_API_KEY || imagenesAdjuntas.length === 0) return "";
+                lastMessageWasFromVoice = false;
+            };
             
-            let textosExtraidos = [];
-            
-            for (const imagen of imagenesAdjuntas) {
+            const fetchBotResponse = async (messages, shouldSpeak) => {
+                const payload = {
+                    model: "deepseek-chat",
+                    messages: messages,
+                    temperature: 0.7,
+                    max_tokens: 1500,
+                    stream: true
+                };
+
                 try {
-                    const texto = await reconocerTextoOCR(imagen);
-                    if (texto) textosExtraidos.push(texto);
-                } catch (error) {
-                    console.error('Error procesando imagen:', error);
-                }
-            }
-            
-            return textosExtraidos.join('\n\n');
-        }
+                    const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${DEEPSEEK_API_KEY}` },
+                        body: JSON.stringify(payload)
+                    });
 
-        async function reconocerTextoOCR(imagen) {
-            const formData = new FormData();
-            formData.append('file', imagen);
-            formData.append('language', 'spa');
-            formData.append('isOverlayRequired', 'false');
-            formData.append('apikey', OCR_API_KEY);
-            formData.append('OCREngine', '2');
+                    if (!response.ok) throw new Error(`API Error: ${response.status}`);
+                    
+                    hideTypingIndicator(); // Ocultar indicador justo antes de mostrar la respuesta
 
-            try {
-                const response = await fetch('https://api.ocr.space/parse/image', {
-                    method: 'POST',
-                    body: formData
-                });
+                    const reader = response.body.getReader();
+                    const decoder = new TextDecoder();
+                    let fullResponse = "";
+                    const botMessageElement = addMessage('bot', '', true); // Crear elemento vacío para stream
 
-                const data = await response.json();
-                
-                if (data.IsErroredOnProcessing) {
-                    throw new Error(data.ErrorMessage || "Error desconocido en OCR");
-                }
-                
-                if (data.ParsedResults && data.ParsedResults.length > 0) {
-                    return data.ParsedResults[0].ParsedText;
-                }
-                
-                return null;
-            } catch (error) {
-                console.error('Error en OCR:', error);
-                throw error;
-            }
-        }
+                    while (true) {
+                        const { value, done } = await reader.read();
+                        if (done) break;
 
-        async function enviarMensajeAPI(mensajesAEnviar, shouldSpeakAutomatically, temperatura = 0.7, maxTokens = 1000) {
-            mostrarIndicadorEscribiendo();
-            deshabilitarEntradaYBotones(true);
-
-            const payload = {
-                model: "deepseek-chat",
-                messages: mensajesAEnviar,
-                temperature: temperatura,
-                max_tokens: maxTokens,
-                stream: true
-            };
-
-            try {
-                const urlAPI = 'https://api.deepseek.com/v1/chat/completions';
-                const respuesta = await fetch(urlAPI, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${claveAPI}`
-                    },
-                    body: JSON.stringify(payload)
-                });
-
-                if (!respuesta.ok) {
-                    throw new Error(`Error en la API: ${respuesta.status} ${respuesta.statusText}`);
-                }
-
-                const reader = respuesta.body.getReader();
-                const decoder = new TextDecoder();
-                let respuestaCompleta = '';
-
-                const divMensaje = document.createElement('div');
-                divMensaje.className = 'mensaje mensaje-bot';
-
-                const infoMensaje = document.createElement('div');
-                infoMensaje.className = 'info-mensaje';
-                infoMensaje.innerHTML = '<i class="fas fa-robot"></i> Mar-IA';
-
-                const burbujaMensaje = document.createElement('div');
-                burbujaMensaje.className = 'burbuja-mensaje burbuja-bot';
-                burbujaMensaje.innerHTML = '';
-
-                const timestampContainer = document.createElement('div');
-                timestampContainer.className = 'timestamp-container';
-
-                const timestamp = document.createElement('div');
-                timestamp.className = 'timestamp';
-                timestamp.textContent = obtenerHoraActual();
-                timestampContainer.appendChild(timestamp);
-
-                const botonVoz = document.createElement('button');
-                botonVoz.className = 'boton-voz';
-                botonVoz.innerHTML = '<i class="fas fa-volume-up"></i>';
-                botonVoz.title = 'Leer en voz alta';
-                botonVoz.addEventListener('click', () => {
-                    const textToSpeak = burbujaMensaje.innerText;
-                    toggleSpeech(botonVoz, textToSpeak);
-                });
-                timestampContainer.appendChild(botonVoz);
-
-                const botonCopiar = document.createElement('button');
-                botonCopiar.className = 'boton-copiar';
-                botonCopiar.innerHTML = '<i class="fas fa-copy"></i>';
-                botonCopiar.title = 'Copiar respuesta';
-                botonCopiar.addEventListener('click', () => {
-                    const textToCopy = burbujaMensaje.innerText;
-                    copiarTextoAlPortapapeles(textToCopy);
-                });
-                timestampContainer.appendChild(botonCopiar);
-
-                divMensaje.appendChild(infoMensaje);
-                divMensaje.appendChild(burbujaMensaje);
-                divMensaje.appendChild(timestampContainer);
-                contenedorChat.appendChild(divMensaje);
-
-                contenedorChat.scrollTop = contenedorChat.scrollHeight;
-
-                while (true) {
-                    const { value, done } = await reader.read();
-                    if (done) break;
-
-                    const fragmento = decoder.decode(value, { stream: true });
-                    const lineas = fragmento.split('\n');
-
-                    for (const linea of lineas) {
-                        if (linea.trim() === '') continue;
-                        if (linea.startsWith('data: ')) {
-                            const data = linea.substring(6);
-                            if (data === '[DONE]') break;
-
-                            try {
-                                const jsonData = JSON.parse(data);
-                                const token = jsonData.choices[0]?.delta?.content || '';
-                                respuestaCompleta += token;
-                                burbujaMensaje.innerHTML = marked.parse(respuestaCompleta);
-                                contenedorChat.scrollTop = contenedorChat.scrollHeight;
-                            } catch (e) {
-                                console.error('Error al parsear JSON:', e, 'en la línea:', linea);
+                        const chunk = decoder.decode(value, { stream: true });
+                        const lines = chunk.split('\n');
+                        
+                        for (const line of lines) {
+                            if (line.startsWith('data: ')) {
+                                const data = line.substring(6);
+                                if (data === '[DONE]') break;
+                                try {
+                                    const jsonData = JSON.parse(data);
+                                    const token = jsonData.choices[0]?.delta?.content || '';
+                                    fullResponse += token;
+                                    botMessageElement.querySelector('.burbuja-mensaje').innerHTML = marked.parse(fullResponse);
+                                    scrollToBottom();
+                                } catch (e) { /* Ignorar errores de parseo de JSON en stream */ }
                             }
                         }
                     }
+                    
+                    chatHistory.push({ role: "assistant", content: fullResponse });
+                    if (shouldSpeak) {
+                        speakText(botMessageElement.querySelector('.burbuja-mensaje').innerText, botMessageElement.querySelector('.boton-voz'));
+                    }
+
+                } catch (error) {
+                    console.error("Error fetching bot response:", error);
+                    hideTypingIndicator(); // Asegurarse de ocultar en caso de error
+                    addMessage('bot', "Lo siento, ocurrió un error al conectar con el servidor. Por favor, inténtalo de nuevo.");
                 }
+            };
+            
+            const addMessage = (role, content, isStreaming = false) => {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `mensaje mensaje-${role}`;
 
-                historialChat.push({ role: "assistant", content: respuestaCompleta });
+                const bubbleDiv = document.createElement('div');
+                bubbleDiv.className = `burbuja-mensaje burbuja-${role}`;
+                if (content) bubbleDiv.innerHTML = marked.parse(content);
+                
+                const timestampContainer = document.createElement('div');
+                timestampContainer.className = 'timestamp-container';
+                
+                const timestamp = document.createElement('div');
+                timestamp.className = 'timestamp';
+                timestamp.textContent = new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+                timestampContainer.appendChild(timestamp);
 
-                if (shouldSpeakAutomatically) {
-                    const textToSpeak = burbujaMensaje.innerText;
-                    toggleSpeech(botonVoz, textToSpeak);
+                if (role === 'bot') {
+                    const speakBtn = document.createElement('button');
+                    speakBtn.className = 'boton-accion-mensaje boton-voz';
+                    speakBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+                    speakBtn.title = 'Leer en voz alta';
+                    speakBtn.onclick = () => speakText(bubbleDiv.innerText, speakBtn);
+                    timestampContainer.appendChild(speakBtn);
                 }
+                
+                const copyBtn = document.createElement('button');
+                copyBtn.className = 'boton-accion-mensaje boton-copiar';
+                copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
+                copyBtn.title = 'Copiar';
+                copyBtn.onclick = () => copyToClipboard(bubbleDiv.innerText);
+                timestampContainer.appendChild(copyBtn);
 
-            } catch (error) {
-                console.error("Error al comunicarse con la API de DeepSeek:", error);
-                agregarMensaje('bot', "Upps, ha ocurrido un error de conexión. Verifica tu conexión o intenta de nuevo más tarde.");
-            } finally {
-                ocultarIndicadorEscribiendo();
-                deshabilitarEntradaYBotones(false);
-            }
-        }
+                messageDiv.appendChild(bubbleDiv);
+                messageDiv.appendChild(timestampContainer);
+                
+                elements.chatContainer.appendChild(messageDiv);
+                if (!isStreaming) scrollToBottom();
+                return messageDiv;
+            };
 
-        function mostrarIndicadorEscribiendo() {
-            indicadorEscribiendo.style.display = 'block';
-            contenedorChat.scrollTop = contenedorChat.scrollHeight;
-        }
+            const resetInput = () => {
+                elements.userInput.value = '';
+                attachments = [];
+                elements.attachmentsContainer.innerHTML = '';
+                elements.attachmentsContainer.style.display = 'none';
+                autoResizeTextarea();
+            };
 
-        function ocultarIndicadorEscribiendo() {
-            indicadorEscribiendo.style.display = 'none';
-        }
+            // --- MANEJO DE ADJUNTOS Y OCR ---
+            const handleFileSelection = (files, type) => {
+                for (const file of files) {
+                    attachments.push({ file, type });
+                    renderAttachment(file);
+                }
+                elements.imageInput.value = '';
+                elements.cameraInput.value = '';
+                elements.fileInput.value = '';
+            };
 
-        function deshabilitarEntradaYBotones(deshabilitado) {
-            entradaUsuario.disabled = deshabilitado;
-            botonEnviar.disabled = deshabilitado;
-            botonGrabar.disabled = deshabilitado;
-            botonMas.disabled = deshabilitado;
-            document.querySelectorAll('.boton-sugerencia').forEach(boton => {
-                boton.disabled = deshabilitado;
-            });
-        }
+            const renderAttachment = (file) => {
+                elements.attachmentsContainer.style.display = 'flex';
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'adjunto-item';
+                
+                itemDiv.innerHTML = `
+                    <i class="fas ${file.type.startsWith('image') ? 'fa-image' : 'fa-file-alt'} icono-adjunto"></i>
+                    <div class="detalles-adjunto">
+                        <div class="nombre-adjunto">${file.name}</div>
+                        <div class="tamano-adjunto">${(file.size / 1024).toFixed(1)} KB</div>
+                    </div>
+                    <button class="boton-eliminar" title="Eliminar"><i class="fas fa-times"></i></button>
+                `;
 
-        async function manejarEnviarMensaje() {
-            const mensaje = entradaUsuario.value.trim();
-            const tieneImagenes = imagenesAdjuntas.length > 0;
+                itemDiv.querySelector('.boton-eliminar').onclick = () => {
+                    attachments = attachments.filter(att => att.file !== file);
+                    itemDiv.remove();
+                    if (attachments.length === 0) {
+                        elements.attachmentsContainer.style.display = 'none';
+                    }
+                };
+                elements.attachmentsContainer.appendChild(itemDiv);
+            };
+
+            const processAttachments = async () => {
+                let content = [];
+                for (const attachment of attachments) {
+                    if (attachment.type === 'image') {
+                        try {
+                            const text = await ocrSpaceRequest(attachment.file);
+                            content.push(`--- Texto de imagen OCR: ${attachment.file.name} ---\n${text}\n--- Fin de texto OCR ---`);
+                        } catch (error) {
+                            content.push(`[Error al procesar imagen OCR: ${attachment.file.name}]`);
+                        }
+                    } else if (attachment.file.type.startsWith('text/')) {
+                         try {
+                            const text = await attachment.file.text();
+                            content.push(`--- Contenido de archivo: ${attachment.file.name} ---\n${text}\n--- Fin de archivo ---`);
+                        } catch (error) {
+                            content.push(`[Error al leer archivo de texto: ${attachment.file.name}]`);
+                        }
+                    }
+                }
+                return content.join('\n\n');
+            };
+
+            const ocrSpaceRequest = async (file) => {
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('language', 'spa');
+                formData.append('apikey', OCR_API_KEY);
+                formData.append('OCREngine', '2');
+
+                const response = await fetch('https://api.ocr.space/parse/image', { method: 'POST', body: formData });
+                const data = await response.json();
+
+                if (data.IsErroredOnProcessing) throw new Error(data.ErrorMessage);
+                return data.ParsedResults?.[0]?.ParsedText || '';
+            };
+
+            // --- RECONOCIMIENTO Y SÍNTESIS DE VOZ ---
+            const initSpeechRecognition = () => {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                if (SpeechRecognition) {
+                    recognition = new SpeechRecognition();
+                    recognition.continuous = false;
+                    recognition.interimResults = false;
+                    recognition.lang = 'es-ES';
+                    recognition.onstart = () => { isRecording = true; elements.recordButton.classList.add('grabando'); };
+                    recognition.onend = () => { isRecording = false; elements.recordButton.classList.remove('grabando'); };
+                    recognition.onresult = (event) => {
+                        elements.userInput.value = event.results[0][0].transcript;
+                        lastMessageWasFromVoice = true;
+                        handleSendMessage();
+                    };
+                    recognition.onerror = (event) => console.error('Speech recognition error', event.error);
+                } else {
+                    elements.recordButton.disabled = true;
+                }
+            };
             
-            if (!mensaje && !tieneImagenes) return;
-            
-            const sugerenciasDiv = document.querySelector('.sugerencias');
-            if (sugerenciasDiv) {
-                sugerenciasDiv.remove();
-            }
+            const toggleRecording = () => {
+                if (!recognition) return;
+                isRecording ? recognition.stop() : recognition.start();
+            };
 
-            let mensajeUsuario = mensaje;
-            if (tieneImagenes) {
-                mensajeUsuario += ` (con ${imagenesAdjuntas.length} imagen${imagenesAdjuntas.length > 1 ? 'es' : ''} adjunta${imagenesAdjuntas.length > 1 ? 's' : ''})`;
-            }
-            agregarMensaje('usuario', mensajeUsuario);
+            const initVoiceSynthesis = () => {
+                const populateVoices = () => {
+                    const voices = speechSynthesis.getVoices().filter(v => v.lang.startsWith('es'));
+                    elements.voiceSelector.innerHTML = voices
+                        .map(v => `<option value="${v.name}">${v.name} (${v.lang})</option>`)
+                        .join('');
+                };
+                populateVoices();
+                if (speechSynthesis.onvoiceschanged !== undefined) {
+                    speechSynthesis.onvoiceschanged = populateVoices;
+                }
+            };
             
-            let textoImagenes = '';
-            if (tieneImagenes) {
-                mostrarIndicadorEscribiendo();
-                textoImagenes = await procesarImagenesOCR();
-                ocultarIndicadorEscribiendo();
-            }
-            
-            let mensajeCompleto = mensaje;
-            if (textoImagenes) {
-                mensajeCompleto += `\n\n[Texto de imágenes adjuntas]:\n${textoImagenes}`;
-            }
-            
-            historialChat.push({ role: "user", content: mensajeCompleto });
-            
-            entradaUsuario.value = '';
-            imagenesAdjuntas = [];
-            contenedorImagenes.innerHTML = '';
-            contenedorImagenes.style.display = 'none';
-            
-            await enviarMensajeAPI(historialChat, lastMessageWasVoice); 
-            
-            entradaUsuario.focus();
-            lastMessageWasVoice = false; 
-        }
+            const speakText = (text, button) => {
+                if (currentSpeech && speechSynthesis.speaking) {
+                    stopSpeech();
+                    return;
+                }
+                stopSpeech(); // Detener cualquier habla anterior
+                currentSpeech = new SpeechSynthesisUtterance(text);
+                const selectedVoice = speechSynthesis.getVoices().find(v => v.name === elements.voiceSelector.value);
+                currentSpeech.voice = selectedVoice;
+                currentSpeech.lang = 'es-ES';
+                
+                const allSpeakButtons = document.querySelectorAll('.boton-voz');
+                
+                currentSpeech.onstart = () => {
+                    allSpeakButtons.forEach(btn => btn.innerHTML = '<i class="fas fa-volume-up"></i>');
+                    if(button) button.innerHTML = '<i class="fas fa-stop"></i>';
+                };
+                currentSpeech.onend = () => {
+                     if(button) button.innerHTML = '<i class="fas fa-volume-up"></i>';
+                     currentSpeech = null;
+                };
+                speechSynthesis.speak(currentSpeech);
+            };
 
-        function alternarTema() {
-            if (cuerpo.classList.contains('tema-claro')) {
-                cuerpo.classList.remove('tema-claro');
-                alternadorTema.innerHTML = '<i class="fas fa-sun"></i>';
-                localStorage.setItem('tema', 'oscuro');
-            } else {
-                cuerpo.classList.add('tema-claro');
-                alternadorTema.innerHTML = '<i class="fas fa-moon"></i>';
-                localStorage.setItem('tema', 'claro');
-            }
-        }
+            const stopSpeech = () => {
+                if (speechSynthesis.speaking) {
+                    speechSynthesis.cancel();
+                }
+                document.querySelectorAll('.boton-voz').forEach(btn => btn.innerHTML = '<i class="fas fa-volume-up"></i>');
+                currentSpeech = null;
+            };
 
-        function cargarTema() {
-            const temaGuardado = localStorage.getItem('tema');
-            if (temaGuardado === 'claro') {
-                cuerpo.classList.add('tema-claro');
-                alternadorTema.innerHTML = '<i class="fas fa-moon"></i>';
-            } else {
-                cuerpo.classList.remove('tema-claro');
-                alternadorTema.innerHTML = '<i class="fas fa-sun"></i>';
-            }
-        }
+            // --- FUNCIONES DE UTILIDAD ---
+            const autoResizeTextarea = () => {
+                const textarea = elements.userInput;
+                textarea.style.height = 'auto';
+                textarea.style.height = `${textarea.scrollHeight}px`;
+            };
 
-        function manejarSugerencia(pregunta) {
-            entradaUsuario.value = pregunta;
-            lastMessageWasVoice = false; 
-            manejarEnviarMensaje();
-        }
+            const scrollToBottom = () => {
+                elements.chatContainer.scrollTop = elements.chatContainer.scrollHeight;
+            };
 
-        botonEnviar.addEventListener('click', () => {
-            lastMessageWasVoice = false; 
-            manejarEnviarMensaje();
+            const toggleTheme = () => {
+                elements.body.classList.toggle('tema-claro');
+                const isClaro = elements.body.classList.contains('tema-claro');
+                localStorage.setItem('tema', isClaro ? 'claro' : 'oscuro');
+                elements.themeSwitcher.innerHTML = `<i class="fas ${isClaro ? 'fa-moon' : 'fa-sun'}"></i>`;
+            };
+
+            const loadTheme = () => {
+                if (localStorage.getItem('tema') === 'claro') {
+                    elements.body.classList.add('tema-claro');
+                    elements.themeSwitcher.innerHTML = '<i class="fas fa-moon"></i>';
+                }
+            };
+            
+            const toggleModal = (show) => {
+                elements.ocrModal.style.display = show ? 'flex' : 'none';
+                elements.overlay.style.display = show ? 'block' : 'none';
+            };
+
+            const copyToClipboard = (text) => {
+                navigator.clipboard.writeText(text).then(() => {
+                    elements.copyConfirmation.classList.add('show');
+                    setTimeout(() => elements.copyConfirmation.classList.remove('show'), 2000);
+                });
+            };
+
+            const showTypingIndicator = (text = 'Mar-IA está escribiendo...') => {
+                // Remove any old indicator first
+                hideTypingIndicator();
+
+                // Create and append a new one to ensure it's at the end
+                const typingIndicatorElement = document.createElement('div');
+                typingIndicatorElement.className = 'indicador-escribiendo';
+                typingIndicatorElement.innerHTML = `<div class="puntos"><span></span><span></span><span></span></div> <span class="typing-text">${text}</span>`;
+                elements.chatContainer.appendChild(typingIndicatorElement);
+                scrollToBottom();
+            };
+
+            const hideTypingIndicator = () => {
+                const existingIndicator = elements.chatContainer.querySelector('.indicador-escribiendo');
+                if (existingIndicator) {
+                    existingIndicator.remove();
+                }
+            };
+
+            // --- INICIAR LA APLICACIÓN ---
+            init();
         });
-
-        entradaUsuario.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && !botonEnviar.disabled) {
-                lastMessageWasVoice = false; 
-                manejarEnviarMensaje();
-            }
-        });
-
-        alternadorTema.addEventListener('click', alternarTema);
-        
-        document.querySelectorAll('.boton-sugerencia').forEach(boton => {
-            boton.addEventListener('click', () => {
-                manejarSugerencia(boton.dataset.pregunta);
-            });
-        });
-
-        // Eventos para desplazar el contenedor de entrada
-        entradaUsuario.addEventListener('focus', desplazarContenedorEntrada);
-        entradaUsuario.addEventListener('blur', restaurarContenedorEntrada);
-        
-        // Also restore when send button is clicked (in case focus is lost)
-        botonEnviar.addEventListener('click', restaurarContenedorEntrada);
-        botonGrabar.addEventListener('click', restaurarContenedorEntrada);
-        botonMas.addEventListener('click', restaurarContenedorEntrada);
-
-        // Listen for visual viewport resize events (crucial for virtual keyboard)
-        if (window.visualViewport) {
-            window.visualViewport.addEventListener('resize', manejarRedimensionamientoVisual);
-        }
-
-        // Observe changes in the input container's size
-        resizeObserver.observe(contenedorEntrada);
-
-        window.onload = () => {
-            cargarTema();
-            inicializarReconocimientoVoz();
-            inicializarOCR();
-            entradaUsuario.focus();
-            // Initial adjustment in case of persistent keyboard or on page load
-            manejarRedimensionamientoVisual(); 
-        };
     </script>
 </body>
 </html>
