@@ -38,6 +38,8 @@
             --fondo-boton-control: #2C2C2C;
             --fondo-adjunto: #2C2C2C;
             --borde-adjunto: #444;
+            --fondo-codigo: rgba(0,0,0,0.3);
+            --borde-codigo: rgba(255,255,255,0.1);
         }
 
         body.tema-claro {
@@ -70,6 +72,8 @@
             --fondo-boton-control: #F0F0F0;
             --fondo-adjunto: #F0F0F0;
             --borde-adjunto: #DDD;
+            --fondo-codigo: rgba(0,0,0,0.05);
+            --borde-codigo: rgba(0,0,0,0.1);
         }
 
         * {
@@ -202,6 +206,7 @@
             border-radius: 1.8rem;
             line-height: 1.6;
             word-wrap: break-word;
+            max-width: 100%;
         }
 
         .burbuja-usuario {
@@ -220,8 +225,104 @@
         .burbuja-bot ul, .burbuja-bot ol { padding-left: 2rem; margin: 1rem 0; }
         .burbuja-bot li { margin-bottom: 0.5rem; }
         .burbuja-bot strong { font-weight: bold; }
-        .burbuja-bot pre { background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 0.8rem; overflow-x: auto; margin: 1rem 0; }
         .burbuja-bot code { font-family: monospace; }
+        
+        /* ESTILOS MEJORADOS PARA BLOQUES DE CÓDIGO CON SCROLL HORIZONTAL */
+        .bloque-codigo {
+            position: relative;
+            background: var(--fondo-codigo);
+            border: 1px solid var(--borde-codigo);
+            border-radius: 0.8rem;
+            overflow: hidden;
+            margin: 1.2rem 0;
+            max-width: 100%;
+        }
+        
+        .cabecera-codigo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 1.2rem;
+            background: rgba(0,0,0,0.2);
+            border-bottom: 1px solid var(--borde-codigo);
+        }
+        
+        .lenguaje-codigo {
+            font-size: 1.3rem;
+            font-weight: 500;
+            color: #aaa;
+        }
+        
+        .boton-copiar-codigo {
+            background: transparent;
+            border: none;
+            color: var(--color-texto);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.4rem;
+            font-size: 1.3rem;
+            transition: all 0.2s;
+            z-index: 10;
+        }
+        
+        .boton-copiar-codigo:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .boton-copiar-codigo.copiado {
+            color: #4CAF50;
+        }
+        
+        .boton-copiar-codigo.copiado i {
+            animation: pulse 0.5s;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        .contenedor-codigo {
+            overflow-x: auto;
+            max-width: 100%;
+        }
+        
+        .contenedor-codigo pre {
+            margin: 0;
+            padding: 1.5rem;
+            font-family: 'Courier New', monospace;
+            font-size: 1.4rem;
+            line-height: 1.5;
+            tab-size: 4;
+            white-space: pre;
+            min-width: min-content;
+            display: inline-block;
+        }
+        
+        /* Barra de scroll personalizada */
+        .contenedor-codigo::-webkit-scrollbar {
+            height: 8px;
+        }
+        
+        .contenedor-codigo::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.1);
+            border-radius: 4px;
+        }
+        
+        .contenedor-codigo::-webkit-scrollbar-thumb {
+            background: rgba(128,128,128,0.4);
+            border-radius: 4px;
+        }
+        
+        .contenedor-codigo::-webkit-scrollbar-thumb:hover {
+            background: rgba(128,128,128,0.6);
+        }
+        
+        /* FIN ESTILOS BLOQUES DE CÓDIGO */
         
         .info-mensaje { display: flex; align-items: center; margin-bottom: 0.5rem; font-size: 1.4rem; color: var(--color-timestamp); gap: 0.8rem; }
         .timestamp-container { display: flex; align-items: center; gap: 0.8rem; margin-top: 0.8rem; }
@@ -400,6 +501,10 @@
             .contenedor-entrada-wrapper {
                 padding: 2rem;
             }
+            
+            .burbuja-mensaje {
+                max-width: 85%;
+            }
         }
     </style>
 </head>
@@ -564,6 +669,24 @@
                 elements.fileInput.addEventListener('change', (e) => handleFileSelection(e.target.files, 'file'));
                 elements.themeSwitcher.addEventListener('click', toggleTheme);
                 elements.voiceSelector.addEventListener('change', stopSpeech);
+                
+                // Evento delegado para botones de copiar código
+                elements.chatContainer.addEventListener('click', (e) => {
+                    if (e.target.closest('.boton-copiar-codigo')) {
+                        const button = e.target.closest('.boton-copiar-codigo');
+                        const codeBlock = button.closest('.bloque-codigo');
+                        if (codeBlock) {
+                            const code = codeBlock.querySelector('pre').innerText;
+                            copyToClipboard(code);
+                            button.classList.add('copiado');
+                            button.innerHTML = '<i class="fas fa-check"></i> Copiado';
+                            setTimeout(() => {
+                                button.classList.remove('copiado');
+                                button.innerHTML = '<i class="fas fa-copy"></i> Copiar';
+                            }, 2000);
+                        }
+                    }
+                });
             };
 
             // --- LÓGICA DEL CHAT ---
@@ -631,6 +754,7 @@
                                     const token = jsonData.choices[0]?.delta?.content || '';
                                     fullResponse += token;
                                     botMessageElement.querySelector('.burbuja-mensaje').innerHTML = marked.parse(fullResponse);
+                                    formatCodeBlocks(botMessageElement);
                                     scrollToBottom();
                                 } catch (e) { /* Ignorar errores de parseo de JSON en stream */ }
                             }
@@ -647,6 +771,47 @@
                     hideTypingIndicator(); // Asegurarse de ocultar en caso de error
                     addMessage('bot', "Lo siento, ocurrió un error al conectar con el servidor. Por favor, inténtalo de nuevo.");
                 }
+            };
+            
+            // Formatear bloques de código después de renderizar
+            const formatCodeBlocks = (messageElement) => {
+                const codeBlocks = messageElement.querySelectorAll('pre');
+                codeBlocks.forEach(pre => {
+                    // Crear contenedor de código
+                    const codeContainer = document.createElement('div');
+                    codeContainer.className = 'bloque-codigo';
+                    
+                    // Crear cabecera con botón de copiar
+                    const header = document.createElement('div');
+                    header.className = 'cabecera-codigo';
+                    
+                    const langSpan = document.createElement('span');
+                    langSpan.className = 'lenguaje-codigo';
+                    langSpan.textContent = 'Código';
+                    
+                    const copyBtn = document.createElement('button');
+                    copyBtn.className = 'boton-copiar-codigo';
+                    copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copiar';
+                    
+                    header.appendChild(langSpan);
+                    header.appendChild(copyBtn);
+                    
+                    // Contenedor para el scroll horizontal
+                    const codeContent = document.createElement('div');
+                    codeContent.className = 'contenedor-codigo';
+                    
+                    // Mover el contenido pre al contenedor
+                    const codeElement = document.createElement('pre');
+                    codeElement.innerHTML = pre.innerHTML;
+                    codeContent.appendChild(codeElement);
+                    
+                    // Construir la estructura completa
+                    codeContainer.appendChild(header);
+                    codeContainer.appendChild(codeContent);
+                    
+                    // Reemplazar el pre original con el nuevo contenedor
+                    pre.replaceWith(codeContainer);
+                });
             };
             
             const addMessage = (role, content, isStreaming = false) => {
@@ -685,7 +850,10 @@
                 messageDiv.appendChild(timestampContainer);
                 
                 elements.chatContainer.appendChild(messageDiv);
-                if (!isStreaming) scrollToBottom();
+                if (!isStreaming) {
+                    formatCodeBlocks(messageDiv);
+                    scrollToBottom();
+                }
                 return messageDiv;
             };
 
