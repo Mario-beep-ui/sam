@@ -77,7 +77,7 @@
         .cabecera { flex-shrink: 0; padding: 1rem 1.5rem; border-bottom: 1px solid var(--borde-superior-entrada); display: flex; align-items: center; justify-content: space-between; }
         .cabecera .titulo { display: flex; align-items: center; gap: 1rem; }
         .cabecera .titulo h1 { font-size: 1.8rem; margin: 0; cursor: pointer; transition: all 0.3s; position: relative; color: var(--color-destacado); }
-        .super-ia-gradient { background: linear-gradient(90deg, #8A2BE2, #FFD700, #87CEEB); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-fill-color: transparent; animation: gradient-animation 5s ease infinite; background-size: 200% 200%; }
+        .super-ia-gradient { background: linear-gradient(90deg, #8A2BE2, #FFD700, #87CEEB); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; -webkit-text-fill-color: transparent; animation: gradient-animation 5s ease infinite; background-size: 200% 200%; }
         @keyframes gradient-animation { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         .cabecera .titulo i { color: var(--color-destacado); font-size: 2rem; }
         .cabecera .subtitle { font-size: 1.2rem; opacity: 0.8; color: #aaa; margin-top: 0.2rem; }
@@ -195,10 +195,292 @@
         .copy-confirmation.show { opacity: 1; }
         input[type="file"] { display: none; }
 
-        @media (min-width: 769px) {
-            .contenedor-entrada-wrapper { padding: 2rem; }
-            .burbuja-mensaje { max-width: 85%; }
-            .modal-modo { top: 7rem; left: auto; right: 2rem; transform: none; }
+        /* Nuevos estilos para los modales */
+        .modal-super-ia {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            display: none;
+            flex-direction: column;
+            z-index: 2000;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            animation: fadeInDown 0.5s ease-out;
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -20px);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+        
+        .modal-super-ia-contenido {
+            position: relative;
+        }
+        
+        .cerrar-modal-super-ia {
+            position: absolute;
+            top: -1.5rem;
+            right: -1rem;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            font-size: 2.5rem;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        
+        .cerrar-modal-super-ia:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+        
+        .modal-super-ia h3 {
+            margin-top: 0;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .modal-super-ia p {
+            font-size: 1.6rem;
+            line-height: 1.5;
+            margin: 0 0 1.5rem 0;
+        }
+        
+        .comparacion-modos {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .modo-card {
+            flex: 1;
+            background: rgba(255,255,255,0.1);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .modo-card h4 {
+            margin-top: 0;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+        }
+        
+        .modo-card ul {
+            text-align: left;
+            padding-left: 1.5rem;
+            margin-bottom: 0;
+        }
+        
+        .modo-card li {
+            margin-bottom: 0.8rem;
+            font-size: 1.4rem;
+        }
+        
+        .modo-card.super {
+            border: 2px solid #FFD700;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .modo-card.super::after {
+            content: 'RECOMENDADO';
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: #FFD700;
+            color: #000;
+            font-weight: bold;
+            font-size: 1.1rem;
+            padding: 0.3rem 1rem;
+            border-radius: 0 0 0 1rem;
+            transform: translate(0.5rem, -0.5rem) rotate(25deg);
+        }
+        
+        .boton-entendido {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid white;
+            color: white;
+            border-radius: 3rem;
+            padding: 1rem 2rem;
+            font-size: 1.6rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1.5rem;
+            width: 100%;
+        }
+        
+        .boton-entendido:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-3px);
+        }
+        
+        /* Modal de Ayuda */
+        .modal-ayuda {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--fondo-entrada);
+            border-radius: 1.5rem;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+            padding: 2rem;
+            display: none;
+            flex-direction: column;
+            z-index: 2000;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid var(--borde-superior-entrada);
+        }
+        
+        .modal-ayuda-contenido {
+            position: relative;
+        }
+        
+        .cerrar-modal-ayuda {
+            position: absolute;
+            top: -1.5rem;
+            right: -1rem;
+            background: var(--fondo-boton-control);
+            border: none;
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            font-size: 2.5rem;
+            color: var(--color-texto);
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        
+        .cerrar-modal-ayuda:hover {
+            background: var(--fondo-boton-accion);
+            transform: scale(1.1);
+        }
+        
+        .modal-ayuda h3 {
+            margin-top: 0;
+            font-size: 2.2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: var(--color-destacado);
+        }
+        
+        .seccion-ayuda {
+            margin-bottom: 2rem;
+        }
+        
+        .seccion-ayuda h4 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--color-destacado);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .seccion-ayuda ul {
+            padding-left: 2rem;
+        }
+        
+        .seccion-ayuda li {
+            margin-bottom: 1rem;
+            font-size: 1.6rem;
+            line-height: 1.5;
+        }
+        
+        .icono-ayuda {
+            background: var(--fondo-boton-enviar);
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+        }
+        
+        .item-ayuda {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .item-ayuda .icono-ayuda {
+            flex-shrink: 0;
+        }
+        
+        .item-ayuda .contenido-ayuda {
+            flex: 1;
+        }
+        
+        .item-ayuda .titulo-item {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            font-size: 1.6rem;
+        }
+        
+        .item-ayuda .descripcion-item {
+            font-size: 1.5rem;
+        }
+        
+        .boton-ayuda {
+            background: var(--fondo-boton-enviar);
+            color: white;
+            border: none;
+            border-radius: 3rem;
+            padding: 1rem 2rem;
+            font-size: 1.6rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+        
+        .boton-ayuda:hover {
+            background: #6d1dc4;
+            transform: translateY(-3px);
+        }
+        
+        @media (max-width: 600px) {
+            .comparacion-modos {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
@@ -213,6 +495,9 @@
                 </div>
             </div>
             <div class="controles-cabecera">
+                <button id="boton-ayuda" class="boton-control" aria-label="Ayuda" title="Ayuda">
+                    <i class="fas fa-question-circle"></i>
+                </button>
                 <div class="selector-voz-container boton-control">
                     <i class="fas fa-language"></i>
                     <select id="selector-voz" aria-label="Seleccionar voz de la IA"></select>
@@ -263,6 +548,114 @@
         </div>
     </div>
     
+    <!-- Nuevo modal para SUPER MAR-IA -->
+    <div class="modal-super-ia" id="modal-super-ia">
+        <div class="modal-super-ia-contenido">
+            <button class="cerrar-modal-super-ia" id="cerrar-modal-super-ia">&times;</button>
+            <h3><i class="fas fa-crown"></i> Modo SUPER MAR-IA Activado</h3>
+            <p>Este modo es más avanzado y utiliza un modelo de razonamiento profundo para analizar tus preguntas y generar respuestas de mayor calidad.</p>
+            
+            <div class="comparacion-modos">
+                <div class="modo-card">
+                    <h4><i class="fas fa-comment-alt"></i> Mar-IA</h4>
+                    <ul>
+                        <li>Respuestas rápidas</li>
+                        <li>Ideal para consultas simples</li>
+                        <li>Menor consumo de recursos</li>
+                        <li>Respuestas directas</li>
+                    </ul>
+                </div>
+                <div class="modo-card super">
+                    <h4><i class="fas fa-brain"></i> SUPER MAR-IA</h4>
+                    <ul>
+                        <li>Respuestas más inteligentes</li>
+                        <li>Análisis profundo de problemas</li>
+                        <li>Mayor precisión en respuestas</li>
+                        <li>Capacidad de razonamiento</li>
+                        <li>Procesamiento más lento</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <button class="boton-entendido" id="boton-entendido">¡Entendido! Empezar a usar</button>
+        </div>
+    </div>
+    
+    <!-- Modal de Ayuda -->
+    <div class="modal-ayuda" id="modal-ayuda">
+        <div class="modal-ayuda-contenido">
+            <button class="cerrar-modal-ayuda" id="cerrar-modal-ayuda">&times;</button>
+            <h3><i class="fas fa-question-circle"></i> Guía de Ayuda</h3>
+            
+            <div class="seccion-ayuda">
+                <h4><i class="fas fa-exchange-alt"></i> Cambiar entre modos</h4>
+                <ul>
+                    <li>Para cambiar entre el modo Mar-IA y SUPER MAR-IA, haz clic en el título principal ("Mar-IA" o "SUPER MAR-IA") en la parte superior.</li>
+                    <li>Se abrirá un menú donde podrás seleccionar el modo deseado.</li>
+                    <li>El modo SUPER MAR-IA es más lento pero ofrece respuestas más inteligentes mediante un análisis profundo.</li>
+                </ul>
+            </div>
+            
+            <div class="seccion-ayuda">
+                <h4><i class="fas fa-sliders-h"></i> Funciones de los controles</h4>
+                
+                <div class="item-ayuda">
+                    <div class="icono-ayuda">
+                        <i class="fas fa-plus"></i>
+                    </div>
+                    <div class="contenido-ayuda">
+                        <div class="titulo-item">Adjuntar archivos</div>
+                        <div class="descripcion-item">Permite adjuntar imágenes, documentos u otros archivos para procesarlos con OCR o análisis de texto.</div>
+                    </div>
+                </div>
+                
+                <div class="item-ayuda">
+                    <div class="icono-ayuda">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="contenido-ayuda">
+                        <div class="titulo-item">Buscar en internet</div>
+                        <div class="descripcion-item">Activa el modo de búsqueda para que Mar-IA busque información en internet antes de responder.</div>
+                    </div>
+                </div>
+                
+                <div class="item-ayuda">
+                    <div class="icono-ayuda">
+                        <i class="fas fa-microphone"></i>
+                    </div>
+                    <div class="contenido-ayuda">
+                        <div class="titulo-item">Grabar voz</div>
+                        <div class="descripcion-item">Permite dictar tu mensaje mediante reconocimiento de voz.</div>
+                    </div>
+                </div>
+                
+                <div class="item-ayuda">
+                    <div class="icono-ayuda">
+                        <i class="fas fa-language"></i>
+                    </div>
+                    <div class="contenido-ayuda">
+                        <div class="titulo-item">Seleccionar voz</div>
+                        <div class="descripcion-item">Cambia la voz que utiliza Mar-IA para leer las respuestas en voz alta.</div>
+                    </div>
+                </div>
+                
+                <div class="item-ayuda">
+                    <div class="icono-ayuda">
+                        <i class="fas fa-sun"></i>
+                    </div>
+                    <div class="contenido-ayuda">
+                        <div class="titulo-item">Alternar tema</div>
+                        <div class="descripcion-item">Cambia entre modo claro y modo oscuro.</div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="boton-ayuda" id="cerrar-modal-ayuda-btn">
+                <i class="fas fa-check"></i> Entendido
+            </button>
+        </div>
+    </div>
+    
     <div class="overlay" id="overlay"></div>
     <div id="copyConfirmation" class="copy-confirmation">¡Copiado!</div>
 
@@ -295,7 +688,15 @@
                 voiceSelector: document.getElementById('selector-voz'),
                 attachmentsContainer: document.getElementById('contenedor-adjuntos'),
                 activateSearchModalBtn: document.getElementById('activar-busqueda-modal'),
-                tituloModo: document.getElementById('titulo-modo')
+                tituloModo: document.getElementById('titulo-modo'),
+                // Nuevos elementos
+                modalSuperIA: document.getElementById('modal-super-ia'),
+                cerrarModalSuperIA: document.getElementById('cerrar-modal-super-ia'),
+                botonEntendido: document.getElementById('boton-entendido'),
+                botonAyuda: document.getElementById('boton-ayuda'),
+                modalAyuda: document.getElementById('modal-ayuda'),
+                cerrarModalAyuda: document.getElementById('cerrar-modal-ayuda'),
+                cerrarModalAyudaBtn: document.getElementById('cerrar-modal-ayuda-btn')
             };
 
             // --- APPLICATION STATE ---
@@ -336,6 +737,8 @@
                 elements.overlay.addEventListener('click', () => { 
                     toggleModal(false, elements.ocrModal); 
                     toggleModal(false, elements.modoModal); 
+                    toggleModal(false, elements.modalSuperIA);
+                    toggleModal(false, elements.modalAyuda);
                 });
                 elements.takePictureBtn.addEventListener('click', () => { 
                     toggleModal(false, elements.ocrModal); 
@@ -363,6 +766,25 @@
                     opcion.addEventListener('click', (e) => setIAMode(e.currentTarget.dataset.modo));
                 });
                 elements.chatContainer.addEventListener('click', handleChatContainerClick);
+                
+                // Eventos para el modal de SUPER MAR-IA
+                elements.cerrarModalSuperIA.addEventListener('click', () => {
+                    toggleModal(false, elements.modalSuperIA);
+                });
+                elements.botonEntendido.addEventListener('click', () => {
+                    toggleModal(false, elements.modalSuperIA);
+                });
+                
+                // Eventos para el modal de ayuda
+                elements.botonAyuda.addEventListener('click', () => {
+                    toggleModal(true, elements.modalAyuda);
+                });
+                elements.cerrarModalAyuda.addEventListener('click', () => {
+                    toggleModal(false, elements.modalAyuda);
+                });
+                elements.cerrarModalAyudaBtn.addEventListener('click', () => {
+                    toggleModal(false, elements.modalAyuda);
+                });
             };
 
             // --- CORE MESSAGE HANDLING LOGIC ---
@@ -934,6 +1356,11 @@
                     toggleModal(false, elements.modoModal); 
                 } 
                 localStorage.setItem('modoIA', mode); 
+                
+                // Mostrar modal solo si se activa el modo SUPER
+                if (modoSuperIA) {
+                    toggleModal(true, elements.modalSuperIA);
+                }
             };
             
             const loadState = () => { 
