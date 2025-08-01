@@ -2,19 +2,16 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
-    <title>Mar-IA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SUPER MAR-IA | Asistente Avanzado</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         :root {
-            font-size: 62.5%; /* 1rem = 10px */
+            font-size: 62.5%;
             --color-fondo: #121212;
             --color-contenedor: #1E1E1E;
-            --color-cabecera: #1E1E1E;
             --color-texto: #E0E0E0;
-            --color-texto-cabecera: #FFFFFF;
-            --fondo-chat: #121212;
             --fondo-burbuja-usuario: linear-gradient(135deg, #5A5A5A, #4A4A4A);
             --texto-burbuja-usuario: #FFFFFF;
             --fondo-burbuja-bot: #2C2C2C;
@@ -25,32 +22,30 @@
             --fondo-campo-entrada: #2C2C2C;
             --texto-entrada: #FFFFFF;
             --texto-placeholder: #A0A0A0;
-            --sombra-foco-entrada: 0 0 0 2px rgba(128, 0, 128, 0.5);
             --fondo-boton-enviar: #8A2BE2;
             --texto-boton-enviar: white;
-            --sombra-hover-boton-enviar: 0 4px 12px rgba(138, 43, 226, 0.5);
-            --fondo-deshabilitado-boton-enviar: rgba(138, 43, 226, 0.3);
             --fondo-boton-accion: #2C2C2C;
             --texto-boton-accion: #E0E0E0;
             --fondo-boton-grabando: #E53935;
             --color-timestamp: #A0A0A0;
-            --color-alternador-tema: #FFFFFF;
             --fondo-boton-control: #2C2C2C;
             --fondo-adjunto: #2C2C2C;
             --borde-adjunto: #444;
             --fondo-codigo: rgba(0,0,0,0.3);
             --borde-codigo: rgba(255,255,255,0.1);
+            --fondo-boton-buscar-activo: #4CAF50;
+            --fondo-pensamiento: #1a1a2e;
+            --borde-pensamiento: #2d4263;
+            --fondo-pensamiento-hover: #21213e;
+            --color-destacado: #8A2BE2;
+            --resaltado-pensamiento: rgba(138, 43, 226, 0.2);
         }
 
         body.tema-claro {
             --color-fondo: #F5F5F5;
             --color-contenedor: #FFFFFF;
-            --color-cabecera: #FFFFFF;
             --color-texto: #333333;
-            --color-texto-cabecera: #333333;
-            --fondo-chat: #F5F5F5;
             --fondo-burbuja-usuario: #8A2BE2;
-            --texto-burbuja-usuario: #FFFFFF;
             --fondo-burbuja-bot: #E9E9EB;
             --texto-burbuja-bot: #333333;
             --borde-burbuja-bot: #D1D1D1;
@@ -59,452 +54,151 @@
             --fondo-campo-entrada: #F0F0F0;
             --texto-entrada: #333333;
             --texto-placeholder: #666666;
-            --sombra-foco-entrada: 0 0 0 2px rgba(138, 43, 226, 0.3);
-            --fondo-boton-enviar: #8A2BE2;
-            --texto-boton-enviar: #FFFFFF;
-            --sombra-hover-boton-enviar: 0 4px 12px rgba(138, 43, 226, 0.3);
-            --fondo-deshabilitado-boton-enviar: #D1B2FF;
             --fondo-boton-accion: #E9E9EB;
             --texto-boton-accion: #333333;
             --fondo-boton-grabando: #D32F2F;
             --color-timestamp: #666666;
-            --color-alternador-tema: #333333;
             --fondo-boton-control: #F0F0F0;
             --fondo-adjunto: #F0F0F0;
             --borde-adjunto: #DDD;
             --fondo-codigo: rgba(0,0,0,0.05);
             --borde-codigo: rgba(0,0,0,0.1);
+            --fondo-pensamiento: #eef5ff;
+            --borde-pensamiento: #b1c8e4;
+            --fondo-pensamiento-hover: #e4eef9;
+            --color-destacado: #5e17eb;
+            --resaltado-pensamiento: rgba(94, 23, 235, 0.1);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        html {
-            height: 100%;
-        }
-
-        body {
-            background: var(--color-fondo);
-            color: var(--color-texto);
-            font-size: 1.6rem;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            overflow: hidden;
-        }
-
-        .contenedor {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            width: 100%;
-            max-width: 100%;
-            margin: 0 auto;
-            background: var(--color-contenedor);
-        }
-
-        .cabecera {
-            flex-shrink: 0;
-            padding: 1rem 1.5rem;
-            border-bottom: 1px solid var(--borde-superior-entrada);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .cabecera .titulo {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .cabecera .titulo h1 {
-            font-size: 1.8rem;
-            margin: 0;
-        }
-        
-        .cabecera .titulo i {
-            color: #8A2BE2;
-            font-size: 2rem;
-        }
-        
-        .cabecera .subtitle {
-            font-size: 1.2rem;
-            opacity: 0.8;
-            color: #aaa;
-            margin-top: 0.2rem;
-        }
-
-        .controles-cabecera {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-        
-        .boton-control {
-            background: var(--fondo-boton-control);
-            border: none;
-            font-size: 1.8rem;
-            cursor: pointer;
-            color: var(--color-texto);
-            width: 4rem;
-            height: 4rem;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: background 0.2s;
-        }
-        .boton-control:hover {
-            background: var(--fondo-boton-accion);
-        }
-
-        .selector-voz-container {
-            position: relative;
-        }
-
-        #selector-voz {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            opacity: 0;
-            cursor: pointer;
-        }
-
-        .contenedor-chat {
-            flex-grow: 1;
-            overflow-y: auto;
-            padding: 2rem;
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-            scroll-behavior: smooth;
-        }
-
-        .mensaje {
-            display: flex;
-            flex-direction: column;
-            max-width: 90%;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(1rem); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        html, body { height: 100%; overflow: hidden; }
+        body { background: var(--color-fondo); color: var(--color-texto); font-size: 1.6rem; display: flex; flex-direction: column; }
+        .contenedor { display: flex; flex-direction: column; height: 100%; width: 100%; max-width: 100%; margin: 0 auto; background: var(--color-contenedor); }
+        .cabecera { flex-shrink: 0; padding: 1rem 1.5rem; border-bottom: 1px solid var(--borde-superior-entrada); display: flex; align-items: center; justify-content: space-between; }
+        .cabecera .titulo { display: flex; align-items: center; gap: 1rem; }
+        .cabecera .titulo h1 { font-size: 1.8rem; margin: 0; cursor: pointer; transition: all 0.3s; position: relative; color: var(--color-destacado); }
+        .super-ia-gradient { background: linear-gradient(90deg, #8A2BE2, #FFD700, #87CEEB); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-fill-color: transparent; animation: gradient-animation 5s ease infinite; background-size: 200% 200%; }
+        @keyframes gradient-animation { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .cabecera .titulo i { color: var(--color-destacado); font-size: 2rem; }
+        .cabecera .subtitle { font-size: 1.2rem; opacity: 0.8; color: #aaa; margin-top: 0.2rem; }
+        .controles-cabecera { display: flex; align-items: center; gap: 1rem; }
+        .boton-control { background: var(--fondo-boton-control); border: none; font-size: 1.8rem; cursor: pointer; color: var(--color-texto); width: 4rem; height: 4rem; border-radius: 50%; display: flex; justify-content: center; align-items: center; transition: background 0.2s; }
+        .boton-control:hover { background: var(--fondo-boton-accion); }
+        .selector-voz-container { position: relative; }
+        #selector-voz { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+        .contenedor-chat { flex-grow: 1; overflow-y: auto; padding: 2rem; display: flex; flex-direction: column; gap: 2rem; scroll-behavior: smooth; }
+        .mensaje { display: flex; flex-direction: column; max-width: 90%; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(1rem); } to { opacity: 1; transform: translateY(0); } }
         .mensaje-usuario { align-self: flex-end; align-items: flex-end; }
         .mensaje-bot { align-self: flex-start; align-items: flex-start; }
-
-        .burbuja-mensaje {
-            padding: 1.2rem 1.8rem;
-            border-radius: 1.8rem;
-            line-height: 1.6;
-            word-wrap: break-word;
-            max-width: 100%;
-        }
-
-        .burbuja-usuario {
-            background: var(--fondo-burbuja-usuario);
-            color: var(--texto-burbuja-usuario);
-            border-bottom-right-radius: 0.5rem;
-        }
-
-        .burbuja-bot {
-            background: var(--fondo-burbuja-bot);
-            color: var(--texto-burbuja-bot);
-            border: 1px solid var(--borde-burbuja-bot);
-            border-bottom-left-radius: 0.5rem;
-        }
+        .burbuja-mensaje { padding: 1.2rem 1.8rem; border-radius: 1.8rem; line-height: 1.6; word-wrap: break-word; max-width: 100%; }
+        .burbuja-usuario { background: var(--fondo-burbuja-usuario); color: var(--texto-burbuja-usuario); border-bottom-right-radius: 0.5rem; }
+        .burbuja-bot { background: var(--fondo-burbuja-bot); color: var(--texto-burbuja-bot); border: 1px solid var(--borde-burbuja-bot); border-bottom-left-radius: 0.5rem; }
         
-        .burbuja-bot ul, .burbuja-bot ol { padding-left: 2rem; margin: 1rem 0; }
-        .burbuja-bot li { margin-bottom: 0.5rem; }
-        .burbuja-bot strong { font-weight: bold; }
-        .burbuja-bot code { font-family: monospace; }
-        
-        /* ESTILOS MEJORADOS PARA BLOQUES DE CÓDIGO CON SCROLL HORIZONTAL */
-        .bloque-codigo {
-            position: relative;
-            background: var(--fondo-codigo);
-            border: 1px solid var(--borde-codigo);
-            border-radius: 0.8rem;
-            overflow: hidden;
-            margin: 1.2rem 0;
-            max-width: 100%;
+        .pensamiento-container { 
+            background: var(--fondo-pensamiento); 
+            border: 1px solid var(--borde-pensamiento); 
+            border-radius: 1.2rem; 
+            animation: slideIn 0.4s ease-out; 
+            overflow: hidden; 
+            margin-bottom: 1.5rem;
         }
-        
-        .cabecera-codigo {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.8rem 1.2rem;
-            background: rgba(0,0,0,0.2);
-            border-bottom: 1px solid var(--borde-codigo);
+        @keyframes slideIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        .pensamiento-cabecera-clickable { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 1.2rem 1.5rem; 
+            cursor: pointer; 
+            transition: background-color 0.2s; 
         }
-        
-        .lenguaje-codigo {
-            font-size: 1.3rem;
-            font-weight: 500;
-            color: #aaa;
+        .pensamiento-cabecera-clickable:hover { background-color: var(--fondo-pensamiento-hover); }
+        .pensamiento-titulo { font-weight: 600; color: var(--color-texto); display: flex; align-items: center; gap: 1rem; }
+        .pensamiento-titulo i { color: var(--color-destacado); }
+        .pensamiento-controles-cabecera { display: flex; align-items: center; gap: 1.5rem; }
+        .tiempo-pensamiento { font-size: 1.2rem; color: var(--color-timestamp); }
+        .toggle-icon { font-size: 2rem; color: var(--color-timestamp); transition: transform 0.3s ease; }
+        .toggle-icon.collapsed { transform: rotate(-180deg); }
+        .pensamiento-contenido-wrapper { 
+            max-height: 1000px; 
+            overflow: hidden; 
+            transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out; 
         }
-        
-        .boton-copiar-codigo {
-            background: transparent;
-            border: none;
-            color: var(--color-texto);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.4rem 0.8rem;
-            border-radius: 0.4rem;
-            font-size: 1.3rem;
-            transition: all 0.2s;
-            z-index: 10;
+        .pensamiento-contenido-wrapper.collapsed { max-height: 0; padding-top: 0; padding-bottom: 0; border-top: none; }
+        .contenido-pensamiento { 
+            font-size: 1.4rem; 
+            line-height: 1.7; 
+            padding: 1.5rem; 
+            border-top: 1px solid var(--borde-pensamiento);
+            background: var(--resaltado-pensamiento);
+            min-height: 100px; /* Asegura altura mínima */
+            overflow-y: auto; /* Scroll si es necesario */
         }
+        .pensamiento-acciones { display: flex; gap: 1rem; margin-top: 1.5rem; justify-content: flex-end; padding: 0 1.5rem 1.5rem; }
+        .boton-pensamiento { background: rgba(255,255,255,0.05); border: 1px solid var(--borde-pensamiento); border-radius: 0.8rem; padding: 0.5rem 1rem; color: var(--color-texto); cursor: pointer; display: flex; align-items: center; gap: 0.5rem; transition: all 0.2s; font-size: 1.3rem; }
+        .boton-pensamiento:hover { background: rgba(255,255,255,0.1); }
         
-        .boton-copiar-codigo:hover {
-            background: rgba(255,255,255,0.1);
-        }
+        .bloque-codigo { position: relative; background: var(--fondo-codigo); border: 1px solid var(--borde-codigo); border-radius: 0.8rem; overflow: hidden; margin: 1.2rem 0; max-width: 100%; }
+        .cabecera-codigo { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1.2rem; background: rgba(0,0,0,0.2); border-bottom: 1px solid var(--borde-codigo); }
+        .lenguaje-codigo { font-size: 1.3rem; font-weight: 500; color: #aaa; }
+        .boton-copiar-codigo { background: transparent; border: none; color: var(--color-texto); cursor: pointer; display: flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0.8rem; border-radius: 0.4rem; font-size: 1.3rem; transition: all 0.2s; }
+        .boton-copiar-codigo:hover { background: rgba(255,255,255,0.1); }
+        .boton-copiar-codigo.copiado { color: #4CAF50; }
+        .contenedor-codigo { overflow-x: auto; max-width: 100%; }
+        .contenedor-codigo pre { margin: 0; padding: 1.5rem; font-family: 'Courier New', monospace; font-size: 1.4rem; }
         
-        .boton-copiar-codigo.copiado {
-            color: #4CAF50;
-        }
-        
-        .boton-copiar-codigo.copiado i {
-            animation: pulse 0.5s;
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
-        }
-        
-        .contenedor-codigo {
-            overflow-x: auto;
-            max-width: 100%;
-        }
-        
-        .contenedor-codigo pre {
-            margin: 0;
-            padding: 1.5rem;
-            font-family: 'Courier New', monospace;
-            font-size: 1.4rem;
-            line-height: 1.5;
-            tab-size: 4;
-            white-space: pre;
-            min-width: min-content;
-            display: inline-block;
-        }
-        
-        /* Barra de scroll personalizada */
-        .contenedor-codigo::-webkit-scrollbar {
-            height: 8px;
-        }
-        
-        .contenedor-codigo::-webkit-scrollbar-track {
-            background: rgba(0,0,0,0.1);
-            border-radius: 4px;
-        }
-        
-        .contenedor-codigo::-webkit-scrollbar-thumb {
-            background: rgba(128,128,128,0.4);
-            border-radius: 4px;
-        }
-        
-        .contenedor-codigo::-webkit-scrollbar-thumb:hover {
-            background: rgba(128,128,128,0.6);
-        }
-        
-        /* FIN ESTILOS BLOQUES DE CÓDIGO */
-        
-        .info-mensaje { display: flex; align-items: center; margin-bottom: 0.5rem; font-size: 1.4rem; color: var(--color-timestamp); gap: 0.8rem; }
         .timestamp-container { display: flex; align-items: center; gap: 0.8rem; margin-top: 0.8rem; }
         .timestamp { font-size: 1.2rem; color: var(--color-timestamp); }
         .boton-accion-mensaje { background: none; border: none; width: 2.8rem; height: 2.8rem; border-radius: 50%; cursor: pointer; font-size: 1.4rem; display: flex; justify-content: center; align-items: center; color: var(--color-timestamp); transition: background 0.2s; }
         .boton-accion-mensaje:hover { background: rgba(255,255,255,0.1); }
 
-        .contenedor-entrada-wrapper {
-            flex-shrink: 0;
-            padding: 1rem;
-            background: transparent;
-        }
-
-        .contenedor-entrada {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            width: 100%;
-            background: var(--fondo-entrada);
-            border: 1px solid var(--borde-superior-entrada);
-            border-radius: 2.4rem;
-            padding: 1rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-        
-        .contenedor-adjuntos {
-            display: none; /* Oculto por defecto */
-            overflow-x: auto;
-            overflow-y: hidden;
-            white-space: nowrap;
-            padding-bottom: 1rem;
-            scrollbar-width: thin;
-        }
-        .contenedor-adjuntos::-webkit-scrollbar { height: 5px; }
-        .contenedor-adjuntos::-webkit-scrollbar-thumb { background: #555; border-radius: 10px; }
-
-        .adjunto-item {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.8rem;
-            background: var(--fondo-adjunto);
-            border: 1px solid var(--borde-adjunto);
-            border-radius: 1.2rem;
-            padding: 0.8rem 1.2rem;
-            max-width: 22rem;
-            margin-right: 1rem;
-        }
-        
-        .icono-adjunto { font-size: 2rem; color: #8A2BE2; }
+        .contenedor-entrada-wrapper { flex-shrink: 0; padding: 1rem; background: transparent; }
+        .contenedor-entrada { display: flex; flex-direction: column; gap: 1rem; width: 100%; background: var(--fondo-entrada); border: 1px solid var(--borde-superior-entrada); border-radius: 2.4rem; padding: 1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .contenedor-adjuntos { display: none; overflow-x: auto; overflow-y: hidden; white-space: nowrap; padding-bottom: 1rem; scrollbar-width: thin; }
+        .adjunto-item { display: inline-flex; align-items: center; gap: 0.8rem; background: var(--fondo-adjunto); border: 1px solid var(--borde-adjunto); border-radius: 1.2rem; padding: 0.8rem 1.2rem; max-width: 22rem; margin-right: 1rem; }
+        .icono-adjunto { font-size: 2rem; color: var(--color-destacado); }
         .detalles-adjunto { display: flex; flex-direction: column; min-width: 0; }
         .nombre-adjunto { font-size: 1.3rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .tamano-adjunto { font-size: 1.1rem; color: var(--color-timestamp); }
         .boton-eliminar { background: transparent; border: none; border-radius: 50%; width: 2.4rem; height: 2.4rem; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #aaa; transition: all 0.2s; }
         .boton-eliminar:hover { color: #E53935; background: rgba(255, 0, 0, 0.1); }
-
-        .input-area {
-            background-color: var(--fondo-campo-entrada);
-            border: 1px solid var(--borde-adjunto);
-            border-radius: 2.4rem;
-            padding: 1rem 1.5rem;
-            transition: border-color 0.3s;
-        }
-        .input-area:focus-within {
-            border-color: #8A2BE2;
-        }
-
-        #entrada-usuario {
-            width: 100%;
-            flex-grow: 1;
-            border: none;
-            background: transparent;
-            color: var(--texto-entrada);
-            font-size: 1.6rem;
-            outline: none;
-            resize: none;
-            max-height: 15rem;
-            overflow-y: auto;
-            scrollbar-width: none;
-        }
-        #entrada-usuario::-webkit-scrollbar { display: none; }
-        #entrada-usuario::placeholder { color: var(--texto-placeholder); }
-
-        .action-buttons {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .boton-input {
-            background: var(--fondo-boton-accion);
-            color: var(--texto-boton-accion);
-            border: none;
-            width: 4.8rem;
-            height: 4.8rem;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 2rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: all 0.2s;
-            flex-shrink: 0;
-        }
-        .boton-input:hover {
-            transform: scale(1.05);
-        }
-
-        #boton-enviar {
-            background: var(--fondo-boton-enviar);
-            color: var(--texto-boton-enviar);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        #boton-enviar:hover {
-            transform: scale(1.1);
-            box-shadow: var(--sombra-hover-boton-enviar);
-        }
-        #boton-enviar:disabled {
-            background: var(--fondo-deshabilitado-boton-enviar);
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-        
-        #boton-grabar.grabando {
-            background: var(--fondo-boton-grabando);
-            animation: pulsate 1.5s infinite;
-        }
+        .input-area { background-color: var(--fondo-campo-entrada); border: 1px solid var(--borde-adjunto); border-radius: 2.4rem; padding: 1rem 1.5rem; transition: border-color 0.3s; }
+        .input-area:focus-within { border-color: var(--color-destacado); }
+        #entrada-usuario { width: 100%; flex-grow: 1; border: none; background: transparent; color: var(--texto-entrada); font-size: 1.6rem; outline: none; resize: none; max-height: 15rem; overflow-y: auto; }
+        .action-buttons { display: flex; justify-content: flex-end; align-items: center; gap: 1rem; }
+        .boton-input { background: var(--fondo-boton-accion); color: var(--texto-boton-accion); border: none; width: 4.8rem; height: 4.8rem; border-radius: 50%; cursor: pointer; font-size: 2rem; display: flex; justify-content: center; align-items: center; transition: all 0.2s; flex-shrink: 0; }
+        .boton-input:hover { transform: scale(1.05); }
+        .boton-input.modo-activo { background: var(--fondo-boton-buscar-activo) !important; animation: pulsate 2s infinite; }
+        #boton-enviar { background: var(--fondo-boton-enviar); color: var(--texto-boton-enviar); }
+        #boton-grabar.grabando { background: var(--fondo-boton-grabando); animation: pulsate 1.5s infinite; }
         @keyframes pulsate { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
-
-        .indicador-escribiendo {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem 1.5rem;
-            background: var(--fondo-burbuja-bot);
-            border-radius: 1.8rem;
-            width: fit-content;
-            color: var(--texto-burbuja-bot);
-            align-self: flex-start;
-            animation: fadeIn 0.3s ease;
-        }
+        
+        .indicador-escribiendo { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem; background: var(--fondo-burbuja-bot); border-radius: 1.8rem; width: fit-content; color: var(--texto-burbuja-bot); align-self: flex-start; animation: fadeIn 0.3s ease; }
         .indicador-escribiendo .puntos span { height: 0.8rem; width: 0.8rem; background: var(--color-timestamp); border-radius: 50%; display: inline-block; margin: 0 0.2rem; animation: bounce 1.3s infinite; }
         .indicador-escribiendo .puntos span:nth-child(2) { animation-delay: 0.2s; }
         .indicador-escribiendo .puntos span:nth-child(3) { animation-delay: 0.4s; }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-0.5rem); } }
+        .fa-beat { animation: fa-beat 1.5s ease-in-out infinite; }
+        @keyframes fa-beat { 0%, 100% { transform: scale(1); opacity: 0.7; } 50% { transform: scale(1.15); opacity: 1; } }
 
-        .modal-ocr {
-            position: fixed;
-            bottom: 10rem;
-            left: 2rem;
-            background: var(--fondo-entrada);
-            border-radius: 1.5rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            padding: 1rem;
-            display: none;
-            flex-direction: column;
-            gap: 1rem;
-            z-index: 2000;
-            border: 1px solid var(--borde-superior-entrada);
-        }
-        
+        .modal-ocr { position: fixed; bottom: 10rem; right: 2rem; background: var(--fondo-entrada); border-radius: 1.5rem; box-shadow: 0 5px 15px rgba(0,0,0,0.3); padding: 1rem; display: none; flex-direction: column; gap: 1rem; z-index: 2000; border: 1px solid var(--borde-superior-entrada); }
         .opcion-ocr { background: var(--fondo-campo-entrada); color: var(--texto-entrada); border: none; border-radius: 1.2rem; padding: 1.2rem 1.5rem; display: flex; align-items: center; gap: 1.2rem; cursor: pointer; transition: all 0.2s; font-weight: 500; }
-        .opcion-ocr:hover { background: #8A2BE2; color: white; }
+        .opcion-ocr:hover { background: var(--color-destacado); color: white; }
         .opcion-ocr i { font-size: 1.8rem; }
-        
+        .modal-modo { position: fixed; top: 6rem; left: 50%; transform: translateX(-50%); background: var(--fondo-entrada); border-radius: 1.5rem; box-shadow: 0 10px 25px rgba(0,0,0,0.3); padding: 1.5rem; display: none; flex-direction: column; gap: 1rem; z-index: 2000; width: 28rem; border: 1px solid var(--borde-superior-entrada); }
+        .opcion-modo { background: var(--fondo-campo-entrada); color: var(--texto-entrada); border: none; border-radius: 1.2rem; padding: 1.5rem; display: flex; flex-direction: column; gap: 0.8rem; cursor: pointer; transition: all 0.2s; }
+        .opcion-modo:hover { background: var(--color-destacado); color: white; }
+        .opcion-modo-titulo { font-weight: 600; font-size: 1.6rem; display: flex; align-items: center; gap: 1rem; }
+        .opcion-modo-desc { font-size: 1.3rem; opacity: 0.9; line-height: 1.5; }
         .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1500; display: none; }
-        
         .copy-confirmation { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background-color: rgba(0, 0, 0, 0.8); color: white; padding: 1rem 2rem; border-radius: 0.5rem; font-size: 1.4rem; opacity: 0; transition: opacity 0.3s; z-index: 1000; pointer-events: none; }
         .copy-confirmation.show { opacity: 1; }
-
         input[type="file"] { display: none; }
 
-        /* Estilos para PC */
         @media (min-width: 769px) {
-            .contenedor-entrada-wrapper {
-                padding: 2rem;
-            }
-            
-            .burbuja-mensaje {
-                max-width: 85%;
-            }
+            .contenedor-entrada-wrapper { padding: 2rem; }
+            .burbuja-mensaje { max-width: 85%; }
+            .modal-modo { top: 7rem; left: auto; right: 2rem; transform: none; }
         }
     </style>
 </head>
@@ -514,7 +208,7 @@
             <div class="titulo">
                 <i class="fas fa-robot"></i>
                 <div>
-                    <h1>Mar-IA</h1>
+                    <h1 id="titulo-modo">Mar-IA</h1>
                     <div class="subtitle">by Mario Vazquez</div>
                 </div>
             </div>
@@ -529,9 +223,7 @@
             </div>
         </header>
 
-        <main class="contenedor-chat" id="contenedor-chat">
-            <!-- Los mensajes se agregarán aquí dinámicamente -->
-        </main>
+        <main class="contenedor-chat" id="contenedor-chat"></main>
 
         <div class="contenedor-entrada-wrapper" id="contenedor-entrada-wrapper">
             <div class="contenedor-entrada">
@@ -540,21 +232,15 @@
                     <textarea id="entrada-usuario" placeholder="Pregúntale a Mar-IA..." rows="1"></textarea>
                 </div>
                 <div class="action-buttons">
-                    <button id="boton-mas" class="boton-input" title="Adjuntar archivo">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                    <button id="boton-grabar" class="boton-input" title="Grabar voz">
-                        <i class="fas fa-microphone"></i>
-                    </button>
-                    <button id="boton-enviar" class="boton-input" title="Enviar mensaje">
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
+                    <button id="boton-mas" class="boton-input" title="Adjuntar archivo"><i class="fas fa-plus"></i></button>
+                    <button id="boton-buscar" class="boton-input" title="Buscar en internet"><i class="fas fa-search"></i></button>
+                    <button id="boton-grabar" class="boton-input" title="Grabar voz"><i class="fas fa-microphone"></i></button>
+                    <button id="boton-enviar" class="boton-input" title="Enviar mensaje"><i class="fas fa-paper-plane"></i></button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Elementos fuera del flujo principal -->
     <input type="file" id="input-imagen" accept="image/*" multiple>
     <input type="file" id="input-camara" accept="image/*" capture="camera">
     <input type="file" id="input-archivo" multiple>
@@ -563,6 +249,18 @@
         <button class="opcion-ocr" id="tomar-foto"><i class="fas fa-camera"></i> Tomar foto</button>
         <button class="opcion-ocr" id="elegir-galeria"><i class="fas fa-images"></i> Elegir de galería</button>
         <button class="opcion-ocr" id="elegir-archivo"><i class="fas fa-file-alt"></i> Subir archivo</button>
+        <button class="opcion-ocr" id="activar-busqueda-modal"><i class="fas fa-search"></i> Buscar en internet</button>
+    </div>
+    
+    <div class="modal-modo" id="modal-modo">
+        <div class="opcion-modo" data-modo="normal">
+            <div class="opcion-modo-titulo"><i class="fas fa-comment-alt"></i><span>Mar-IA</span></div>
+            <div class="opcion-modo-desc">Respuesta directa y rápida.</div>
+        </div>
+        <div class="opcion-modo" data-modo="super">
+            <div class="opcion-modo-titulo"><i class="fas fa-brain"></i><span>SUPER MAR-IA</span></div>
+            <div class="opcion-modo-desc">Usa el modelo de razonamiento avanzado para respuestas profundas.</div>
+        </div>
     </div>
     
     <div class="overlay" id="overlay"></div>
@@ -570,11 +268,11 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- CLAVES DE API (Mantenlas seguras) ---
+            // --- API KEYS AND CONFIG ---
             const DEEPSEEK_API_KEY = 'sk-646a5b86d1de4ee186dfac833541452b';
             const OCR_API_KEY = 'K82439722788957'; 
 
-            // --- REFERENCIAS A ELEMENTOS DEL DOM ---
+            // --- DOM ELEMENT REFERENCES ---
             const elements = {
                 body: document.body,
                 chatContainer: document.getElementById('contenedor-chat'),
@@ -582,10 +280,12 @@
                 sendButton: document.getElementById('boton-enviar'),
                 recordButton: document.getElementById('boton-grabar'),
                 moreButton: document.getElementById('boton-mas'),
+                searchButton: document.getElementById('boton-buscar'),
                 imageInput: document.getElementById('input-imagen'),
                 cameraInput: document.getElementById('input-camara'),
                 fileInput: document.getElementById('input-archivo'),
                 ocrModal: document.getElementById('modal-ocr'),
+                modoModal: document.getElementById('modal-modo'),
                 overlay: document.getElementById('overlay'),
                 takePictureBtn: document.getElementById('tomar-foto'),
                 galleryBtn: document.getElementById('elegir-galeria'),
@@ -594,154 +294,198 @@
                 copyConfirmation: document.getElementById('copyConfirmation'),
                 voiceSelector: document.getElementById('selector-voz'),
                 attachmentsContainer: document.getElementById('contenedor-adjuntos'),
-                inputWrapper: document.getElementById('contenedor-entrada-wrapper')
+                activateSearchModalBtn: document.getElementById('activar-busqueda-modal'),
+                tituloModo: document.getElementById('titulo-modo')
             };
 
-            // --- ESTADO DE LA APLICACIÓN ---
-            let chatHistory = [
-                {
-                    role: "system",
-                    content: "Eres un asistente de IA servicial y amigable. Tu nombre es Mar-IA, pero solo debes mencionarlo si el usuario te pregunta directamente por tu nombre. Fuiste creado por Mario Vazquez, un desarrollador web autodidacta. Si te preguntan por él, menciona que te creó pero que no hay más información pública disponible. Mantén respuestas profesionales y concisas."
-                }
-            ];
+            // --- APPLICATION STATE ---
+            let chatHistory = [{ role: "system", content: "Eres un asistente de IA servicial y amigable. Tu nombre es Mar-IA. Fuiste creado por Mario Vazquez. Mantén respuestas profesionales y concisas." }];
             let attachments = [];
             let recognition = null;
             let isRecording = false;
             let lastMessageWasFromVoice = false;
             let currentSpeech = null;
+            let modoBusqueda = false;
+            let modoSuperIA = false;
+            let isGeneratingThought = false;
+            let currentReasoning = "";
 
-            // --- INICIALIZACIÓN ---
+            // --- INITIALIZATION ---
             const init = () => {
-                loadTheme();
+                loadState();
                 setupEventListeners();
                 initSpeechRecognition();
                 initVoiceSynthesis();
                 addMessage('bot', '¡Hola! Soy Mar-IA. ¿En qué puedo ayudarte hoy?');
                 autoResizeTextarea();
-                handleKeyboard();
             };
 
-            // --- MANEJO DEL TECLADO VIRTUAL (CORREGIDO) ---
-            const handleKeyboard = () => {
-                const container = document.querySelector('.contenedor');
-                if (!container) return;
-
-                // Detectar si es probable que sea un dispositivo móvil con un visual viewport dinámico
-                // Esto es una heurística y podría necesitar ajustes finos
-                const isMobile = ('visualViewport' in window) && (window.innerWidth < 769 || window.innerHeight < 769);
-
-                if (isMobile) {
-                    const setAppHeight = () => {
-                        container.style.height = `${window.visualViewport.height}px`;
-                    };
-
-                    window.visualViewport.addEventListener('resize', () => {
-                        setAppHeight();
-                        // Darle al layout un momento para ajustarse antes de hacer scroll
-                        setTimeout(scrollToBottom, 100);
-                    });
-
-                    setAppHeight(); // Establecer la altura inicial correctamente
-                } else {
-                    // Para no móviles (PC), asegurar que el contenedor tome la altura completa disponible
-                    container.style.height = '100%';
-                }
-            };
-            
-            // --- MANEJO DE EVENTOS ---
+            // --- EVENT LISTENERS SETUP ---
             const setupEventListeners = () => {
                 elements.sendButton.addEventListener('click', handleSendMessage);
-                elements.userInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        handleSendMessage();
-                    }
+                elements.userInput.addEventListener('keypress', (e) => { 
+                    if (e.key === 'Enter' && !e.shiftKey) { 
+                        e.preventDefault(); 
+                        handleSendMessage(); 
+                    } 
                 });
                 elements.userInput.addEventListener('input', autoResizeTextarea);
                 elements.recordButton.addEventListener('click', toggleRecording);
-                elements.moreButton.addEventListener('click', () => toggleModal(true));
-                elements.overlay.addEventListener('click', () => toggleModal(false));
-                elements.takePictureBtn.addEventListener('click', () => { toggleModal(false); elements.cameraInput.click(); });
-                elements.galleryBtn.addEventListener('click', () => { toggleModal(false); elements.imageInput.click(); });
-                elements.fileBtn.addEventListener('click', () => { toggleModal(false); elements.fileInput.click(); });
-                elements.imageInput.addEventListener('change', (e) => handleFileSelection(e.target.files, 'image'));
-                elements.cameraInput.addEventListener('change', (e) => handleFileSelection(e.target.files, 'image'));
-                elements.fileInput.addEventListener('change', (e) => handleFileSelection(e.target.files, 'file'));
+                elements.moreButton.addEventListener('click', () => toggleModal(true, elements.ocrModal));
+                elements.searchButton.addEventListener('click', toggleModoBusqueda);
+                elements.overlay.addEventListener('click', () => { 
+                    toggleModal(false, elements.ocrModal); 
+                    toggleModal(false, elements.modoModal); 
+                });
+                elements.takePictureBtn.addEventListener('click', () => { 
+                    toggleModal(false, elements.ocrModal); 
+                    elements.cameraInput.click(); 
+                });
+                elements.galleryBtn.addEventListener('click', () => { 
+                    toggleModal(false, elements.ocrModal); 
+                    elements.imageInput.click(); 
+                });
+                elements.fileBtn.addEventListener('click', () => { 
+                    toggleModal(false, elements.ocrModal); 
+                    elements.fileInput.click(); 
+                });
+                elements.imageInput.addEventListener('change', (e) => handleFileSelection(e.target.files));
+                elements.cameraInput.addEventListener('change', (e) => handleFileSelection(e.target.files));
+                elements.fileInput.addEventListener('change', (e) => handleFileSelection(e.target.files));
                 elements.themeSwitcher.addEventListener('click', toggleTheme);
                 elements.voiceSelector.addEventListener('change', stopSpeech);
-                
-                // Evento delegado para botones de copiar código
-                elements.chatContainer.addEventListener('click', (e) => {
-                    if (e.target.closest('.boton-copiar-codigo')) {
-                        const button = e.target.closest('.boton-copiar-codigo');
-                        const codeBlock = button.closest('.bloque-codigo');
-                        if (codeBlock) {
-                            const code = codeBlock.querySelector('pre').innerText;
-                            copyToClipboard(code);
-                            button.classList.add('copiado');
-                            button.innerHTML = '<i class="fas fa-check"></i> Copiado';
-                            setTimeout(() => {
-                                button.classList.remove('copiado');
-                                button.innerHTML = '<i class="fas fa-copy"></i> Copiar';
-                            }, 2000);
-                        }
-                    }
+                elements.activateSearchModalBtn.addEventListener('click', () => { 
+                    toggleModoBusqueda(); 
+                    toggleModal(false, elements.ocrModal); 
                 });
+                elements.tituloModo.addEventListener('click', () => toggleModal(true, elements.modoModal));
+                document.querySelectorAll('.opcion-modo').forEach(opcion => {
+                    opcion.addEventListener('click', (e) => setIAMode(e.currentTarget.dataset.modo));
+                });
+                elements.chatContainer.addEventListener('click', handleChatContainerClick);
             };
 
-            // --- LÓGICA DEL CHAT ---
+            // --- CORE MESSAGE HANDLING LOGIC ---
             const handleSendMessage = async () => {
                 const messageText = elements.userInput.value.trim();
                 if (!messageText && attachments.length === 0) return;
 
                 addMessage('usuario', messageText || `Enviando ${attachments.length} archivo(s)...`);
 
-                let fullMessage = messageText;
-                if (attachments.length > 0) {
-                    showTypingIndicator('Procesando archivos...');
-                    const attachmentContent = await processAttachments();
-                    fullMessage += `\n\n${attachmentContent}`;
+                let userMessageContent = messageText;
+                
+                if (modoBusqueda) {
+                    showIndicator('Buscando en internet...');
+                    const searchResults = await performWebSearch(messageText);
+                    chatHistory.push({ role: "system", content: `Contexto de Búsqueda:\n${searchResults}` });
+                    toggleModoBusqueda();
                 }
                 
-                chatHistory.push({ role: "user", content: fullMessage });
+                if (attachments.length > 0) {
+                    showIndicator('Procesando archivos...');
+                    const attachmentContent = await processAttachments();
+                    userMessageContent += `\n\n--- Archivos Adjuntos ---\n${attachmentContent}`;
+                }
                 
+                hideIndicator();
+                
+                chatHistory.push({ role: "user", content: userMessageContent });
+                const currentQueryHistory = [...chatHistory];
                 resetInput();
                 
-                showTypingIndicator();
-                await fetchBotResponse(chatHistory, lastMessageWasFromVoice);
-
+                if (modoSuperIA) {
+                    await executeSuperIaFlow(currentQueryHistory, lastMessageWasFromVoice);
+                } else {
+                    await fetchBotResponse(currentQueryHistory, lastMessageWasFromVoice);
+                }
+                
                 lastMessageWasFromVoice = false;
             };
-            
-            const fetchBotResponse = async (messages, shouldSpeak) => {
-                const payload = {
-                    model: "deepseek-chat",
-                    messages: messages,
-                    temperature: 0.7,
-                    max_tokens: 1500,
-                    stream: true
-                };
 
+            // --- SUPER MAR-IA FLOW with visible reasoning ---
+            const executeSuperIaFlow = async (currentChatHistory, shouldSpeak) => {
+                isGeneratingThought = true;
+                showIndicator('SUPER MAR-IA está razonando...', 'brain');
+                
+                try {
+                    // Primero: obtener el pensamiento completo
+                    const thoughtResponse = await fetch('https://api.deepseek.com/v1/chat/completions', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${DEEPSEEK_API_KEY}`
+                        },
+                        body: JSON.stringify({
+                            model: "deepseek-reasoner",
+                            messages: currentChatHistory,
+                            max_tokens: 1000
+                        })
+                    });
+
+                    if (!thoughtResponse.ok) {
+                        throw new Error(`Error de API: ${thoughtResponse.status} ${thoughtResponse.statusText}`);
+                    }
+
+                    const thoughtData = await thoughtResponse.json();
+                    const reasoning = thoughtData.choices[0].message.content;
+                    currentReasoning = reasoning;
+                    
+                    hideIndicator();
+                    
+                    // Mostrar el pensamiento en un contenedor especial
+                    const thoughtContainer = createThoughtContainer(reasoning);
+                    
+                    // Segundo: generar respuesta final basada en el pensamiento
+                    await generateFinalResponse(reasoning, currentChatHistory, shouldSpeak);
+                    
+                } catch (error) {
+                    hideIndicator();
+                    console.error("Error en el flujo de SUPER MAR-IA:", error);
+                    addMessage('bot', "Lo siento, ocurrió un error grave al intentar razonar la respuesta.");
+                }
+                
+                isGeneratingThought = false;
+            };
+            
+            // Generar respuesta final basada en el pensamiento
+            const generateFinalResponse = async (reasoning, currentChatHistory, shouldSpeak) => {
+                showIndicator('SUPER MAR-IA está generando la respuesta final...', 'brain');
+                
+                // Agregar el razonamiento al historial para la respuesta final
+                const finalHistory = [
+                    ...currentChatHistory,
+                    { role: "assistant", content: reasoning },
+                    { role: "user", content: "Basándote en tu razonamiento anterior, genera una respuesta final estructurada, concisa y profesional." }
+                ];
+                
                 try {
                     const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${DEEPSEEK_API_KEY}` },
-                        body: JSON.stringify(payload)
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${DEEPSEEK_API_KEY}`
+                        },
+                        body: JSON.stringify({
+                            model: "deepseek-reasoner",
+                            messages: finalHistory,
+                            stream: true
+                        })
                     });
 
-                    if (!response.ok) throw new Error(`API Error: ${response.status}`);
-                    
-                    hideTypingIndicator(); // Ocultar indicador justo antes de mostrar la respuesta
+                    if (!response.ok) {
+                        throw new Error(`Error de API: ${response.status} ${response.statusText}`);
+                    }
 
                     const reader = response.body.getReader();
                     const decoder = new TextDecoder();
                     let fullResponse = "";
-                    const botMessageElement = addMessage('bot', '', true); // Crear elemento vacío para stream
-
+                    const botMessageElement = addMessage('bot', '', true);
+                    hideIndicator();
+                    
                     while (true) {
                         const { value, done } = await reader.read();
                         if (done) break;
-
+                        
                         const chunk = decoder.decode(value, { stream: true });
                         const lines = chunk.split('\n');
                         
@@ -749,6 +493,7 @@
                             if (line.startsWith('data: ')) {
                                 const data = line.substring(6);
                                 if (data === '[DONE]') break;
+                                
                                 try {
                                     const jsonData = JSON.parse(data);
                                     const token = jsonData.choices[0]?.delta?.content || '';
@@ -756,32 +501,198 @@
                                     botMessageElement.querySelector('.burbuja-mensaje').innerHTML = marked.parse(fullResponse);
                                     formatCodeBlocks(botMessageElement);
                                     scrollToBottom();
-                                } catch (e) { /* Ignorar errores de parseo de JSON en stream */ }
+                                } catch (e) { 
+                                    // Ignore parsing errors 
+                                }
                             }
                         }
                     }
                     
                     chatHistory.push({ role: "assistant", content: fullResponse });
-                    if (shouldSpeak) {
-                        speakText(botMessageElement.querySelector('.burbuja-mensaje').innerText, botMessageElement.querySelector('.boton-voz'));
-                    }
-
+                    if (shouldSpeak) speakText(botMessageElement.querySelector('.burbuja-mensaje').innerText, botMessageElement.querySelector('.boton-voz'));
                 } catch (error) {
-                    console.error("Error fetching bot response:", error);
-                    hideTypingIndicator(); // Asegurarse de ocultar en caso de error
-                    addMessage('bot', "Lo siento, ocurrió un error al conectar con el servidor. Por favor, inténtalo de nuevo.");
+                    hideIndicator();
+                    console.error("Error generando respuesta final:", error);
+                    addMessage('bot', "Lo siento, ocurrió un error al generar la respuesta final.");
                 }
             };
             
-            // Formatear bloques de código después de renderizar
-            const formatCodeBlocks = (messageElement) => {
-                const codeBlocks = messageElement.querySelectorAll('pre');
-                codeBlocks.forEach(pre => {
-                    // Crear contenedor de código
+            // --- STANDARD BOT RESPONSE FETCHING (for normal mode) ---
+            const fetchBotResponse = async (messages, shouldSpeak) => {
+                showIndicator('Mar-IA está escribiendo...');
+                
+                const payload = { 
+                    model: "deepseek-chat", 
+                    messages: messages, 
+                    stream: true 
+                };
+
+                try {
+                    const response = await fetch('https://api.deepseek.com/v1/chat/completions', { 
+                        method: 'POST', 
+                        headers: { 
+                            'Content-Type': 'application/json', 
+                            'Authorization': `Bearer ${DEEPSEEK_API_KEY}` 
+                        }, 
+                        body: JSON.stringify(payload) 
+                    });
+                    
+                    if (!response.ok) throw new Error(`API Error: ${response.status}`);
+                    
+                    const reader = response.body.getReader();
+                    const decoder = new TextDecoder();
+                    let fullResponse = "";
+                    const botMessageElement = addMessage('bot', '', true);
+                    hideIndicator();
+                    
+                    while (true) {
+                        const { value, done } = await reader.read();
+                        if (done) break;
+                        
+                        const chunk = decoder.decode(value, { stream: true });
+                        const lines = chunk.split('\n');
+                        
+                        for (const line of lines) {
+                            if (line.startsWith('data: ')) {
+                                const data = line.substring(6);
+                                if (data === '[DONE]') break;
+                                
+                                try {
+                                    const jsonData = JSON.parse(data);
+                                    const token = jsonData.choices[0]?.delta?.content || '';
+                                    fullResponse += token;
+                                    botMessageElement.querySelector('.burbuja-mensaje').innerHTML = marked.parse(fullResponse);
+                                    formatCodeBlocks(botMessageElement);
+                                    scrollToBottom();
+                                } catch (e) { 
+                                    // Ignore parsing errors 
+                                }
+                            }
+                        }
+                    }
+                    
+                    chatHistory.push({ role: "assistant", content: fullResponse });
+                    if (shouldSpeak) speakText(botMessageElement.querySelector('.burbuja-mensaje').innerText, botMessageElement.querySelector('.boton-voz'));
+                } catch (error) {
+                    hideIndicator();
+                    console.error("Error fetching bot response:", error);
+                    addMessage('bot', "Lo siento, ocurrió un error al conectar con el servidor.");
+                }
+            };
+
+            // --- UI & DOM MANIPULATION ---
+            const addMessage = (role, content, isStreaming = false) => {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `mensaje mensaje-${role}`;
+                
+                const bubbleDiv = document.createElement('div');
+                bubbleDiv.className = `burbuja-mensaje burbuja-${role}`;
+                
+                if (content || isStreaming) {
+                    bubbleDiv.innerHTML = content ? marked.parse(content) : '';
+                }
+                
+                const timestampContainer = document.createElement('div');
+                timestampContainer.className = 'timestamp-container';
+                
+                const timestamp = document.createElement('div');
+                timestamp.className = 'timestamp';
+                timestamp.textContent = new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+                timestampContainer.appendChild(timestamp);
+                
+                if (role === 'bot') {
+                    const speakBtn = document.createElement('button');
+                    speakBtn.className = 'boton-accion-mensaje boton-voz';
+                    speakBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+                    speakBtn.title = 'Leer en voz alta';
+                    timestampContainer.appendChild(speakBtn);
+                }
+                
+                const copyBtn = document.createElement('button');
+                copyBtn.className = 'boton-accion-mensaje boton-copiar';
+                copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
+                copyBtn.title = 'Copiar';
+                timestampContainer.appendChild(copyBtn);
+                
+                messageDiv.appendChild(bubbleDiv);
+                messageDiv.appendChild(timestampContainer);
+                
+                elements.chatContainer.appendChild(messageDiv);
+                
+                if (!isStreaming) {
+                    formatCodeBlocks(messageDiv);
+                    scrollToBottom();
+                }
+                
+                return messageDiv;
+            };
+
+            const createThoughtContainer = (reasoning) => {
+                const thoughtDiv = document.createElement('div');
+                thoughtDiv.className = 'pensamiento-container';
+                
+                thoughtDiv.innerHTML = `
+                    <div class="pensamiento-cabecera-clickable">
+                        <div class="pensamiento-titulo"><i class="fas fa-brain"></i><span>Proceso de Pensamiento de SUPER MAR-IA</span></div>
+                        <div class="pensamiento-controles-cabecera">
+                            <div class="tiempo-pensamiento">${new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}</div>
+                            <i class="fas fa-chevron-up toggle-icon"></i>
+                        </div>
+                    </div>
+                    <div class="pensamiento-contenido-wrapper">
+                        <div class="contenido-pensamiento">${marked.parse(reasoning)}</div>
+                        <div class="pensamiento-acciones">
+                            <button class="boton-pensamiento boton-copiar-pensamiento"><i class="fas fa-copy"></i> Copiar Razonamiento</button>
+                        </div>
+                    </div>`;
+                
+                elements.chatContainer.appendChild(thoughtDiv);
+                formatCodeBlocks(thoughtDiv);
+                scrollToBottom();
+                
+                return thoughtDiv;
+            };
+            
+            const handleChatContainerClick = (e) => {
+                const header = e.target.closest('.pensamiento-cabecera-clickable');
+                if (header) {
+                    const wrapper = header.nextElementSibling;
+                    const icon = header.querySelector('.toggle-icon');
+                    const isCollapsed = wrapper.classList.toggle('collapsed');
+                    icon.classList.toggle('collapsed', isCollapsed);
+                    icon.classList.toggle('fa-chevron-down', isCollapsed);
+                    icon.classList.toggle('fa-chevron-up', !isCollapsed);
+                    return;
+                }
+                
+                const copyBtn = e.target.closest('.boton-copiar');
+                if (copyBtn) {
+                    const textToCopy = copyBtn.closest('.mensaje').querySelector('.burbuja-mensaje').innerText;
+                    copyToClipboard(textToCopy);
+                    return;
+                }
+                
+                const copyThoughtBtn = e.target.closest('.boton-copiar-pensamiento');
+                if (copyThoughtBtn) {
+                    const textToCopy = copyThoughtBtn.closest('.pensamiento-container').querySelector('.contenido-pensamiento').innerText;
+                    copyToClipboard(textToCopy);
+                    return;
+                }
+                
+                const speakBtn = e.target.closest('.boton-voz');
+                if (speakBtn) {
+                    const textToSpeak = speakBtn.closest('.mensaje').querySelector('.burbuja-mensaje').innerText;
+                    speakText(textToSpeak, speakBtn);
+                }
+            };
+
+            const formatCodeBlocks = (element) => {
+                element.querySelectorAll('pre').forEach(pre => {
+                    if (pre.parentElement.classList.contains('bloque-codigo')) return;
+                    
                     const codeContainer = document.createElement('div');
                     codeContainer.className = 'bloque-codigo';
                     
-                    // Crear cabecera con botón de copiar
                     const header = document.createElement('div');
                     header.className = 'cabecera-codigo';
                     
@@ -792,69 +703,24 @@
                     const copyBtn = document.createElement('button');
                     copyBtn.className = 'boton-copiar-codigo';
                     copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copiar';
+                    copyBtn.onclick = () => {
+                        copyToClipboard(pre.innerText);
+                        copyBtn.innerHTML = '<i class="fas fa-check"></i> Copiado';
+                        setTimeout(() => { copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copiar'; }, 2000);
+                    };
                     
                     header.appendChild(langSpan);
                     header.appendChild(copyBtn);
                     
-                    // Contenedor para el scroll horizontal
                     const codeContent = document.createElement('div');
                     codeContent.className = 'contenedor-codigo';
+                    codeContent.appendChild(pre.cloneNode(true));
                     
-                    // Mover el contenido pre al contenedor
-                    const codeElement = document.createElement('pre');
-                    codeElement.innerHTML = pre.innerHTML;
-                    codeContent.appendChild(codeElement);
-                    
-                    // Construir la estructura completa
                     codeContainer.appendChild(header);
                     codeContainer.appendChild(codeContent);
                     
-                    // Reemplazar el pre original con el nuevo contenedor
                     pre.replaceWith(codeContainer);
                 });
-            };
-            
-            const addMessage = (role, content, isStreaming = false) => {
-                const messageDiv = document.createElement('div');
-                messageDiv.className = `mensaje mensaje-${role}`;
-
-                const bubbleDiv = document.createElement('div');
-                bubbleDiv.className = `burbuja-mensaje burbuja-${role}`;
-                if (content) bubbleDiv.innerHTML = marked.parse(content);
-                
-                const timestampContainer = document.createElement('div');
-                timestampContainer.className = 'timestamp-container';
-                
-                const timestamp = document.createElement('div');
-                timestamp.className = 'timestamp';
-                timestamp.textContent = new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-                timestampContainer.appendChild(timestamp);
-
-                if (role === 'bot') {
-                    const speakBtn = document.createElement('button');
-                    speakBtn.className = 'boton-accion-mensaje boton-voz';
-                    speakBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
-                    speakBtn.title = 'Leer en voz alta';
-                    speakBtn.onclick = () => speakText(bubbleDiv.innerText, speakBtn);
-                    timestampContainer.appendChild(speakBtn);
-                }
-                
-                const copyBtn = document.createElement('button');
-                copyBtn.className = 'boton-accion-mensaje boton-copiar';
-                copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
-                copyBtn.title = 'Copiar';
-                copyBtn.onclick = () => copyToClipboard(bubbleDiv.innerText);
-                timestampContainer.appendChild(copyBtn);
-
-                messageDiv.appendChild(bubbleDiv);
-                messageDiv.appendChild(timestampContainer);
-                
-                elements.chatContainer.appendChild(messageDiv);
-                if (!isStreaming) {
-                    formatCodeBlocks(messageDiv);
-                    scrollToBottom();
-                }
-                return messageDiv;
             };
 
             const resetInput = () => {
@@ -865,17 +731,17 @@
                 autoResizeTextarea();
             };
 
-            // --- MANEJO DE ADJUNTOS Y OCR ---
-            const handleFileSelection = (files, type) => {
-                for (const file of files) {
-                    attachments.push({ file, type });
-                    renderAttachment(file);
+            // --- ATTACHMENTS & OCR ---
+            const handleFileSelection = (files) => {
+                for (const file of files) { 
+                    attachments.push({ file }); 
+                    renderAttachment(file); 
                 }
-                elements.imageInput.value = '';
-                elements.cameraInput.value = '';
+                elements.imageInput.value = ''; 
+                elements.cameraInput.value = ''; 
                 elements.fileInput.value = '';
             };
-
+            
             const renderAttachment = (file) => {
                 elements.attachmentsContainer.style.display = 'flex';
                 const itemDiv = document.createElement('div');
@@ -889,181 +755,236 @@
                     </div>
                     <button class="boton-eliminar" title="Eliminar"><i class="fas fa-times"></i></button>
                 `;
-
+                
                 itemDiv.querySelector('.boton-eliminar').onclick = () => {
                     attachments = attachments.filter(att => att.file !== file);
                     itemDiv.remove();
-                    if (attachments.length === 0) {
-                        elements.attachmentsContainer.style.display = 'none';
-                    }
+                    if (attachments.length === 0) elements.attachmentsContainer.style.display = 'none';
                 };
+                
                 elements.attachmentsContainer.appendChild(itemDiv);
             };
-
+            
             const processAttachments = async () => {
                 let content = [];
+                
                 for (const attachment of attachments) {
-                    if (attachment.type === 'image') {
-                        try {
-                            const text = await ocrSpaceRequest(attachment.file);
-                            content.push(`--- Texto de imagen OCR: ${attachment.file.name} ---\n${text}\n--- Fin de texto OCR ---`);
-                        } catch (error) {
-                            content.push(`[Error al procesar imagen OCR: ${attachment.file.name}]`);
+                    if (attachment.file.type.startsWith('image/')) {
+                        try { 
+                            const text = await ocrSpaceRequest(attachment.file); 
+                            content.push(`--- Texto de imagen OCR: ${attachment.file.name} ---\n${text}\n---`); 
+                        } catch (error) { 
+                            content.push(`[Error OCR: ${attachment.file.name}]`); 
                         }
                     } else if (attachment.file.type.startsWith('text/')) {
-                         try {
-                            const text = await attachment.file.text();
-                            content.push(`--- Contenido de archivo: ${attachment.file.name} ---\n${text}\n--- Fin de archivo ---`);
-                        } catch (error) {
-                            content.push(`[Error al leer archivo de texto: ${attachment.file.name}]`);
-                        }
+                         try { 
+                             const text = await attachment.file.text(); 
+                             content.push(`--- Archivo: ${attachment.file.name} ---\n${text}\n---`); 
+                         } catch (error) { 
+                             content.push(`[Error al leer: ${attachment.file.name}]`); 
+                         }
                     }
                 }
+                
                 return content.join('\n\n');
             };
-
+            
             const ocrSpaceRequest = async (file) => {
                 const formData = new FormData();
-                formData.append('file', file);
-                formData.append('language', 'spa');
-                formData.append('apikey', OCR_API_KEY);
+                formData.append('file', file); 
+                formData.append('language', 'spa'); 
+                formData.append('apikey', OCR_API_KEY); 
                 formData.append('OCREngine', '2');
-
-                const response = await fetch('https://api.ocr.space/parse/image', { method: 'POST', body: formData });
+                
+                const response = await fetch('https://api.ocr.space/parse/image', { 
+                    method: 'POST', 
+                    body: formData 
+                });
+                
                 const data = await response.json();
-
                 if (data.IsErroredOnProcessing) throw new Error(data.ErrorMessage);
                 return data.ParsedResults?.[0]?.ParsedText || '';
             };
 
-            // --- RECONOCIMIENTO Y SÍNTESIS DE VOZ ---
+            // --- SPEECH RECOGNITION & SYNTHESIS ---
             const initSpeechRecognition = () => {
                 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                
                 if (SpeechRecognition) {
                     recognition = new SpeechRecognition();
-                    recognition.continuous = false;
-                    recognition.interimResults = false;
                     recognition.lang = 'es-ES';
-                    recognition.onstart = () => { isRecording = true; elements.recordButton.classList.add('grabando'); };
-                    recognition.onend = () => { isRecording = false; elements.recordButton.classList.remove('grabando'); };
-                    recognition.onresult = (event) => {
-                        elements.userInput.value = event.results[0][0].transcript;
-                        lastMessageWasFromVoice = true;
-                        handleSendMessage();
+                    recognition.onstart = () => { 
+                        isRecording = true; 
+                        elements.recordButton.classList.add('grabando'); 
+                    };
+                    recognition.onend = () => { 
+                        isRecording = false; 
+                        elements.recordButton.classList.remove('grabando'); 
+                    };
+                    recognition.onresult = (event) => { 
+                        elements.userInput.value = event.results[0][0].transcript; 
+                        lastMessageWasFromVoice = true; 
+                        handleSendMessage(); 
                     };
                     recognition.onerror = (event) => console.error('Speech recognition error', event.error);
-                } else {
-                    elements.recordButton.disabled = true;
+                } else { 
+                    elements.recordButton.disabled = true; 
                 }
             };
             
-            const toggleRecording = () => {
-                if (!recognition) return;
-                isRecording ? recognition.stop() : recognition.start();
+            const toggleRecording = () => { 
+                if (!recognition) return; 
+                isRecording ? recognition.stop() : recognition.start(); 
             };
-
+            
             const initVoiceSynthesis = () => {
                 const populateVoices = () => {
                     const voices = speechSynthesis.getVoices().filter(v => v.lang.startsWith('es'));
-                    elements.voiceSelector.innerHTML = voices
-                        .map(v => `<option value="${v.name}">${v.name} (${v.lang})</option>`)
-                        .join('');
+                    elements.voiceSelector.innerHTML = voices.map(v => 
+                        `<option value="${v.name}">${v.name} (${v.lang})</option>`
+                    ).join('');
                 };
+                
                 populateVoices();
+                
                 if (speechSynthesis.onvoiceschanged !== undefined) {
                     speechSynthesis.onvoiceschanged = populateVoices;
                 }
             };
             
             const speakText = (text, button) => {
-                if (currentSpeech && speechSynthesis.speaking) {
-                    stopSpeech();
-                    return;
+                if (currentSpeech && speechSynthesis.speaking) { 
+                    stopSpeech(); 
+                    return; 
                 }
-                stopSpeech(); // Detener cualquier habla anterior
+                
+                stopSpeech();
+                
                 currentSpeech = new SpeechSynthesisUtterance(text);
-                const selectedVoice = speechSynthesis.getVoices().find(v => v.name === elements.voiceSelector.value);
-                currentSpeech.voice = selectedVoice;
-                currentSpeech.lang = 'es-ES';
+                const selectedVoiceName = elements.voiceSelector.value;
+                const voices = speechSynthesis.getVoices();
+                const voice = voices.find(v => v.name === selectedVoiceName);
+                
+                if (voice) {
+                    currentSpeech.voice = voice;
+                }
                 
                 const allSpeakButtons = document.querySelectorAll('.boton-voz');
                 
-                currentSpeech.onstart = () => {
-                    allSpeakButtons.forEach(btn => btn.innerHTML = '<i class="fas fa-volume-up"></i>');
-                    if(button) button.innerHTML = '<i class="fas fa-stop"></i>';
+                currentSpeech.onstart = () => { 
+                    allSpeakButtons.forEach(btn => btn.innerHTML = '<i class="fas fa-volume-up"></i>'); 
+                    if(button) button.innerHTML = '<i class="fas fa-stop"></i>'; 
                 };
-                currentSpeech.onend = () => {
-                     if(button) button.innerHTML = '<i class="fas fa-volume-up"></i>';
-                     currentSpeech = null;
+                
+                currentSpeech.onend = () => { 
+                    if(button) button.innerHTML = '<i class="fas fa-volume-up"></i>'; 
+                    currentSpeech = null; 
                 };
+                
                 speechSynthesis.speak(currentSpeech);
             };
-
+            
             const stopSpeech = () => {
-                if (speechSynthesis.speaking) {
-                    speechSynthesis.cancel();
-                }
+                if (speechSynthesis.speaking) speechSynthesis.cancel();
                 document.querySelectorAll('.boton-voz').forEach(btn => btn.innerHTML = '<i class="fas fa-volume-up"></i>');
                 currentSpeech = null;
             };
 
-            // --- FUNCIONES DE UTILIDAD ---
-            const autoResizeTextarea = () => {
-                const textarea = elements.userInput;
-                textarea.style.height = 'auto';
-                textarea.style.height = `${textarea.scrollHeight}px`;
-            };
-
-            const scrollToBottom = () => {
-                elements.chatContainer.scrollTop = elements.chatContainer.scrollHeight;
-            };
-
-            const toggleTheme = () => {
-                elements.body.classList.toggle('tema-claro');
-                const isClaro = elements.body.classList.contains('tema-claro');
-                localStorage.setItem('tema', isClaro ? 'claro' : 'oscuro');
-                elements.themeSwitcher.innerHTML = `<i class="fas ${isClaro ? 'fa-moon' : 'fa-sun'}"></i>`;
-            };
-
-            const loadTheme = () => {
-                if (localStorage.getItem('tema') === 'claro') {
-                    elements.body.classList.add('tema-claro');
-                    elements.themeSwitcher.innerHTML = '<i class="fas fa-moon"></i>';
-                }
+            // --- UTILITY FUNCTIONS ---
+            const autoResizeTextarea = () => { 
+                const ta = elements.userInput; 
+                ta.style.height = 'auto'; 
+                ta.style.height = `${ta.scrollHeight}px`; 
             };
             
-            const toggleModal = (show) => {
-                elements.ocrModal.style.display = show ? 'flex' : 'none';
-                elements.overlay.style.display = show ? 'block' : 'none';
+            const scrollToBottom = () => { 
+                elements.chatContainer.scrollTop = elements.chatContainer.scrollHeight; 
+            };
+            
+            const toggleTheme = () => { 
+                elements.body.classList.toggle('tema-claro'); 
+                const isClaro = elements.body.classList.contains('tema-claro'); 
+                localStorage.setItem('theme', isClaro ? 'claro' : 'oscuro'); 
+                elements.themeSwitcher.innerHTML = `<i class="fas ${isClaro ? 'fa-moon' : 'fa-sun'}"></i>`; 
+            };
+            
+            const toggleModal = (show, modal) => { 
+                modal.style.display = show ? 'flex' : 'none'; 
+                elements.overlay.style.display = show ? 'block' : 'none'; 
+            };
+            
+            const copyToClipboard = (text) => { 
+                navigator.clipboard.writeText(text).then(() => { 
+                    elements.copyConfirmation.classList.add('show'); 
+                    setTimeout(() => elements.copyConfirmation.classList.remove('show'), 2000); 
+                }); 
+            };
+            
+            const toggleModoBusqueda = () => { 
+                modoBusqueda = !modoBusqueda; 
+                elements.searchButton.classList.toggle('modo-activo', modoBusqueda); 
+                elements.searchButton.title = modoBusqueda ? 'Modo búsqueda activo' : 'Buscar en internet'; 
+            };
+            
+            const setIAMode = (mode) => { 
+                modoSuperIA = mode === 'super'; 
+                elements.tituloModo.textContent = modoSuperIA ? 'SUPER MAR-IA' : 'Mar-IA'; 
+                elements.tituloModo.classList.toggle('super-ia-gradient', modoSuperIA); 
+                if(elements.modoModal.style.display === 'flex') { 
+                    toggleModal(false, elements.modoModal); 
+                } 
+                localStorage.setItem('modoIA', mode); 
+            };
+            
+            const loadState = () => { 
+                if (localStorage.getItem('theme') === 'claro') { 
+                    elements.body.classList.add('tema-claro'); 
+                    elements.themeSwitcher.innerHTML = '<i class="fas fa-moon"></i>'; 
+                } 
+                setIAMode(localStorage.getItem('modoIA') || 'normal'); 
+            };
+            
+            const showIndicator = (text, iconType = 'dots') => { 
+                hideIndicator(); 
+                const indicator = document.createElement('div'); 
+                indicator.id = 'dynamic-indicator'; 
+                indicator.className = 'indicador-escribiendo'; 
+                const iconHtml = iconType === 'brain' ? '<i class="fas fa-brain fa-beat"></i>' : '<div class="puntos"><span></span><span></span><span></span></div>'; 
+                indicator.innerHTML = `${iconHtml} <span>${text}</span>`; 
+                elements.chatContainer.appendChild(indicator); 
+                scrollToBottom(); 
+            };
+            
+            const hideIndicator = () => { 
+                const indicator = document.getElementById('dynamic-indicator'); 
+                if (indicator) indicator.remove(); 
+            };
+            
+            const performWebSearch = async (query) => { 
+                try { 
+                    const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(`https://api.duckduckgo.com/?q=${query}&format=json&no_html=1`)}`);
+                    const data = await response.json();
+                    const results = JSON.parse(data.contents);
+                    return formatSearchResults(results);
+                } catch (error) { 
+                    console.error('Error en búsqueda web:', error); 
+                    return "No se pudo realizar la búsqueda en internet debido a un error."; 
+                } 
+            };
+            
+            const formatSearchResults = (results) => { 
+                if (!results || !results.AbstractText) return "No se encontraron resultados de búsqueda relevantes."; 
+                let formatted = `**Fuente: ${results.AbstractSource}**\n${results.AbstractText}\n\n`; 
+                if (results.RelatedTopics?.length > 0) { 
+                    formatted += "**Tópicos Relacionados:**\n"; 
+                    results.RelatedTopics.slice(0, 4).forEach(topic => { 
+                        if (topic.Text) formatted += `• ${topic.Text}\n`; 
+                    }); 
+                } 
+                return formatted; 
             };
 
-            const copyToClipboard = (text) => {
-                navigator.clipboard.writeText(text).then(() => {
-                    elements.copyConfirmation.classList.add('show');
-                    setTimeout(() => elements.copyConfirmation.classList.remove('show'), 2000);
-                });
-            };
-
-            const showTypingIndicator = (text = 'Mar-IA está escribiendo...') => {
-                // Remove any old indicator first
-                hideTypingIndicator();
-
-                // Create and append a new one to ensure it's at the end
-                const typingIndicatorElement = document.createElement('div');
-                typingIndicatorElement.className = 'indicador-escribiendo';
-                typingIndicatorElement.innerHTML = `<div class="puntos"><span></span><span></span><span></span></div> <span class="typing-text">${text}</span>`;
-                elements.chatContainer.appendChild(typingIndicatorElement);
-                scrollToBottom();
-            };
-
-            const hideTypingIndicator = () => {
-                const existingIndicator = elements.chatContainer.querySelector('.indicador-escribiendo');
-                if (existingIndicator) {
-                    existingIndicator.remove();
-                }
-            };
-
-            // --- INICIAR LA APLICACIÓN ---
+            // Initialize the application
             init();
         });
     </script>
