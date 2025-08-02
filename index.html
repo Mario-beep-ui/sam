@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>SUPER MAR-IA | Asistente Avanzado</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -71,23 +71,28 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        html, body { height: 100%; overflow: hidden; }
-        body { background: var(--color-fondo); color: var(--color-texto); font-size: 1.6rem; display: flex; flex-direction: column; }
         
-        /* Cambios para el desplazamiento en móviles */
+        html, body { 
+            height: 100%;
+            overflow: hidden; 
+        }
+
+        body { 
+            background: var(--color-fondo); 
+            color: var(--color-texto); 
+            font-size: 1.6rem; 
+        }
+        
         .contenedor {
             display: flex;
             flex-direction: column;
-            height: 100%;
+            height: 100%; 
             width: 100%;
-            max-width: 100%;
-            margin: 0 auto;
             background: var(--color-contenedor);
-            position: relative;
         }
         
         .cabecera { 
-            flex-shrink: 0; 
+            flex-shrink: 0;
             padding: 1rem 1.5rem; 
             border-bottom: 1px solid var(--borde-superior-entrada); 
             display: flex; 
@@ -97,7 +102,8 @@
         }
         
         .contenedor-chat { 
-            flex-grow: 1; 
+            flex: 1;
+            min-height: 0;
             overflow-y: auto; 
             padding: 2rem; 
             display: flex; 
@@ -106,18 +112,13 @@
             scroll-behavior: smooth; 
         }
         
-        /* Contenedor de entrada con posición sticky */
         .contenedor-entrada-wrapper { 
-            flex-shrink: 0; 
+            flex-shrink: 0;
             padding: 1rem; 
-            background: transparent;
-            position: sticky;
-            bottom: 0;
-            z-index: 100;
             background: var(--color-contenedor);
+            z-index: 10;
         }
 
-        /* Resto de estilos permanecen iguales */
         .cabecera .titulo { display: flex; align-items: center; gap: 1rem; }
         .cabecera .titulo h1 { font-size: 1.8rem; margin: 0; cursor: pointer; transition: all 0.3s; position: relative; color: var(--color-destacado); }
         .super-ia-gradient { background: linear-gradient(90deg, #8A2BE2, #FFD700, #87CEEB); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; -webkit-text-fill-color: transparent; animation: gradient-animation 5s ease infinite; background-size: 200% 200%; }
@@ -137,23 +138,9 @@
         .burbuja-usuario { background: var(--fondo-burbuja-usuario); color: var(--texto-burbuja-usuario); border-bottom-right-radius: 0.5rem; }
         .burbuja-bot { background: var(--fondo-burbuja-bot); color: var(--texto-burbuja-bot); border: 1px solid var(--borde-burbuja-bot); border-bottom-left-radius: 0.5rem; }
         
-        .pensamiento-container { 
-            background: var(--fondo-pensamiento); 
-            border: 1px solid var(--borde-pensamiento); 
-            border-radius: 1.2rem; 
-            animation: slideIn 0.4s ease-out; 
-            overflow: hidden; 
-            margin-bottom: 1.5rem;
-        }
+        .pensamiento-container { background: var(--fondo-pensamiento); border: 1px solid var(--borde-pensamiento); border-radius: 1.2rem; animation: slideIn 0.4s ease-out; overflow: hidden; margin-bottom: 1.5rem; }
         @keyframes slideIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
-        .pensamiento-cabecera-clickable { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 1.2rem 1.5rem; 
-            cursor: pointer; 
-            transition: background-color 0.2s; 
-        }
+        .pensamiento-cabecera-clickable { display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 1.5rem; cursor: pointer; transition: background-color 0.2s; }
         .pensamiento-cabecera-clickable:hover { background-color: var(--fondo-pensamiento-hover); }
         .pensamiento-titulo { font-weight: 600; color: var(--color-texto); display: flex; align-items: center; gap: 1rem; }
         .pensamiento-titulo i { color: var(--color-destacado); }
@@ -161,21 +148,9 @@
         .tiempo-pensamiento { font-size: 1.2rem; color: var(--color-timestamp); }
         .toggle-icon { font-size: 2rem; color: var(--color-timestamp); transition: transform 0.3s ease; }
         .toggle-icon.collapsed { transform: rotate(-180deg); }
-        .pensamiento-contenido-wrapper { 
-            max-height: 1000px; 
-            overflow: hidden; 
-            transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out; 
-        }
+        .pensamiento-contenido-wrapper { max-height: 1000px; overflow: hidden; transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out; }
         .pensamiento-contenido-wrapper.collapsed { max-height: 0; padding-top: 0; padding-bottom: 0; border-top: none; }
-        .contenido-pensamiento { 
-            font-size: 1.4rem; 
-            line-height: 1.7; 
-            padding: 1.5rem; 
-            border-top: 1px solid var(--borde-pensamiento);
-            background: var(--resaltado-pensamiento);
-            min-height: 100px; /* Asegura altura mínima */
-            overflow-y: auto; /* Scroll si es necesario */
-        }
+        .contenido-pensamiento { font-size: 1.4rem; line-height: 1.7; padding: 1.5rem; border-top: 1px solid var(--borde-pensamiento); background: var(--resaltado-pensamiento); min-height: 100px; overflow-y: auto; }
         .pensamiento-acciones { display: flex; gap: 1rem; margin-top: 1.5rem; justify-content: flex-end; padding: 0 1.5rem 1.5rem; }
         .boton-pensamiento { background: rgba(255,255,255,0.05); border: 1px solid var(--borde-pensamiento); border-radius: 0.8rem; padding: 0.5rem 1rem; color: var(--color-texto); cursor: pointer; display: flex; align-items: center; gap: 0.5rem; transition: all 0.2s; font-size: 1.3rem; }
         .boton-pensamiento:hover { background: rgba(255,255,255,0.1); }
@@ -194,8 +169,20 @@
         .boton-accion-mensaje { background: none; border: none; width: 2.8rem; height: 2.8rem; border-radius: 50%; cursor: pointer; font-size: 1.4rem; display: flex; justify-content: center; align-items: center; color: var(--color-timestamp); transition: background 0.2s; }
         .boton-accion-mensaje:hover { background: rgba(255,255,255,0.1); }
 
-        .contenedor-entrada { display: flex; flex-direction: column; gap: 1rem; width: 100%; background: var(--fondo-entrada); border: 1px solid var(--borde-superior-entrada); border-radius: 2.4rem; padding: 1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
-        .contenedor-adjuntos { display: none; overflow-x: auto; overflow-y: hidden; white-space: nowrap; padding-bottom: 1rem; scrollbar-width: thin; }
+        .contenedor-entrada { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 1rem; 
+            width: 100%; 
+            background-color: var(--fondo-campo-entrada); 
+            border: 1px solid var(--borde-adjunto); 
+            border-radius: 2.4rem; 
+            padding: 1rem; 
+            transition: border-color 0.3s;
+        }
+        .contenedor-entrada:focus-within { border-color: var(--color-destacado); }
+
+        .contenedor-adjuntos { display: none; overflow-x: auto; overflow-y: hidden; white-space: nowrap; padding-bottom: 1rem; scrollbar-width: thin; border-bottom: 1px solid var(--borde-adjunto); margin-bottom: 0.5rem;}
         .adjunto-item { display: inline-flex; align-items: center; gap: 0.8rem; background: var(--fondo-adjunto); border: 1px solid var(--borde-adjunto); border-radius: 1.2rem; padding: 0.8rem 1.2rem; max-width: 22rem; margin-right: 1rem; }
         .icono-adjunto { font-size: 2rem; color: var(--color-destacado); }
         .detalles-adjunto { display: flex; flex-direction: column; min-width: 0; }
@@ -203,15 +190,57 @@
         .tamano-adjunto { font-size: 1.1rem; color: var(--color-timestamp); }
         .boton-eliminar { background: transparent; border: none; border-radius: 50%; width: 2.4rem; height: 2.4rem; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #aaa; transition: all 0.2s; }
         .boton-eliminar:hover { color: #E53935; background: rgba(255, 0, 0, 0.1); }
-        .input-area { background-color: var(--fondo-campo-entrada); border: 1px solid var(--borde-adjunto); border-radius: 2.4rem; padding: 1rem 1.5rem; transition: border-color 0.3s; }
-        .input-area:focus-within { border-color: var(--color-destacado); }
-        #entrada-usuario { width: 100%; flex-grow: 1; border: none; background: transparent; color: var(--texto-entrada); font-size: 1.6rem; outline: none; resize: none; max-height: 15rem; overflow-y: auto; }
-        .action-buttons { display: flex; justify-content: flex-end; align-items: center; gap: 1rem; }
-        .boton-input { background: var(--fondo-boton-accion); color: var(--texto-boton-accion); border: none; width: 4.8rem; height: 4.8rem; border-radius: 50%; cursor: pointer; font-size: 2rem; display: flex; justify-content: center; align-items: center; transition: all 0.2s; flex-shrink: 0; }
+        
+        #entrada-usuario { 
+            width: 100%; 
+            border: none; 
+            background: transparent; 
+            color: var(--texto-entrada); 
+            font-size: 1.6rem; 
+            outline: none; 
+            resize: none; 
+            max-height: 15rem; 
+            overflow-y: auto; 
+        }
+
+        .input-area-botones {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .boton-input { 
+            background: var(--fondo-boton-accion); 
+            color: var(--texto-boton-accion); 
+            border: 2px solid transparent; 
+            width: 4.8rem; 
+            height: 4.8rem; 
+            border-radius: 50%; 
+            cursor: pointer; 
+            font-size: 2rem; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            transition: all 0.2s; 
+            flex-shrink: 0; 
+        }
         .boton-input:hover { transform: scale(1.05); }
-        .boton-input.modo-activo { background: var(--fondo-boton-buscar-activo) !important; animation: pulsate 2s infinite; }
-        #boton-enviar { background: var(--fondo-boton-enviar); color: var(--texto-boton-enviar); }
-        #boton-grabar.grabando { background: var(--fondo-boton-grabando); animation: pulsate 1.5s infinite; }
+        
+        #boton-enviar { background: var(--fondo-boton-enviar); color: var(--texto-boton-enviar); border-color: transparent; }
+        
+        #boton-grabar.grabando { 
+            background: var(--fondo-boton-grabando); 
+            animation: pulsate 1.5s infinite; 
+            border-color: var(--color-destacado);
+        }
+        
+        .boton-input.modo-activo {
+            border-color: var(--color-destacado);
+            background: var(--fondo-boton-accion) !important;
+            animation: none !important;
+        }
+        
         @keyframes pulsate { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
         
         .indicador-escribiendo { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem; background: var(--fondo-burbuja-bot); border-radius: 1.8rem; width: fit-content; color: var(--texto-burbuja-bot); align-self: flex-start; animation: fadeIn 0.3s ease; }
@@ -236,287 +265,40 @@
         .copy-confirmation.show { opacity: 1; }
         input[type="file"] { display: none; }
 
-        /* Nuevos estilos para los modales */
-        .modal-super-ia {
-            position: fixed;
-            top: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            color: white;
-            border-radius: 1.5rem;
-            padding: 2rem;
-            display: none;
-            flex-direction: column;
-            z-index: 2000;
-            width: 90%;
-            max-width: 500px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.1);
-            animation: fadeInDown 0.5s ease-out;
-        }
+        .modal-super-ia { position: fixed; top: 2rem; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%); color: white; border-radius: 1.5rem; padding: 2rem; display: none; flex-direction: column; z-index: 2000; width: 90%; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); animation: fadeInDown 0.5s ease-out; }
+        @keyframes fadeInDown { from { opacity: 0; transform: translate(-50%, -20px); } to { opacity: 1; transform: translate(-50%, 0); } }
+        .modal-super-ia-contenido { position: relative; }
+        .cerrar-modal-super-ia { position: absolute; top: -1.5rem; right: -1rem; background: rgba(255,255,255,0.2); border: none; width: 3rem; height: 3rem; border-radius: 50%; font-size: 2.5rem; color: white; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: all 0.3s; }
+        .cerrar-modal-super-ia:hover { background: rgba(255,255,255,0.3); transform: scale(1.1); }
+        .modal-super-ia h3 { margin-top: 0; font-size: 2rem; margin-bottom: 1rem; text-align: center; }
+        .modal-super-ia p { font-size: 1.6rem; line-height: 1.5; margin: 0 0 1.5rem 0; }
+        .comparacion-modos { display: flex; gap: 1.5rem; margin-top: 1.5rem; }
+        .modo-card { flex: 1; background: rgba(255,255,255,0.1); border-radius: 1rem; padding: 1.5rem; text-align: center; }
+        .modo-card h4 { margin-top: 0; font-size: 1.8rem; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; gap: 0.8rem; }
+        .modo-card ul { text-align: left; padding-left: 1.5rem; margin-bottom: 0; }
+        .modo-card li { margin-bottom: 0.8rem; font-size: 1.4rem; }
+        .modo-card.super { border: 2px solid #FFD700; position: relative; overflow: hidden; }
+        .modo-card.super::after { content: 'RECOMENDADO'; position: absolute; top: 0; right: 0; background: #FFD700; color: #000; font-weight: bold; font-size: 1.1rem; padding: 0.3rem 1rem; border-radius: 0 0 0 1rem; transform: translate(0.5rem, -0.5rem) rotate(25deg); }
+        .boton-entendido { background: rgba(255,255,255,0.2); border: 2px solid white; color: white; border-radius: 3rem; padding: 1rem 2rem; font-size: 1.6rem; font-weight: bold; cursor: pointer; transition: all 0.3s; margin-top: 1.5rem; width: 100%; }
+        .boton-entendido:hover { background: rgba(255,255,255,0.3); transform: translateY(-3px); }
         
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translate(-50%, -20px);
-            }
-            to {
-                opacity: 1;
-                transform: translate(-50%, 0);
-            }
-        }
-        
-        .modal-super-ia-contenido {
-            position: relative;
-        }
-        
-        .cerrar-modal-super-ia {
-            position: absolute;
-            top: -1.5rem;
-            right: -1rem;
-            background: rgba(255,255,255,0.2);
-            border: none;
-            width: 3rem;
-            height: 3rem;
-            border-radius: 50%;
-            font-size: 2.5rem;
-            color: white;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: all 0.3s;
-        }
-        
-        .cerrar-modal-super-ia:hover {
-            background: rgba(255,255,255,0.3);
-            transform: scale(1.1);
-        }
-        
-        .modal-super-ia h3 {
-            margin-top: 0;
-            font-size: 2rem;
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-        
-        .modal-super-ia p {
-            font-size: 1.6rem;
-            line-height: 1.5;
-            margin: 0 0 1.5rem 0;
-        }
-        
-        .comparacion-modos {
-            display: flex;
-            gap: 1.5rem;
-            margin-top: 1.5rem;
-        }
-        
-        .modo-card {
-            flex: 1;
-            background: rgba(255,255,255,0.1);
-            border-radius: 1rem;
-            padding: 1.5rem;
-            text-align: center;
-        }
-        
-        .modo-card h4 {
-            margin-top: 0;
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.8rem;
-        }
-        
-        .modo-card ul {
-            text-align: left;
-            padding-left: 1.5rem;
-            margin-bottom: 0;
-        }
-        
-        .modo-card li {
-            margin-bottom: 0.8rem;
-            font-size: 1.4rem;
-        }
-        
-        .modo-card.super {
-            border: 2px solid #FFD700;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .modo-card.super::after {
-            content: 'RECOMENDADO';
-            position: absolute;
-            top: 0;
-            right: 0;
-            background: #FFD700;
-            color: #000;
-            font-weight: bold;
-            font-size: 1.1rem;
-            padding: 0.3rem 1rem;
-            border-radius: 0 0 0 1rem;
-            transform: translate(0.5rem, -0.5rem) rotate(25deg);
-        }
-        
-        .boton-entendido {
-            background: rgba(255,255,255,0.2);
-            border: 2px solid white;
-            color: white;
-            border-radius: 3rem;
-            padding: 1rem 2rem;
-            font-size: 1.6rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 1.5rem;
-            width: 100%;
-        }
-        
-        .boton-entendido:hover {
-            background: rgba(255,255,255,0.3);
-            transform: translateY(-3px);
-        }
-        
-        /* Modal de Ayuda */
-        .modal-ayuda {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: var(--fondo-entrada);
-            border-radius: 1.5rem;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
-            padding: 2rem;
-            display: none;
-            flex-direction: column;
-            z-index: 2000;
-            width: 90%;
-            max-width: 600px;
-            max-height: 80vh;
-            overflow-y: auto;
-            border: 1px solid var(--borde-superior-entrada);
-        }
-        
-        .modal-ayuda-contenido {
-            position: relative;
-        }
-        
-        .cerrar-modal-ayuda {
-            position: absolute;
-            top: -1.5rem;
-            right: -1rem;
-            background: var(--fondo-boton-control);
-            border: none;
-            width: 3rem;
-            height: 3rem;
-            border-radius: 50%;
-            font-size: 2.5rem;
-            color: var(--color-texto);
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: all 0.3s;
-        }
-        
-        .cerrar-modal-ayuda:hover {
-            background: var(--fondo-boton-accion);
-            transform: scale(1.1);
-        }
-        
-        .modal-ayuda h3 {
-            margin-top: 0;
-            font-size: 2.2rem;
-            margin-bottom: 2rem;
-            text-align: center;
-            color: var(--color-destacado);
-        }
-        
-        .seccion-ayuda {
-            margin-bottom: 2rem;
-        }
-        
-        .seccion-ayuda h4 {
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
-            color: var(--color-destacado);
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-        
-        .seccion-ayuda ul {
-            padding-left: 2rem;
-        }
-        
-        .seccion-ayuda li {
-            margin-bottom: 1rem;
-            font-size: 1.6rem;
-            line-height: 1.5;
-        }
-        
-        .icono-ayuda {
-            background: var(--fondo-boton-enviar);
-            width: 3.5rem;
-            height: 3.5rem;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            color: white;
-        }
-        
-        .item-ayuda {
-            display: flex;
-            align-items: flex-start;
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .item-ayuda .icono-ayuda {
-            flex-shrink: 0;
-        }
-        
-        .item-ayuda .contenido-ayuda {
-            flex: 1;
-        }
-        
-        .item-ayuda .titulo-item {
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-            font-size: 1.6rem;
-        }
-        
-        .item-ayuda .descripcion-item {
-            font-size: 1.5rem;
-        }
-        
-        .boton-ayuda {
-            background: var(--fondo-boton-enviar);
-            color: white;
-            border: none;
-            border-radius: 3rem;
-            padding: 1rem 2rem;
-            font-size: 1.6rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
-        }
-        
-        .boton-ayuda:hover {
-            background: #6d1dc4;
-            transform: translateY(-3px);
-        }
+        .modal-ayuda { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--fondo-entrada); border-radius: 1.5rem; box-shadow: 0 15px 30px rgba(0,0,0,0.3); padding: 2rem; display: none; flex-direction: column; z-index: 2000; width: 90%; max-width: 600px; max-height: 80vh; overflow-y: auto; border: 1px solid var(--borde-superior-entrada); }
+        .modal-ayuda-contenido { position: relative; }
+        .cerrar-modal-ayuda { position: absolute; top: -1.5rem; right: -1rem; background: var(--fondo-boton-control); border: none; width: 3rem; height: 3rem; border-radius: 50%; font-size: 2.5rem; color: var(--color-texto); cursor: pointer; display: flex; justify-content: center; align-items: center; transition: all 0.3s; }
+        .cerrar-modal-ayuda:hover { background: var(--fondo-boton-accion); transform: scale(1.1); }
+        .modal-ayuda h3 { margin-top: 0; font-size: 2.2rem; margin-bottom: 2rem; text-align: center; color: var(--color-destacado); }
+        .seccion-ayuda { margin-bottom: 2rem; }
+        .seccion-ayuda h4 { font-size: 1.8rem; margin-bottom: 1rem; color: var(--color-destacado); display: flex; align-items: center; gap: 1rem; }
+        .seccion-ayuda ul { padding-left: 2rem; }
+        .seccion-ayuda li { margin-bottom: 1rem; font-size: 1.6rem; line-height: 1.5; }
+        .icono-ayuda { background: var(--fondo-boton-enviar); width: 3.5rem; height: 3.5rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: white; }
+        .item-ayuda { display: flex; align-items: flex-start; gap: 1.5rem; margin-bottom: 1.5rem; }
+        .item-ayuda .icono-ayuda { flex-shrink: 0; }
+        .item-ayuda .contenido-ayuda { flex: 1; }
+        .item-ayuda .titulo-item { font-weight: bold; margin-bottom: 0.5rem; font-size: 1.6rem; }
+        .item-ayuda .descripcion-item { font-size: 1.5rem; }
+        .boton-ayuda { background: var(--fondo-boton-enviar); color: white; border: none; border-radius: 3rem; padding: 1rem 2rem; font-size: 1.6rem; font-weight: bold; cursor: pointer; transition: all 0.3s; margin-top: 1rem; display: flex; align-items: center; justify-content: center; gap: 1rem; }
+        .boton-ayuda:hover { background: #6d1dc4; transform: translateY(-3px); }
         
         @media (max-width: 600px) {
             .comparacion-modos {
@@ -554,10 +336,8 @@
         <div class="contenedor-entrada-wrapper" id="contenedor-entrada-wrapper">
             <div class="contenedor-entrada">
                 <div class="contenedor-adjuntos" id="contenedor-adjuntos"></div>
-                <div class="input-area">
-                    <textarea id="entrada-usuario" placeholder="Pregúntale a Mar-IA..." rows="1"></textarea>
-                </div>
-                <div class="action-buttons">
+                <textarea id="entrada-usuario" placeholder="Pregúntale a Mar-IA..." rows="1"></textarea>
+                <div class="input-area-botones">
                     <button id="boton-mas" class="boton-input" title="Adjuntar archivo"><i class="fas fa-plus"></i></button>
                     <button id="boton-buscar" class="boton-input" title="Buscar en internet"><i class="fas fa-search"></i></button>
                     <button id="boton-grabar" class="boton-input" title="Grabar voz"><i class="fas fa-microphone"></i></button>
@@ -589,111 +369,42 @@
         </div>
     </div>
     
-    <!-- Nuevo modal para SUPER MAR-IA -->
     <div class="modal-super-ia" id="modal-super-ia">
         <div class="modal-super-ia-contenido">
             <button class="cerrar-modal-super-ia" id="cerrar-modal-super-ia">&times;</button>
             <h3><i class="fas fa-crown"></i> Modo SUPER MAR-IA Activado</h3>
             <p>Este modo es más avanzado y utiliza un modelo de razonamiento profundo para analizar tus preguntas y generar respuestas de mayor calidad.</p>
-            
             <div class="comparacion-modos">
                 <div class="modo-card">
                     <h4><i class="fas fa-comment-alt"></i> Mar-IA</h4>
-                    <ul>
-                        <li>Respuestas rápidas</li>
-                        <li>Ideal para consultas simples</li>
-                        <li>Menor consumo de recursos</li>
-                        <li>Respuestas directas</li>
-                    </ul>
+                    <ul><li>Respuestas rápidas</li><li>Ideal para consultas simples</li><li>Menor consumo de recursos</li><li>Respuestas directas</li></ul>
                 </div>
                 <div class="modo-card super">
                     <h4><i class="fas fa-brain"></i> SUPER MAR-IA</h4>
-                    <ul>
-                        <li>Respuestas más inteligentes</li>
-                        <li>Análisis profundo de problemas</li>
-                        <li>Mayor precisión en respuestas</li>
-                        <li>Capacidad de razonamiento</li>
-                        <li>Procesamiento más lento</li>
-                    </ul>
+                    <ul><li>Respuestas más inteligentes</li><li>Análisis profundo de problemas</li><li>Mayor precisión en respuestas</li><li>Capacidad de razonamiento</li><li>Procesamiento más lento</li></ul>
                 </div>
             </div>
-            
             <button class="boton-entendido" id="boton-entendido">¡Entendido! Empezar a usar</button>
         </div>
     </div>
     
-    <!-- Modal de Ayuda -->
     <div class="modal-ayuda" id="modal-ayuda">
         <div class="modal-ayuda-contenido">
             <button class="cerrar-modal-ayuda" id="cerrar-modal-ayuda">&times;</button>
             <h3><i class="fas fa-question-circle"></i> Guía de Ayuda</h3>
-            
             <div class="seccion-ayuda">
                 <h4><i class="fas fa-exchange-alt"></i> Cambiar entre modos</h4>
-                <ul>
-                    <li>Para cambiar entre el modo Mar-IA y SUPER MAR-IA, haz clic en el título principal ("Mar-IA" o "SUPER MAR-IA") en la parte superior.</li>
-                    <li>Se abrirá un menú donde podrás seleccionar el modo deseado.</li>
-                    <li>El modo SUPER MAR-IA es más lento pero ofrece respuestas más inteligentes mediante un análisis profundo.</li>
-                </ul>
+                <ul><li>Para cambiar entre el modo Mar-IA y SUPER MAR-IA, haz clic en el título principal ("Mar-IA" o "SUPER MAR-IA") en la parte superior.</li><li>Se abrirá un menú donde podrás seleccionar el modo deseado.</li><li>El modo SUPER MAR-IA es más lento pero ofrece respuestas más inteligentes mediante un análisis profundo.</li></ul>
             </div>
-            
             <div class="seccion-ayuda">
                 <h4><i class="fas fa-sliders-h"></i> Funciones de los controles</h4>
-                
-                <div class="item-ayuda">
-                    <div class="icono-ayuda">
-                        <i class="fas fa-plus"></i>
-                    </div>
-                    <div class="contenido-ayuda">
-                        <div class="titulo-item">Adjuntar archivos</div>
-                        <div class="descripcion-item">Permite adjuntar imágenes, documentos u otros archivos para procesarlos con OCR o análisis de texto.</div>
-                    </div>
-                </div>
-                
-                <div class="item-ayuda">
-                    <div class="icono-ayuda">
-                        <i class="fas fa-search"></i>
-                    </div>
-                    <div class="contenido-ayuda">
-                        <div class="titulo-item">Buscar en internet</div>
-                        <div class="descripcion-item">Activa el modo de búsqueda para que Mar-IA busque información en internet antes de responder.</div>
-                    </div>
-                </div>
-                
-                <div class="item-ayuda">
-                    <div class="icono-ayuda">
-                        <i class="fas fa-microphone"></i>
-                    </div>
-                    <div class="contenido-ayuda">
-                        <div class="titulo-item">Grabar voz</div>
-                        <div class="descripcion-item">Permite dictar tu mensaje mediante reconocimiento de voz.</div>
-                    </div>
-                </div>
-                
-                <div class="item-ayuda">
-                    <div class="icono-ayuda">
-                        <i class="fas fa-language"></i>
-                    </div>
-                    <div class="contenido-ayuda">
-                        <div class="titulo-item">Seleccionar voz</div>
-                        <div class="descripcion-item">Cambia la voz que utiliza Mar-IA para leer las respuestas en voz alta.</div>
-                    </div>
-                </div>
-                
-                <div class="item-ayuda">
-                    <div class="icono-ayuda">
-                        <i class="fas fa-sun"></i>
-                    </div>
-                    <div class="contenido-ayuda">
-                        <div class="titulo-item">Alternar tema</div>
-                        <div class="descripcion-item">Cambia entre modo claro y modo oscuro.</div>
-                    </div>
-                </div>
+                <div class="item-ayuda"><div class="icono-ayuda"><i class="fas fa-plus"></i></div><div class="contenido-ayuda"><div class="titulo-item">Adjuntar archivos</div><div class="descripcion-item">Permite adjuntar imágenes, documentos u otros archivos para procesarlos con OCR o análisis de texto.</div></div></div>
+                <div class="item-ayuda"><div class="icono-ayuda"><i class="fas fa-search"></i></div><div class="contenido-ayuda"><div class="titulo-item">Buscar en internet</div><div class="descripcion-item">Activa el modo de búsqueda para que Mar-IA busque información en internet antes de responder.</div></div></div>
+                <div class="item-ayuda"><div class="icono-ayuda"><i class="fas fa-microphone"></i></div><div class="contenido-ayuda"><div class="titulo-item">Grabar voz</div><div class="descripcion-item">Permite dictar tu mensaje mediante reconocimiento de voz.</div></div></div>
+                <div class="item-ayuda"><div class="icono-ayuda"><i class="fas fa-language"></i></div><div class="contenido-ayuda"><div class="titulo-item">Seleccionar voz</div><div class="descripcion-item">Cambia la voz que utiliza Mar-IA para leer las respuestas en voz alta.</div></div></div>
+                <div class="item-ayuda"><div class="icono-ayuda"><i class="fas fa-sun"></i></div><div class="contenido-ayuda"><div class="titulo-item">Alternar tema</div><div class="descripcion-item">Cambia entre modo claro y modo oscuro.</div></div></div>
             </div>
-            
-            <button class="boton-ayuda" id="cerrar-modal-ayuda-btn">
-                <i class="fas fa-check"></i> Entendido
-            </button>
+            <button class="boton-ayuda" id="cerrar-modal-ayuda-btn"><i class="fas fa-check"></i> Entendido</button>
         </div>
     </div>
     
@@ -709,6 +420,7 @@
             // --- DOM ELEMENT REFERENCES ---
             const elements = {
                 body: document.body,
+                contenedor: document.querySelector('.contenedor'),
                 chatContainer: document.getElementById('contenedor-chat'),
                 userInput: document.getElementById('entrada-usuario'),
                 sendButton: document.getElementById('boton-enviar'),
@@ -730,7 +442,6 @@
                 attachmentsContainer: document.getElementById('contenedor-adjuntos'),
                 activateSearchModalBtn: document.getElementById('activar-busqueda-modal'),
                 tituloModo: document.getElementById('titulo-modo'),
-                // Nuevos elementos
                 modalSuperIA: document.getElementById('modal-super-ia'),
                 cerrarModalSuperIA: document.getElementById('cerrar-modal-super-ia'),
                 botonEntendido: document.getElementById('boton-entendido'),
@@ -755,21 +466,18 @@
 
             // --- INITIALIZATION ---
             const init = () => {
+                setContainerHeight();
                 loadState();
                 setupEventListeners();
                 initSpeechRecognition();
                 initVoiceSynthesis();
                 addMessage('bot', '¡Hola! Soy Mar-IA. ¿En qué puedo ayudarte hoy?');
                 autoResizeTextarea();
-                
-                // Prevenir desplazamiento automático en iOS
-                elements.userInput.addEventListener('focus', () => {
-                    setTimeout(scrollToBottom, 300);
-                });
             };
 
             // --- EVENT LISTENERS SETUP ---
             const setupEventListeners = () => {
+                window.addEventListener('resize', setContainerHeight);
                 elements.sendButton.addEventListener('click', handleSendMessage);
                 elements.userInput.addEventListener('keypress', (e) => { 
                     if (e.key === 'Enter' && !e.shiftKey) { 
@@ -779,8 +487,11 @@
                 });
                 elements.userInput.addEventListener('input', autoResizeTextarea);
                 elements.recordButton.addEventListener('click', toggleRecording);
-                elements.moreButton.addEventListener('click', () => toggleModal(true, elements.ocrModal));
-                elements.searchButton.addEventListener('click', toggleModoBusqueda);
+                elements.moreButton.addEventListener('click', () => {
+                    const isActive = elements.ocrModal.style.display === 'flex';
+                    toggleModal(!isActive, elements.ocrModal);
+                });
+                elements.searchButton.addEventListener('click', () => toggleModoBusqueda());
                 elements.overlay.addEventListener('click', () => { 
                     toggleModal(false, elements.ocrModal); 
                     toggleModal(false, elements.modoModal); 
@@ -805,7 +516,7 @@
                 elements.themeSwitcher.addEventListener('click', toggleTheme);
                 elements.voiceSelector.addEventListener('change', stopSpeech);
                 elements.activateSearchModalBtn.addEventListener('click', () => { 
-                    toggleModoBusqueda(); 
+                    toggleModoBusqueda(true); 
                     toggleModal(false, elements.ocrModal); 
                 });
                 elements.tituloModo.addEventListener('click', () => toggleModal(true, elements.modoModal));
@@ -813,156 +524,91 @@
                     opcion.addEventListener('click', (e) => setIAMode(e.currentTarget.dataset.modo));
                 });
                 elements.chatContainer.addEventListener('click', handleChatContainerClick);
-                
-                // Eventos para el modal de SUPER MAR-IA
-                elements.cerrarModalSuperIA.addEventListener('click', () => {
-                    toggleModal(false, elements.modalSuperIA);
-                });
-                elements.botonEntendido.addEventListener('click', () => {
-                    toggleModal(false, elements.modalSuperIA);
-                });
-                
-                // Eventos para el modal de ayuda
-                elements.botonAyuda.addEventListener('click', () => {
-                    toggleModal(true, elements.modalAyuda);
-                });
-                elements.cerrarModalAyuda.addEventListener('click', () => {
-                    toggleModal(false, elements.modalAyuda);
-                });
-                elements.cerrarModalAyudaBtn.addEventListener('click', () => {
-                    toggleModal(false, elements.modalAyuda);
-                });
+                elements.cerrarModalSuperIA.addEventListener('click', () => toggleModal(false, elements.modalSuperIA));
+                elements.botonEntendido.addEventListener('click', () => toggleModal(false, elements.modalSuperIA));
+                elements.botonAyuda.addEventListener('click', () => toggleModal(true, elements.modalAyuda));
+                elements.cerrarModalAyuda.addEventListener('click', () => toggleModal(false, elements.modalAyuda));
+                elements.cerrarModalAyudaBtn.addEventListener('click', () => toggleModal(false, elements.modalAyuda));
             };
 
             // --- CORE MESSAGE HANDLING LOGIC ---
             const handleSendMessage = async () => {
                 const messageText = elements.userInput.value.trim();
                 if (!messageText && attachments.length === 0) return;
-
                 addMessage('usuario', messageText || `Enviando ${attachments.length} archivo(s)...`);
-
                 let userMessageContent = messageText;
-                
                 if (modoBusqueda) {
                     showIndicator('Buscando en internet...');
                     const searchResults = await performWebSearch(messageText);
                     chatHistory.push({ role: "system", content: `Contexto de Búsqueda:\n${searchResults}` });
-                    toggleModoBusqueda();
+                    toggleModoBusqueda(false);
                 }
-                
                 if (attachments.length > 0) {
                     showIndicator('Procesando archivos...');
                     const attachmentContent = await processAttachments();
                     userMessageContent += `\n\n--- Archivos Adjuntos ---\n${attachmentContent}`;
                 }
-                
                 hideIndicator();
-                
                 chatHistory.push({ role: "user", content: userMessageContent });
                 const currentQueryHistory = [...chatHistory];
                 resetInput();
-                
                 if (modoSuperIA) {
                     await executeSuperIaFlow(currentQueryHistory, lastMessageWasFromVoice);
                 } else {
                     await fetchBotResponse(currentQueryHistory, lastMessageWasFromVoice);
                 }
-                
                 lastMessageWasFromVoice = false;
             };
 
-            // --- SUPER MAR-IA FLOW with visible reasoning ---
+            // --- SUPER MAR-IA FLOW ---
             const executeSuperIaFlow = async (currentChatHistory, shouldSpeak) => {
                 isGeneratingThought = true;
                 showIndicator('SUPER MAR-IA está razonando...', 'brain');
-                
                 try {
-                    // Primero: obtener el pensamiento completo
                     const thoughtResponse = await fetch('https://api.deepseek.com/v1/chat/completions', {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${DEEPSEEK_API_KEY}`
-                        },
-                        body: JSON.stringify({
-                            model: "deepseek-reasoner",
-                            messages: currentChatHistory,
-                            max_tokens: 1000
-                        })
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${DEEPSEEK_API_KEY}` },
+                        body: JSON.stringify({ model: "deepseek-reasoner", messages: currentChatHistory, max_tokens: 1000 })
                     });
-
-                    if (!thoughtResponse.ok) {
-                        throw new Error(`Error de API: ${thoughtResponse.status} ${thoughtResponse.statusText}`);
-                    }
-
+                    if (!thoughtResponse.ok) throw new Error(`Error de API: ${thoughtResponse.status} ${thoughtResponse.statusText}`);
                     const thoughtData = await thoughtResponse.json();
                     const reasoning = thoughtData.choices[0].message.content;
                     currentReasoning = reasoning;
-                    
                     hideIndicator();
-                    
-                    // Mostrar el pensamiento en un contenedor especial
-                    const thoughtContainer = createThoughtContainer(reasoning);
-                    
-                    // Segundo: generar respuesta final basada en el pensamiento
+                    createThoughtContainer(reasoning);
                     await generateFinalResponse(reasoning, currentChatHistory, shouldSpeak);
-                    
                 } catch (error) {
                     hideIndicator();
                     console.error("Error en el flujo de SUPER MAR-IA:", error);
                     addMessage('bot', "Lo siento, ocurrió un error grave al intentar razonar la respuesta.");
                 }
-                
                 isGeneratingThought = false;
             };
             
-            // Generar respuesta final basada en el pensamiento
             const generateFinalResponse = async (reasoning, currentChatHistory, shouldSpeak) => {
                 showIndicator('SUPER MAR-IA está generando la respuesta final...', 'brain');
-                
-                // Agregar el razonamiento al historial para la respuesta final
-                const finalHistory = [
-                    ...currentChatHistory,
-                    { role: "assistant", content: reasoning },
-                    { role: "user", content: "Basándote en tu razonamiento anterior, genera una respuesta final estructurada, concisa y profesional." }
-                ];
-                
+                const finalHistory = [ ...currentChatHistory, { role: "assistant", content: reasoning }, { role: "user", content: "Basándote en tu razonamiento anterior, genera una respuesta final estructurada, concisa y profesional." }];
                 try {
                     const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${DEEPSEEK_API_KEY}`
-                        },
-                        body: JSON.stringify({
-                            model: "deepseek-reasoner",
-                            messages: finalHistory,
-                            stream: true
-                        })
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${DEEPSEEK_API_KEY}` },
+                        body: JSON.stringify({ model: "deepseek-reasoner", messages: finalHistory, stream: true })
                     });
-
-                    if (!response.ok) {
-                        throw new Error(`Error de API: ${response.status} ${response.statusText}`);
-                    }
-
+                    if (!response.ok) throw new Error(`Error de API: ${response.status} ${response.statusText}`);
                     const reader = response.body.getReader();
                     const decoder = new TextDecoder();
                     let fullResponse = "";
                     const botMessageElement = addMessage('bot', '', true);
                     hideIndicator();
-                    
                     while (true) {
                         const { value, done } = await reader.read();
                         if (done) break;
-                        
                         const chunk = decoder.decode(value, { stream: true });
                         const lines = chunk.split('\n');
-                        
                         for (const line of lines) {
                             if (line.startsWith('data: ')) {
                                 const data = line.substring(6);
                                 if (data === '[DONE]') break;
-                                
                                 try {
                                     const jsonData = JSON.parse(data);
                                     const token = jsonData.choices[0]?.delta?.content || '';
@@ -970,13 +616,10 @@
                                     botMessageElement.querySelector('.burbuja-mensaje').innerHTML = marked.parse(fullResponse);
                                     formatCodeBlocks(botMessageElement);
                                     scrollToBottom();
-                                } catch (e) { 
-                                    // Ignore parsing errors 
-                                }
+                                } catch (e) { /* Ignore */ }
                             }
                         }
                     }
-                    
                     chatHistory.push({ role: "assistant", content: fullResponse });
                     if (shouldSpeak) speakText(botMessageElement.querySelector('.burbuja-mensaje').innerText, botMessageElement.querySelector('.boton-voz'));
                 } catch (error) {
@@ -986,46 +629,31 @@
                 }
             };
             
-            // --- STANDARD BOT RESPONSE FETCHING (for normal mode) ---
+            // --- STANDARD BOT RESPONSE ---
             const fetchBotResponse = async (messages, shouldSpeak) => {
                 showIndicator('Mar-IA está escribiendo...');
-                
-                const payload = { 
-                    model: "deepseek-chat", 
-                    messages: messages, 
-                    stream: true 
-                };
-
+                const payload = { model: "deepseek-chat", messages: messages, stream: true };
                 try {
                     const response = await fetch('https://api.deepseek.com/v1/chat/completions', { 
                         method: 'POST', 
-                        headers: { 
-                            'Content-Type': 'application/json', 
-                            'Authorization': `Bearer ${DEEPSEEK_API_KEY}` 
-                        }, 
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${DEEPSEEK_API_KEY}` }, 
                         body: JSON.stringify(payload) 
                     });
-                    
                     if (!response.ok) throw new Error(`API Error: ${response.status}`);
-                    
                     const reader = response.body.getReader();
                     const decoder = new TextDecoder();
                     let fullResponse = "";
                     const botMessageElement = addMessage('bot', '', true);
                     hideIndicator();
-                    
                     while (true) {
                         const { value, done } = await reader.read();
                         if (done) break;
-                        
                         const chunk = decoder.decode(value, { stream: true });
                         const lines = chunk.split('\n');
-                        
                         for (const line of lines) {
                             if (line.startsWith('data: ')) {
                                 const data = line.substring(6);
                                 if (data === '[DONE]') break;
-                                
                                 try {
                                     const jsonData = JSON.parse(data);
                                     const token = jsonData.choices[0]?.delta?.content || '';
@@ -1033,13 +661,10 @@
                                     botMessageElement.querySelector('.burbuja-mensaje').innerHTML = marked.parse(fullResponse);
                                     formatCodeBlocks(botMessageElement);
                                     scrollToBottom();
-                                } catch (e) { 
-                                    // Ignore parsing errors 
-                                }
+                                } catch (e) { /* Ignore */ }
                             }
                         }
                     }
-                    
                     chatHistory.push({ role: "assistant", content: fullResponse });
                     if (shouldSpeak) speakText(botMessageElement.querySelector('.burbuja-mensaje').innerText, botMessageElement.querySelector('.boton-voz'));
                 } catch (error) {
@@ -1053,22 +678,15 @@
             const addMessage = (role, content, isStreaming = false) => {
                 const messageDiv = document.createElement('div');
                 messageDiv.className = `mensaje mensaje-${role}`;
-                
                 const bubbleDiv = document.createElement('div');
                 bubbleDiv.className = `burbuja-mensaje burbuja-${role}`;
-                
-                if (content || isStreaming) {
-                    bubbleDiv.innerHTML = content ? marked.parse(content) : '';
-                }
-                
+                if (content || isStreaming) bubbleDiv.innerHTML = content ? marked.parse(content) : '';
                 const timestampContainer = document.createElement('div');
                 timestampContainer.className = 'timestamp-container';
-                
                 const timestamp = document.createElement('div');
                 timestamp.className = 'timestamp';
                 timestamp.textContent = new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
                 timestampContainer.appendChild(timestamp);
-                
                 if (role === 'bot') {
                     const speakBtn = document.createElement('button');
                     speakBtn.className = 'boton-accion-mensaje boton-voz';
@@ -1076,49 +694,28 @@
                     speakBtn.title = 'Leer en voz alta';
                     timestampContainer.appendChild(speakBtn);
                 }
-                
                 const copyBtn = document.createElement('button');
                 copyBtn.className = 'boton-accion-mensaje boton-copiar';
                 copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
                 copyBtn.title = 'Copiar';
                 timestampContainer.appendChild(copyBtn);
-                
                 messageDiv.appendChild(bubbleDiv);
                 messageDiv.appendChild(timestampContainer);
-                
                 elements.chatContainer.appendChild(messageDiv);
-                
                 if (!isStreaming) {
                     formatCodeBlocks(messageDiv);
                     scrollToBottom();
                 }
-                
                 return messageDiv;
             };
 
             const createThoughtContainer = (reasoning) => {
                 const thoughtDiv = document.createElement('div');
                 thoughtDiv.className = 'pensamiento-container';
-                
-                thoughtDiv.innerHTML = `
-                    <div class="pensamiento-cabecera-clickable">
-                        <div class="pensamiento-titulo"><i class="fas fa-brain"></i><span>Proceso de Pensamiento de SUPER MAR-IA</span></div>
-                        <div class="pensamiento-controles-cabecera">
-                            <div class="tiempo-pensamiento">${new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}</div>
-                            <i class="fas fa-chevron-up toggle-icon"></i>
-                        </div>
-                    </div>
-                    <div class="pensamiento-contenido-wrapper">
-                        <div class="contenido-pensamiento">${marked.parse(reasoning)}</div>
-                        <div class="pensamiento-acciones">
-                            <button class="boton-pensamiento boton-copiar-pensamiento"><i class="fas fa-copy"></i> Copiar Razonamiento</button>
-                        </div>
-                    </div>`;
-                
+                thoughtDiv.innerHTML = `<div class="pensamiento-cabecera-clickable"><div class="pensamiento-titulo"><i class="fas fa-brain"></i><span>Proceso de Pensamiento de SUPER MAR-IA</span></div><div class="pensamiento-controles-cabecera"><div class="tiempo-pensamiento">${new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}</div><i class="fas fa-chevron-up toggle-icon"></i></div></div><div class="pensamiento-contenido-wrapper"><div class="contenido-pensamiento">${marked.parse(reasoning)}</div><div class="pensamiento-acciones"><button class="boton-pensamiento boton-copiar-pensamiento"><i class="fas fa-copy"></i> Copiar Razonamiento</button></div></div>`;
                 elements.chatContainer.appendChild(thoughtDiv);
                 formatCodeBlocks(thoughtDiv);
                 scrollToBottom();
-                
                 return thoughtDiv;
             };
             
@@ -1133,42 +730,32 @@
                     icon.classList.toggle('fa-chevron-up', !isCollapsed);
                     return;
                 }
-                
                 const copyBtn = e.target.closest('.boton-copiar');
                 if (copyBtn) {
-                    const textToCopy = copyBtn.closest('.mensaje').querySelector('.burbuja-mensaje').innerText;
-                    copyToClipboard(textToCopy);
+                    copyToClipboard(copyBtn.closest('.mensaje').querySelector('.burbuja-mensaje').innerText);
                     return;
                 }
-                
                 const copyThoughtBtn = e.target.closest('.boton-copiar-pensamiento');
                 if (copyThoughtBtn) {
-                    const textToCopy = copyThoughtBtn.closest('.pensamiento-container').querySelector('.contenido-pensamiento').innerText;
-                    copyToClipboard(textToCopy);
+                    copyToClipboard(copyThoughtBtn.closest('.pensamiento-container').querySelector('.contenido-pensamiento').innerText);
                     return;
                 }
-                
                 const speakBtn = e.target.closest('.boton-voz');
                 if (speakBtn) {
-                    const textToSpeak = speakBtn.closest('.mensaje').querySelector('.burbuja-mensaje').innerText;
-                    speakText(textToSpeak, speakBtn);
+                    speakText(speakBtn.closest('.mensaje').querySelector('.burbuja-mensaje').innerText, speakBtn);
                 }
             };
 
             const formatCodeBlocks = (element) => {
                 element.querySelectorAll('pre').forEach(pre => {
                     if (pre.parentElement.classList.contains('bloque-codigo')) return;
-                    
                     const codeContainer = document.createElement('div');
                     codeContainer.className = 'bloque-codigo';
-                    
                     const header = document.createElement('div');
                     header.className = 'cabecera-codigo';
-                    
                     const langSpan = document.createElement('span');
                     langSpan.className = 'lenguaje-codigo';
                     langSpan.textContent = 'Código';
-                    
                     const copyBtn = document.createElement('button');
                     copyBtn.className = 'boton-copiar-codigo';
                     copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copiar';
@@ -1177,17 +764,13 @@
                         copyBtn.innerHTML = '<i class="fas fa-check"></i> Copiado';
                         setTimeout(() => { copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copiar'; }, 2000);
                     };
-                    
                     header.appendChild(langSpan);
                     header.appendChild(copyBtn);
-                    
                     const codeContent = document.createElement('div');
                     codeContent.className = 'contenedor-codigo';
                     codeContent.appendChild(pre.cloneNode(true));
-                    
                     codeContainer.appendChild(header);
                     codeContainer.appendChild(codeContent);
-                    
                     pre.replaceWith(codeContainer);
                 });
             };
@@ -1202,74 +785,39 @@
 
             // --- ATTACHMENTS & OCR ---
             const handleFileSelection = (files) => {
-                for (const file of files) { 
-                    attachments.push({ file }); 
-                    renderAttachment(file); 
-                }
-                elements.imageInput.value = ''; 
-                elements.cameraInput.value = ''; 
-                elements.fileInput.value = '';
+                for (const file of files) { attachments.push({ file }); renderAttachment(file); }
+                elements.imageInput.value = ''; elements.cameraInput.value = ''; elements.fileInput.value = '';
             };
             
             const renderAttachment = (file) => {
                 elements.attachmentsContainer.style.display = 'flex';
                 const itemDiv = document.createElement('div');
                 itemDiv.className = 'adjunto-item';
-                
-                itemDiv.innerHTML = `
-                    <i class="fas ${file.type.startsWith('image') ? 'fa-image' : 'fa-file-alt'} icono-adjunto"></i>
-                    <div class="detalles-adjunto">
-                        <div class="nombre-adjunto">${file.name}</div>
-                        <div class="tamano-adjunto">${(file.size / 1024).toFixed(1)} KB</div>
-                    </div>
-                    <button class="boton-eliminar" title="Eliminar"><i class="fas fa-times"></i></button>
-                `;
-                
+                itemDiv.innerHTML = `<i class="fas ${file.type.startsWith('image') ? 'fa-image' : 'fa-file-alt'} icono-adjunto"></i><div class="detalles-adjunto"><div class="nombre-adjunto">${file.name}</div><div class="tamano-adjunto">${(file.size / 1024).toFixed(1)} KB</div></div><button class="boton-eliminar" title="Eliminar"><i class="fas fa-times"></i></button>`;
                 itemDiv.querySelector('.boton-eliminar').onclick = () => {
                     attachments = attachments.filter(att => att.file !== file);
                     itemDiv.remove();
                     if (attachments.length === 0) elements.attachmentsContainer.style.display = 'none';
                 };
-                
                 elements.attachmentsContainer.appendChild(itemDiv);
             };
             
             const processAttachments = async () => {
                 let content = [];
-                
                 for (const attachment of attachments) {
                     if (attachment.file.type.startsWith('image/')) {
-                        try { 
-                            const text = await ocrSpaceRequest(attachment.file); 
-                            content.push(`--- Texto de imagen OCR: ${attachment.file.name} ---\n${text}\n---`); 
-                        } catch (error) { 
-                            content.push(`[Error OCR: ${attachment.file.name}]`); 
-                        }
+                        try { const text = await ocrSpaceRequest(attachment.file); content.push(`--- Texto de imagen OCR: ${attachment.file.name} ---\n${text}\n---`); } catch (error) { content.push(`[Error OCR: ${attachment.file.name}]`); }
                     } else if (attachment.file.type.startsWith('text/')) {
-                         try { 
-                             const text = await attachment.file.text(); 
-                             content.push(`--- Archivo: ${attachment.file.name} ---\n${text}\n---`); 
-                         } catch (error) { 
-                             content.push(`[Error al leer: ${attachment.file.name}]`); 
-                         }
+                         try { const text = await attachment.file.text(); content.push(`--- Archivo: ${attachment.file.name} ---\n${text}\n---`); } catch (error) { content.push(`[Error al leer: ${attachment.file.name}]`); }
                     }
                 }
-                
                 return content.join('\n\n');
             };
             
             const ocrSpaceRequest = async (file) => {
                 const formData = new FormData();
-                formData.append('file', file); 
-                formData.append('language', 'spa'); 
-                formData.append('apikey', OCR_API_KEY); 
-                formData.append('OCREngine', '2');
-                
-                const response = await fetch('https://api.ocr.space/parse/image', { 
-                    method: 'POST', 
-                    body: formData 
-                });
-                
+                formData.append('file', file); formData.append('language', 'spa'); formData.append('apikey', OCR_API_KEY); formData.append('OCREngine', '2');
+                const response = await fetch('https://api.ocr.space/parse/image', { method: 'POST', body: formData });
                 const data = await response.json();
                 if (data.IsErroredOnProcessing) throw new Error(data.ErrorMessage);
                 return data.ParsedResults?.[0]?.ParsedText || '';
@@ -1278,78 +826,36 @@
             // --- SPEECH RECOGNITION & SYNTHESIS ---
             const initSpeechRecognition = () => {
                 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-                
                 if (SpeechRecognition) {
                     recognition = new SpeechRecognition();
                     recognition.lang = 'es-ES';
-                    recognition.onstart = () => { 
-                        isRecording = true; 
-                        elements.recordButton.classList.add('grabando'); 
-                    };
-                    recognition.onend = () => { 
-                        isRecording = false; 
-                        elements.recordButton.classList.remove('grabando'); 
-                    };
-                    recognition.onresult = (event) => { 
-                        elements.userInput.value = event.results[0][0].transcript; 
-                        lastMessageWasFromVoice = true; 
-                        handleSendMessage(); 
-                    };
+                    recognition.onstart = () => { isRecording = true; elements.recordButton.classList.add('grabando'); };
+                    recognition.onend = () => { isRecording = false; elements.recordButton.classList.remove('grabando'); };
+                    recognition.onresult = (event) => { elements.userInput.value = event.results[0][0].transcript; lastMessageWasFromVoice = true; handleSendMessage(); };
                     recognition.onerror = (event) => console.error('Speech recognition error', event.error);
-                } else { 
-                    elements.recordButton.disabled = true; 
-                }
+                } else { elements.recordButton.disabled = true; }
             };
             
-            const toggleRecording = () => { 
-                if (!recognition) return; 
-                isRecording ? recognition.stop() : recognition.start(); 
-            };
+            const toggleRecording = () => { if (!recognition) return; isRecording ? recognition.stop() : recognition.start(); };
             
             const initVoiceSynthesis = () => {
                 const populateVoices = () => {
                     const voices = speechSynthesis.getVoices().filter(v => v.lang.startsWith('es'));
-                    elements.voiceSelector.innerHTML = voices.map(v => 
-                        `<option value="${v.name}">${v.name} (${v.lang})</option>`
-                    ).join('');
+                    elements.voiceSelector.innerHTML = voices.map(v => `<option value="${v.name}">${v.name} (${v.lang})</option>`).join('');
                 };
-                
                 populateVoices();
-                
-                if (speechSynthesis.onvoiceschanged !== undefined) {
-                    speechSynthesis.onvoiceschanged = populateVoices;
-                }
+                if (speechSynthesis.onvoiceschanged !== undefined) speechSynthesis.onvoiceschanged = populateVoices;
             };
             
             const speakText = (text, button) => {
-                if (currentSpeech && speechSynthesis.speaking) { 
-                    stopSpeech(); 
-                    return; 
-                }
-                
+                if (currentSpeech && speechSynthesis.speaking) { stopSpeech(); return; }
                 stopSpeech();
-                
                 currentSpeech = new SpeechSynthesisUtterance(text);
                 const selectedVoiceName = elements.voiceSelector.value;
-                const voices = speechSynthesis.getVoices();
-                const voice = voices.find(v => v.name === selectedVoiceName);
-                
-                if (voice) {
-                    currentSpeech.voice = voice;
-                }
-                
-                const allSpeakButtons = document.querySelectorAll('.boton-voz');
-                
-                currentSpeech.onstart = () => { 
-                    allSpeakButtons.forEach(btn => btn.innerHTML = '<i class="fas fa-volume-up"></i>'); 
-                    if(button) button.innerHTML = '<i class="fas fa-stop"></i>'; 
-                };
-                
-                currentSpeech.onend = () => { 
-                    if(button) button.innerHTML = '<i class="fas fa-volume-up"></i>'; 
-                    currentSpeech = null; 
-                };
-                
+                const voice = speechSynthesis.getVoices().find(v => v.name === selectedVoiceName);
+                if (voice) currentSpeech.voice = voice;
+                currentSpeech.onstart = () => { document.querySelectorAll('.boton-voz').forEach(btn => btn.innerHTML = '<i class="fas fa-volume-up"></i>'); if(button) button.innerHTML = '<i class="fas fa-stop"></i>'; };
+                currentSpeech.onend = () => { if(button) button.innerHTML = '<i class="fas fa-volume-up"></i>'; currentSpeech = null; };
                 speechSynthesis.speak(currentSpeech);
             };
             
@@ -1360,15 +866,19 @@
             };
 
             // --- UTILITY FUNCTIONS ---
+            const setContainerHeight = () => {
+                // This function sets the container height to the actual visible window height.
+                // It's crucial for mobile browsers where the keyboard changes the viewport size.
+                elements.contenedor.style.height = window.innerHeight + 'px';
+            };
+
             const autoResizeTextarea = () => { 
                 const ta = elements.userInput; 
                 ta.style.height = 'auto'; 
                 ta.style.height = `${ta.scrollHeight}px`; 
             };
             
-            const scrollToBottom = () => { 
-                elements.chatContainer.scrollTop = elements.chatContainer.scrollHeight; 
-            };
+            const scrollToBottom = () => { elements.chatContainer.scrollTop = elements.chatContainer.scrollHeight; };
             
             const toggleTheme = () => { 
                 elements.body.classList.toggle('tema-claro'); 
@@ -1379,7 +889,10 @@
             
             const toggleModal = (show, modal) => { 
                 modal.style.display = show ? 'flex' : 'none'; 
-                elements.overlay.style.display = show ? 'block' : 'none'; 
+                elements.overlay.style.display = show ? 'block' : 'none';
+                if (modal === elements.ocrModal) {
+                    elements.moreButton.classList.toggle('modo-activo', show);
+                }
             };
             
             const copyToClipboard = (text) => { 
@@ -1389,8 +902,8 @@
                 }); 
             };
             
-            const toggleModoBusqueda = () => { 
-                modoBusqueda = !modoBusqueda; 
+            const toggleModoBusqueda = (forceState) => { 
+                modoBusqueda = typeof forceState === 'boolean' ? forceState : !modoBusqueda; 
                 elements.searchButton.classList.toggle('modo-activo', modoBusqueda); 
                 elements.searchButton.title = modoBusqueda ? 'Modo búsqueda activo' : 'Buscar en internet'; 
             };
@@ -1399,15 +912,9 @@
                 modoSuperIA = mode === 'super'; 
                 elements.tituloModo.textContent = modoSuperIA ? 'SUPER MAR-IA' : 'Mar-IA'; 
                 elements.tituloModo.classList.toggle('super-ia-gradient', modoSuperIA); 
-                if(elements.modoModal.style.display === 'flex') { 
-                    toggleModal(false, elements.modoModal); 
-                } 
+                if(elements.modoModal.style.display === 'flex') toggleModal(false, elements.modoModal); 
                 localStorage.setItem('modoIA', mode); 
-                
-                // Mostrar modal solo si se activa el modo SUPER
-                if (modoSuperIA) {
-                    toggleModal(true, elements.modalSuperIA);
-                }
+                if (modoSuperIA) toggleModal(true, elements.modalSuperIA);
             };
             
             const loadState = () => { 
@@ -1458,7 +965,6 @@
                 return formatted; 
             };
 
-            // Initialize the application
             init();
         });
     </script>
