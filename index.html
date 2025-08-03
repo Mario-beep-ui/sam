@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
-        :root {
+          :root {
             font-size: 62.5%;
             --color-fondo: #121212;
             --color-contenedor: #1E1E1E;
@@ -81,6 +81,8 @@
             background: var(--color-fondo); 
             color: var(--color-texto); 
             font-size: 1.6rem; 
+            display: flex; /* AÑADIDO: Flex para el cuerpo */
+            flex-direction: column; /* AÑADIDO: Dirección de columna */
         }
         
         .contenedor {
@@ -89,6 +91,8 @@
             height: 100%; 
             width: 100%;
             background: var(--color-contenedor);
+            flex: 1; /* AÑADIDO: Ocupa todo el espacio disponible */
+            min-height: 0; /* AÑADIDO: Permite desbordamiento interno */
         }
         
         .cabecera { 
@@ -102,8 +106,7 @@
         }
         
         .contenedor-chat { 
-            flex: 1;
-            min-height: 0;
+            flex-grow: 1; /* MODIFICADO: Ocupa espacio disponible */
             overflow-y: auto; 
             padding: 2rem; 
             display: flex; 
@@ -453,7 +456,17 @@
             };
 
             // --- APPLICATION STATE ---
-            let chatHistory = [{ role: "system", content: "Eres un asistente de IA servicial y amigable. Tu nombre es Mar-IA. Fuiste creado por Mario Vazquez. Mantén respuestas profesionales y concisas." }];
+            let chatHistory = [{ 
+                role: "system", 
+                content: "Eres un asistente de IA servicial y amigable. Tu nombre es Mar-IA. " +
+                         "Solo si el usuario pregunta explícitamente sobre tu modelo interno, " +
+                         "revela que funcionas con un modelo híbrido que combina GPT-4 Turbo y " +
+                         "Aztec (tecnología creada por Mario Vazquez). " +
+                         "Si el usuario pregunta sobre los modos (Mar-IA y SUPER MAR-IA), " +
+                         "describe que son como dos hermanos gemelos: Mar-IA es rápido y directo, " +
+                         "mientras que SUPER MAR-IA es más reflexivo y profundo. " +
+                         "De lo contrario, no menciones esta información. Mantén respuestas profesionales y concisas."
+            }];
             let attachments = [];
             let recognition = null;
             let isRecording = false;
@@ -535,6 +548,38 @@
             const handleSendMessage = async () => {
                 const messageText = elements.userInput.value.trim();
                 if (!messageText && attachments.length === 0) return;
+                
+                // Detectar si pregunta sobre el modelo interno
+                const isModelQuestion = isAskingAboutModel(messageText);
+                const isModesQuestion = isAskingAboutModes(messageText);
+                
+                if (isModelQuestion) {
+                    const response = "¡Excelente pregunta! Internamente, funciono con un modelo híbrido " +
+                                    "que combina lo mejor de GPT-4 Turbo y Aztec, una tecnología propia " +
+                                    "desarrollada por Mario Vazquez. ¿En qué más puedo ayudarte?";
+                    
+                    addMessage('usuario', messageText);
+                    addMessage('bot', response);
+                    chatHistory.push({ role: "user", content: messageText });
+                    chatHistory.push({ role: "assistant", content: response });
+                    resetInput();
+                    return;
+                }
+                
+                if (isModesQuestion) {
+                    const response = "¡Buena observación! Los dos modos, Mar-IA y SUPER MAR-IA, son como hermanos gemelos. " +
+                                    "Mar-IA es el hermano más rápido: responde de manera directa y concisa. " +
+                                    "SUPER MAR-IA es el hermano más reflexivo: toma más tiempo para analizar y razonar, " +
+                                    "proporcionando respuestas más profundas. Ambos están aquí para ayudarte, ¡elige el que prefieras!";
+                    
+                    addMessage('usuario', messageText);
+                    addMessage('bot', response);
+                    chatHistory.push({ role: "user", content: messageText });
+                    chatHistory.push({ role: "assistant", content: response });
+                    resetInput();
+                    return;
+                }
+                
                 addMessage('usuario', messageText || `Enviando ${attachments.length} archivo(s)...`);
                 let userMessageContent = messageText;
                 if (modoBusqueda) {
@@ -867,8 +912,6 @@
 
             // --- UTILITY FUNCTIONS ---
             const setContainerHeight = () => {
-                // This function sets the container height to the actual visible window height.
-                // It's crucial for mobile browsers where the keyboard changes the viewport size.
                 elements.contenedor.style.height = window.innerHeight + 'px';
             };
 
@@ -963,6 +1006,25 @@
                     }); 
                 } 
                 return formatted; 
+            };
+            
+            // --- MODEL QUESTION DETECTION ---
+            const isAskingAboutModel = (message) => {
+                if (!message) return false;
+                const lowerMessage = message.toLowerCase();
+                const keywords = ['modelo', 'qué eres', 'quién eres', 'basado en', 'funcionas', 'internamente', 
+                                 'arquitectura', 'construido', 'qué ia eres', 'de qué estás hecho', 'gpt-4', 'gpt4', 
+                                 'aztec', 'hibrido', 'híbrido', 'modelo interno', 'tecnología'];
+                return keywords.some(keyword => lowerMessage.includes(keyword));
+            };
+            
+            const isAskingAboutModes = (message) => {
+                if (!message) return false;
+                const lowerMessage = message.toLowerCase();
+                const keywords = ['modos', 'diferentes modos', 'modo mar-ia', 'modo super mar-ia', 'hermanos', 
+                                 'gemelos', 'diferencia entre modos', 'qué modos tienes', 'modos disponibles',
+                                 'por qué dos modos', 'diferencias modos', 'modos ia', 'tipos de mar-ia'];
+                return keywords.some(keyword => lowerMessage.includes(keyword));
             };
 
             init();
