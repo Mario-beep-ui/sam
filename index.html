@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
-          :root {
+        :root {
             font-size: 62.5%;
             --color-fondo: #121212;
             --color-contenedor: #1E1E1E;
@@ -81,8 +81,8 @@
             background: var(--color-fondo); 
             color: var(--color-texto); 
             font-size: 1.6rem; 
-            display: flex; /* AÑADIDO: Flex para el cuerpo */
-            flex-direction: column; /* AÑADIDO: Dirección de columna */
+            display: flex;
+            flex-direction: column;
         }
         
         .contenedor {
@@ -91,8 +91,9 @@
             height: 100%; 
             width: 100%;
             background: var(--color-contenedor);
-            flex: 1; /* AÑADIDO: Ocupa todo el espacio disponible */
-            min-height: 0; /* AÑADIDO: Permite desbordamiento interno */
+            flex: 1;
+            min-height: 0;
+            overflow: hidden;
         }
         
         .cabecera { 
@@ -106,7 +107,7 @@
         }
         
         .contenedor-chat { 
-            flex-grow: 1; /* MODIFICADO: Ocupa espacio disponible */
+            flex-grow: 1;
             overflow-y: auto; 
             padding: 2rem; 
             display: flex; 
@@ -120,6 +121,8 @@
             padding: 1rem; 
             background: var(--color-contenedor);
             z-index: 10;
+            position: sticky;
+            bottom: 0;
         }
 
         .cabecera .titulo { display: flex; align-items: center; gap: 1rem; }
@@ -308,6 +311,21 @@
                 flex-direction: column;
             }
         }
+        
+        /* Optimización para móviles */
+        @media (max-width: 768px) {
+            .contenedor-chat {
+                padding: 1rem;
+            }
+            
+            .burbuja-mensaje {
+                max-width: 95%;
+            }
+            
+            .contenedor-entrada-wrapper {
+                padding: 0.5rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -476,6 +494,11 @@
             let modoSuperIA = false;
             let isGeneratingThought = false;
             let currentReasoning = "";
+            
+            // --- MOBILE KEYBOARD HANDLING ---
+            let keyboardOpen = false;
+            let originalChatHeight = 0;
+            let originalInputPosition = 0;
 
             // --- INITIALIZATION ---
             const init = () => {
@@ -486,6 +509,10 @@
                 initVoiceSynthesis();
                 addMessage('bot', '¡Hola! Soy Mar-IA. ¿En qué puedo ayudarte hoy?');
                 autoResizeTextarea();
+                
+                // Guardar alturas originales
+                originalChatHeight = elements.chatContainer.clientHeight;
+                originalInputPosition = elements.entradaWrapper.getBoundingClientRect().top;
             };
 
             // --- EVENT LISTENERS SETUP ---
@@ -542,6 +569,56 @@
                 elements.botonAyuda.addEventListener('click', () => toggleModal(true, elements.modalAyuda));
                 elements.cerrarModalAyuda.addEventListener('click', () => toggleModal(false, elements.modalAyuda));
                 elements.cerrarModalAyudaBtn.addEventListener('click', () => toggleModal(false, elements.modalAyuda));
+                
+                // Mobile keyboard handling
+                elements.userInput.addEventListener('focus', handleInputFocus);
+                elements.userInput.addEventListener('blur', handleInputBlur);
+            };
+
+            // --- MOBILE KEYBOARD HANDLING FUNCTIONS ---
+            const handleInputFocus = () => {
+                keyboardOpen = true;
+                setTimeout(adjustForKeyboard, 300);
+            };
+
+            const handleInputBlur = () => {
+                keyboardOpen = false;
+                setTimeout(restoreOriginalLayout, 300);
+            };
+
+            const adjustForKeyboard = () => {
+                if (!keyboardOpen) return;
+                
+                // Calcular altura visible disponible
+                const visibleHeight = window.innerHeight;
+                
+                // Calcular posición actual del área de entrada
+                const inputRect = elements.entradaWrapper.getBoundingClientRect();
+                const inputBottomPosition = inputRect.bottom;
+                
+                // Calcular cuánto espacio necesita moverse
+                const moveUpAmount = Math.max(0, inputBottomPosition - visibleHeight + 50);
+                
+                if (moveUpAmount > 0) {
+                    // Ajustar altura del contenedor de chat
+                    elements.chatContainer.style.height = `${visibleHeight - elements.entradaWrapper.offsetHeight - 50}px`;
+                    
+                    // Desplazar todo el contenido hacia arriba
+                    elements.contenedor.scrollTop = elements.contenedor.scrollHeight;
+                    
+                    // Desplazar chat al final
+                    scrollToBottom();
+                }
+            };
+
+            const restoreOriginalLayout = () => {
+                if (keyboardOpen) return;
+                
+                // Restaurar altura del chat
+                elements.chatContainer.style.height = '';
+                
+                // Restaurar posición de desplazamiento
+                elements.contenedor.scrollTop = 0;
             };
 
             // --- CORE MESSAGE HANDLING LOGIC ---
