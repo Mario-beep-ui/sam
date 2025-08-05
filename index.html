@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SUPER MAR-IA | Asistente Avanzado</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -40,7 +40,6 @@
             --color-destacado: #8A2BE2;
             --resaltado-pensamiento: rgba(138, 43, 226, 0.2);
         }
-
         body.tema-claro {
             --color-fondo: #F5F5F5;
             --color-contenedor: #FFFFFF;
@@ -69,33 +68,26 @@
             --color-destacado: #5e17eb;
             --resaltado-pensamiento: rgba(94, 23, 235, 0.1);
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        
-        html, body { 
-            height: 100%;
-            overflow: hidden; 
-        }
-
+        html { height: 100%; }
         body { 
+            height: 100dvh;
             background: var(--color-fondo); 
             color: var(--color-texto); 
             font-size: 1.6rem; 
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
-        
         .contenedor {
             display: flex;
             flex-direction: column;
-            height: 100%; 
             width: 100%;
             background: var(--color-contenedor);
             flex: 1;
             min-height: 0;
             overflow: hidden;
         }
-        
         .cabecera { 
             flex-shrink: 0;
             padding: 1rem 1.5rem; 
@@ -105,7 +97,6 @@
             justify-content: space-between; 
             z-index: 10;
         }
-        
         .contenedor-chat { 
             flex-grow: 1;
             overflow-y: auto; 
@@ -115,16 +106,12 @@
             gap: 2rem; 
             scroll-behavior: smooth; 
         }
-        
         .contenedor-entrada-wrapper { 
             flex-shrink: 0;
             padding: 1rem; 
             background: var(--color-contenedor);
             z-index: 10;
-            position: sticky;
-            bottom: 0;
         }
-
         .cabecera .titulo { display: flex; align-items: center; gap: 1rem; }
         .cabecera .titulo h1 { font-size: 1.8rem; margin: 0; cursor: pointer; transition: all 0.3s; position: relative; color: var(--color-destacado); }
         .super-ia-gradient { background: linear-gradient(90deg, #8A2BE2, #FFD700, #87CEEB); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; -webkit-text-fill-color: transparent; animation: gradient-animation 5s ease infinite; background-size: 200% 200%; }
@@ -143,7 +130,6 @@
         .burbuja-mensaje { padding: 1.2rem 1.8rem; border-radius: 1.8rem; line-height: 1.6; word-wrap: break-word; max-width: 100%; }
         .burbuja-usuario { background: var(--fondo-burbuja-usuario); color: var(--texto-burbuja-usuario); border-bottom-right-radius: 0.5rem; }
         .burbuja-bot { background: var(--fondo-burbuja-bot); color: var(--texto-burbuja-bot); border: 1px solid var(--borde-burbuja-bot); border-bottom-left-radius: 0.5rem; }
-        
         .pensamiento-container { background: var(--fondo-pensamiento); border: 1px solid var(--borde-pensamiento); border-radius: 1.2rem; animation: slideIn 0.4s ease-out; overflow: hidden; margin-bottom: 1.5rem; }
         @keyframes slideIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
         .pensamiento-cabecera-clickable { display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 1.5rem; cursor: pointer; transition: background-color 0.2s; }
@@ -154,13 +140,20 @@
         .tiempo-pensamiento { font-size: 1.2rem; color: var(--color-timestamp); }
         .toggle-icon { font-size: 2rem; color: var(--color-timestamp); transition: transform 0.3s ease; }
         .toggle-icon.collapsed { transform: rotate(-180deg); }
-        .pensamiento-contenido-wrapper { max-height: 1000px; overflow: hidden; transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out; }
+        .pensamiento-contenido-wrapper { overflow: hidden; transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out; }
         .pensamiento-contenido-wrapper.collapsed { max-height: 0; padding-top: 0; padding-bottom: 0; border-top: none; }
-        .contenido-pensamiento { font-size: 1.4rem; line-height: 1.7; padding: 1.5rem; border-top: 1px solid var(--borde-pensamiento); background: var(--resaltado-pensamiento); min-height: 100px; overflow-y: auto; }
+        .contenido-pensamiento { 
+            font-size: 1.4rem; 
+            line-height: 1.7; 
+            padding: 1.5rem; 
+            border-top: 1px solid var(--borde-pensamiento); 
+            background: var(--resaltado-pensamiento); 
+            overflow-y: auto;
+            max-height: 50vh;
+        }
         .pensamiento-acciones { display: flex; gap: 1rem; margin-top: 1.5rem; justify-content: flex-end; padding: 0 1.5rem 1.5rem; }
         .boton-pensamiento { background: rgba(255,255,255,0.05); border: 1px solid var(--borde-pensamiento); border-radius: 0.8rem; padding: 0.5rem 1rem; color: var(--color-texto); cursor: pointer; display: flex; align-items: center; gap: 0.5rem; transition: all 0.2s; font-size: 1.3rem; }
         .boton-pensamiento:hover { background: rgba(255,255,255,0.1); }
-        
         .bloque-codigo { position: relative; background: var(--fondo-codigo); border: 1px solid var(--borde-codigo); border-radius: 0.8rem; overflow: hidden; margin: 1.2rem 0; max-width: 100%; }
         .cabecera-codigo { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1.2rem; background: rgba(0,0,0,0.2); border-bottom: 1px solid var(--borde-codigo); }
         .lenguaje-codigo { font-size: 1.3rem; font-weight: 500; color: #aaa; }
@@ -169,12 +162,10 @@
         .boton-copiar-codigo.copiado { color: #4CAF50; }
         .contenedor-codigo { overflow-x: auto; max-width: 100%; }
         .contenedor-codigo pre { margin: 0; padding: 1.5rem; font-family: 'Courier New', monospace; font-size: 1.4rem; }
-        
         .timestamp-container { display: flex; align-items: center; gap: 0.8rem; margin-top: 0.8rem; }
         .timestamp { font-size: 1.2rem; color: var(--color-timestamp); }
         .boton-accion-mensaje { background: none; border: none; width: 2.8rem; height: 2.8rem; border-radius: 50%; cursor: pointer; font-size: 1.4rem; display: flex; justify-content: center; align-items: center; color: var(--color-timestamp); transition: background 0.2s; }
         .boton-accion-mensaje:hover { background: rgba(255,255,255,0.1); }
-
         .contenedor-entrada { 
             display: flex; 
             flex-direction: column; 
@@ -187,7 +178,6 @@
             transition: border-color 0.3s;
         }
         .contenedor-entrada:focus-within { border-color: var(--color-destacado); }
-
         .contenedor-adjuntos { display: none; overflow-x: auto; overflow-y: hidden; white-space: nowrap; padding-bottom: 1rem; scrollbar-width: thin; border-bottom: 1px solid var(--borde-adjunto); margin-bottom: 0.5rem;}
         .adjunto-item { display: inline-flex; align-items: center; gap: 0.8rem; background: var(--fondo-adjunto); border: 1px solid var(--borde-adjunto); border-radius: 1.2rem; padding: 0.8rem 1.2rem; max-width: 22rem; margin-right: 1rem; }
         .icono-adjunto { font-size: 2rem; color: var(--color-destacado); }
@@ -196,7 +186,6 @@
         .tamano-adjunto { font-size: 1.1rem; color: var(--color-timestamp); }
         .boton-eliminar { background: transparent; border: none; border-radius: 50%; width: 2.4rem; height: 2.4rem; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #aaa; transition: all 0.2s; }
         .boton-eliminar:hover { color: #E53935; background: rgba(255, 0, 0, 0.1); }
-        
         #entrada-usuario { 
             width: 100%; 
             border: none; 
@@ -208,14 +197,12 @@
             max-height: 15rem; 
             overflow-y: auto; 
         }
-
         .input-area-botones {
             display: flex;
             justify-content: flex-end;
             align-items: center;
             gap: 0.5rem;
         }
-        
         .boton-input { 
             background: var(--fondo-boton-accion); 
             color: var(--texto-boton-accion); 
@@ -232,23 +219,18 @@
             flex-shrink: 0; 
         }
         .boton-input:hover { transform: scale(1.05); }
-        
         #boton-enviar { background: var(--fondo-boton-enviar); color: var(--texto-boton-enviar); border-color: transparent; }
-        
         #boton-grabar.grabando { 
             background: var(--fondo-boton-grabando); 
             animation: pulsate 1.5s infinite; 
             border-color: var(--color-destacado);
         }
-        
         .boton-input.modo-activo {
             border-color: var(--color-destacado);
             background: var(--fondo-boton-accion) !important;
             animation: none !important;
         }
-        
         @keyframes pulsate { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
-        
         .indicador-escribiendo { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem; background: var(--fondo-burbuja-bot); border-radius: 1.8rem; width: fit-content; color: var(--texto-burbuja-bot); align-self: flex-start; animation: fadeIn 0.3s ease; }
         .indicador-escribiendo .puntos span { height: 0.8rem; width: 0.8rem; background: var(--color-timestamp); border-radius: 50%; display: inline-block; margin: 0 0.2rem; animation: bounce 1.3s infinite; }
         .indicador-escribiendo .puntos span:nth-child(2) { animation-delay: 0.2s; }
@@ -256,7 +238,6 @@
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-0.5rem); } }
         .fa-beat { animation: fa-beat 1.5s ease-in-out infinite; }
         @keyframes fa-beat { 0%, 100% { transform: scale(1); opacity: 0.7; } 50% { transform: scale(1.15); opacity: 1; } }
-
         .modal-ocr { position: fixed; bottom: 10rem; right: 2rem; background: var(--fondo-entrada); border-radius: 1.5rem; box-shadow: 0 5px 15px rgba(0,0,0,0.3); padding: 1rem; display: none; flex-direction: column; gap: 1rem; z-index: 2000; border: 1px solid var(--borde-superior-entrada); }
         .opcion-ocr { background: var(--fondo-campo-entrada); color: var(--texto-entrada); border: none; border-radius: 1.2rem; padding: 1.2rem 1.5rem; display: flex; align-items: center; gap: 1.2rem; cursor: pointer; transition: all 0.2s; font-weight: 500; }
         .opcion-ocr:hover { background: var(--color-destacado); color: white; }
@@ -270,7 +251,6 @@
         .copy-confirmation { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background-color: rgba(0, 0, 0, 0.8); color: white; padding: 1rem 2rem; border-radius: 0.5rem; font-size: 1.4rem; opacity: 0; transition: opacity 0.3s; z-index: 1000; pointer-events: none; }
         .copy-confirmation.show { opacity: 1; }
         input[type="file"] { display: none; }
-
         .modal-super-ia { position: fixed; top: 2rem; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%); color: white; border-radius: 1.5rem; padding: 2rem; display: none; flex-direction: column; z-index: 2000; width: 90%; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); animation: fadeInDown 0.5s ease-out; }
         @keyframes fadeInDown { from { opacity: 0; transform: translate(-50%, -20px); } to { opacity: 1; transform: translate(-50%, 0); } }
         .modal-super-ia-contenido { position: relative; }
@@ -287,7 +267,6 @@
         .modo-card.super::after { content: 'RECOMENDADO'; position: absolute; top: 0; right: 0; background: #FFD700; color: #000; font-weight: bold; font-size: 1.1rem; padding: 0.3rem 1rem; border-radius: 0 0 0 1rem; transform: translate(0.5rem, -0.5rem) rotate(25deg); }
         .boton-entendido { background: rgba(255,255,255,0.2); border: 2px solid white; color: white; border-radius: 3rem; padding: 1rem 2rem; font-size: 1.6rem; font-weight: bold; cursor: pointer; transition: all 0.3s; margin-top: 1.5rem; width: 100%; }
         .boton-entendido:hover { background: rgba(255,255,255,0.3); transform: translateY(-3px); }
-        
         .modal-ayuda { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--fondo-entrada); border-radius: 1.5rem; box-shadow: 0 15px 30px rgba(0,0,0,0.3); padding: 2rem; display: none; flex-direction: column; z-index: 2000; width: 90%; max-width: 600px; max-height: 80vh; overflow-y: auto; border: 1px solid var(--borde-superior-entrada); }
         .modal-ayuda-contenido { position: relative; }
         .cerrar-modal-ayuda { position: absolute; top: -1.5rem; right: -1rem; background: var(--fondo-boton-control); border: none; width: 3rem; height: 3rem; border-radius: 50%; font-size: 2.5rem; color: var(--color-texto); cursor: pointer; display: flex; justify-content: center; align-items: center; transition: all 0.3s; }
@@ -305,23 +284,18 @@
         .item-ayuda .descripcion-item { font-size: 1.5rem; }
         .boton-ayuda { background: var(--fondo-boton-enviar); color: white; border: none; border-radius: 3rem; padding: 1rem 2rem; font-size: 1.6rem; font-weight: bold; cursor: pointer; transition: all 0.3s; margin-top: 1rem; display: flex; align-items: center; justify-content: center; gap: 1rem; }
         .boton-ayuda:hover { background: #6d1dc4; transform: translateY(-3px); }
-        
         @media (max-width: 600px) {
             .comparacion-modos {
                 flex-direction: column;
             }
         }
-        
-        /* Optimización para móviles */
         @media (max-width: 768px) {
             .contenedor-chat {
                 padding: 1rem;
             }
-            
             .burbuja-mensaje {
                 max-width: 95%;
             }
-            
             .contenedor-entrada-wrapper {
                 padding: 0.5rem;
             }
@@ -430,38 +404,36 @@
     </div>
     
     <div class="overlay" id="overlay"></div>
-    <div id="copyConfirmation" class="copy-confirmation">¡Copiado!</div>
+    <div id="confirmacionCopia" class="copy-confirmation">¡Copiado!</div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- API KEYS AND CONFIG ---
-            const DEEPSEEK_API_KEY = 'sk-646a5b86d1de4ee186dfac833541452b';
-            const OCR_API_KEY = 'K82439722788957'; 
+            const CLAVE_API_DEEPSEEK = 'sk-646a5b86d1de4ee186dfac833541452b';
+            const CLAVE_API_OCR = 'K82439722788957'; 
 
-            // --- DOM ELEMENT REFERENCES ---
-            const elements = {
+            const elementos = {
                 body: document.body,
                 contenedor: document.querySelector('.contenedor'),
-                chatContainer: document.getElementById('contenedor-chat'),
-                userInput: document.getElementById('entrada-usuario'),
-                sendButton: document.getElementById('boton-enviar'),
-                recordButton: document.getElementById('boton-grabar'),
-                moreButton: document.getElementById('boton-mas'),
-                searchButton: document.getElementById('boton-buscar'),
-                imageInput: document.getElementById('input-imagen'),
-                cameraInput: document.getElementById('input-camara'),
-                fileInput: document.getElementById('input-archivo'),
-                ocrModal: document.getElementById('modal-ocr'),
-                modoModal: document.getElementById('modal-modo'),
+                contenedorChat: document.getElementById('contenedor-chat'),
+                entradaUsuario: document.getElementById('entrada-usuario'),
+                botonEnviar: document.getElementById('boton-enviar'),
+                botonGrabar: document.getElementById('boton-grabar'),
+                botonMas: document.getElementById('boton-mas'),
+                botonBuscar: document.getElementById('boton-buscar'),
+                inputImagen: document.getElementById('input-imagen'),
+                inputCamara: document.getElementById('input-camara'),
+                inputArchivo: document.getElementById('input-archivo'),
+                modalOcr: document.getElementById('modal-ocr'),
+                modalModo: document.getElementById('modal-modo'),
                 overlay: document.getElementById('overlay'),
-                takePictureBtn: document.getElementById('tomar-foto'),
-                galleryBtn: document.getElementById('elegir-galeria'),
-                fileBtn: document.getElementById('elegir-archivo'),
-                themeSwitcher: document.getElementById('alternador-tema'),
-                copyConfirmation: document.getElementById('copyConfirmation'),
-                voiceSelector: document.getElementById('selector-voz'),
-                attachmentsContainer: document.getElementById('contenedor-adjuntos'),
-                activateSearchModalBtn: document.getElementById('activar-busqueda-modal'),
+                btnTomarFoto: document.getElementById('tomar-foto'),
+                btnGaleria: document.getElementById('elegir-galeria'),
+                btnArchivo: document.getElementById('elegir-archivo'),
+                alternadorTema: document.getElementById('alternador-tema'),
+                confirmacionCopia: document.getElementById('confirmacionCopia'),
+                selectorVoz: document.getElementById('selector-voz'),
+                contenedorAdjuntos: document.getElementById('contenedor-adjuntos'),
+                btnActivarBusquedaModal: document.getElementById('activar-busqueda-modal'),
                 tituloModo: document.getElementById('titulo-modo'),
                 modalSuperIA: document.getElementById('modal-super-ia'),
                 cerrarModalSuperIA: document.getElementById('cerrar-modal-super-ia'),
@@ -473,8 +445,7 @@
                 entradaWrapper: document.getElementById('contenedor-entrada-wrapper')
             };
 
-            // --- APPLICATION STATE ---
-            let chatHistory = [{ 
+            let historialChat = [{ 
                 role: "system", 
                 content: "Eres un asistente de IA servicial y amigable. Tu nombre es Mar-IA. " +
                          "Solo si el usuario pregunta explícitamente sobre tu modelo interno, " +
@@ -485,626 +456,621 @@
                          "mientras que SUPER MAR-IA es más reflexivo y profundo. " +
                          "De lo contrario, no menciones esta información. Mantén respuestas profesionales y concisas."
             }];
-            let attachments = [];
-            let recognition = null;
-            let isRecording = false;
-            let lastMessageWasFromVoice = false;
-            let currentSpeech = null;
+            let archivosAdjuntos = [];
+            let reconocimientoVoz = null;
+            let estaGrabando = false;
+            let ultimoMensajeFuePorVoz = false;
+            let sintesisVozActual = null;
             let modoBusqueda = false;
             let modoSuperIA = false;
-            let isGeneratingThought = false;
-            let currentReasoning = "";
+            let estaGenerandoPensamiento = false;
+            let razonamientoActual = "";
             
-            // --- MOBILE KEYBOARD HANDLING ---
-            let keyboardOpen = false;
-            let originalChatHeight = 0;
-            let originalInputPosition = 0;
-
-            // --- INITIALIZATION ---
-            const init = () => {
-                setContainerHeight();
-                loadState();
-                setupEventListeners();
-                initSpeechRecognition();
-                initVoiceSynthesis();
-                addMessage('bot', '¡Hola! Soy Mar-IA. ¿En qué puedo ayudarte hoy?');
-                autoResizeTextarea();
-                
-                // Guardar alturas originales
-                originalChatHeight = elements.chatContainer.clientHeight;
-                originalInputPosition = elements.entradaWrapper.getBoundingClientRect().top;
+            const iniciar = () => {
+                cargarEstado();
+                configurarEventListeners();
+                iniciarReconocimientoVoz();
+                iniciarSintesisVoz();
+                agregarMensaje('bot', '¡Hola! Soy Mar-IA. ¿En qué puedo ayudarte hoy?');
+                autoAjustarTextarea();
             };
 
-            // --- EVENT LISTENERS SETUP ---
-            const setupEventListeners = () => {
-                window.addEventListener('resize', setContainerHeight);
-                elements.sendButton.addEventListener('click', handleSendMessage);
-                elements.userInput.addEventListener('keypress', (e) => { 
+            const configurarEventListeners = () => {
+                window.addEventListener('resize', irAlFinal);
+                elementos.botonEnviar.addEventListener('click', gestionarEnvioMensaje);
+                elementos.entradaUsuario.addEventListener('keypress', (e) => { 
                     if (e.key === 'Enter' && !e.shiftKey) { 
                         e.preventDefault(); 
-                        handleSendMessage(); 
+                        gestionarEnvioMensaje(); 
                     } 
                 });
-                elements.userInput.addEventListener('input', autoResizeTextarea);
-                elements.recordButton.addEventListener('click', toggleRecording);
-                elements.moreButton.addEventListener('click', () => {
-                    const isActive = elements.ocrModal.style.display === 'flex';
-                    toggleModal(!isActive, elements.ocrModal);
+                elementos.entradaUsuario.addEventListener('input', autoAjustarTextarea);
+                elementos.entradaUsuario.addEventListener('focus', gestionarFocoInput);
+                elementos.botonGrabar.addEventListener('click', alternarGrabacion);
+                elementos.botonMas.addEventListener('click', () => {
+                    const estaActivo = elementos.modalOcr.style.display === 'flex';
+                    alternarModal(!estaActivo, elementos.modalOcr);
                 });
-                elements.searchButton.addEventListener('click', () => toggleModoBusqueda());
-                elements.overlay.addEventListener('click', () => { 
-                    toggleModal(false, elements.ocrModal); 
-                    toggleModal(false, elements.modoModal); 
-                    toggleModal(false, elements.modalSuperIA);
-                    toggleModal(false, elements.modalAyuda);
+                elementos.botonBuscar.addEventListener('click', () => alternarModoBusqueda());
+                elementos.overlay.addEventListener('click', () => { 
+                    alternarModal(false, elementos.modalOcr); 
+                    alternarModal(false, elementos.modalModo); 
+                    alternarModal(false, elementos.modalSuperIA);
+                    alternarModal(false, elementos.modalAyuda);
                 });
-                elements.takePictureBtn.addEventListener('click', () => { 
-                    toggleModal(false, elements.ocrModal); 
-                    elements.cameraInput.click(); 
+                elementos.btnTomarFoto.addEventListener('click', () => { 
+                    alternarModal(false, elementos.modalOcr); 
+                    elementos.inputCamara.click(); 
                 });
-                elements.galleryBtn.addEventListener('click', () => { 
-                    toggleModal(false, elements.ocrModal); 
-                    elements.imageInput.click(); 
+                elementos.btnGaleria.addEventListener('click', () => { 
+                    alternarModal(false, elementos.modalOcr); 
+                    elementos.inputImagen.click(); 
                 });
-                elements.fileBtn.addEventListener('click', () => { 
-                    toggleModal(false, elements.ocrModal); 
-                    elements.fileInput.click(); 
+                elementos.btnArchivo.addEventListener('click', () => { 
+                    alternarModal(false, elementos.modalOcr); 
+                    elementos.inputArchivo.click(); 
                 });
-                elements.imageInput.addEventListener('change', (e) => handleFileSelection(e.target.files));
-                elements.cameraInput.addEventListener('change', (e) => handleFileSelection(e.target.files));
-                elements.fileInput.addEventListener('change', (e) => handleFileSelection(e.target.files));
-                elements.themeSwitcher.addEventListener('click', toggleTheme);
-                elements.voiceSelector.addEventListener('change', stopSpeech);
-                elements.activateSearchModalBtn.addEventListener('click', () => { 
-                    toggleModoBusqueda(true); 
-                    toggleModal(false, elements.ocrModal); 
+                elementos.inputImagen.addEventListener('change', (e) => gestionarSeleccionArchivo(e.target.files));
+                elementos.inputCamara.addEventListener('change', (e) => gestionarSeleccionArchivo(e.target.files));
+                elementos.inputArchivo.addEventListener('change', (e) => gestionarSeleccionArchivo(e.target.files));
+                elementos.alternadorTema.addEventListener('click', alternarTema);
+                elementos.selectorVoz.addEventListener('change', detenerVoz);
+                elementos.btnActivarBusquedaModal.addEventListener('click', () => { 
+                    alternarModoBusqueda(true); 
+                    alternarModal(false, elementos.modalOcr); 
                 });
-                elements.tituloModo.addEventListener('click', () => toggleModal(true, elements.modoModal));
+                elementos.tituloModo.addEventListener('click', () => alternarModal(true, elementos.modalModo));
                 document.querySelectorAll('.opcion-modo').forEach(opcion => {
-                    opcion.addEventListener('click', (e) => setIAMode(e.currentTarget.dataset.modo));
+                    opcion.addEventListener('click', (e) => establecerModoIA(e.currentTarget.dataset.modo));
                 });
-                elements.chatContainer.addEventListener('click', handleChatContainerClick);
-                elements.cerrarModalSuperIA.addEventListener('click', () => toggleModal(false, elements.modalSuperIA));
-                elements.botonEntendido.addEventListener('click', () => toggleModal(false, elements.modalSuperIA));
-                elements.botonAyuda.addEventListener('click', () => toggleModal(true, elements.modalAyuda));
-                elements.cerrarModalAyuda.addEventListener('click', () => toggleModal(false, elements.modalAyuda));
-                elements.cerrarModalAyudaBtn.addEventListener('click', () => toggleModal(false, elements.modalAyuda));
-                
-                // Mobile keyboard handling
-                elements.userInput.addEventListener('focus', handleInputFocus);
-                elements.userInput.addEventListener('blur', handleInputBlur);
+                elementos.contenedorChat.addEventListener('click', gestionarClickContenedorChat);
+                elementos.cerrarModalSuperIA.addEventListener('click', () => alternarModal(false, elementos.modalSuperIA));
+                elementos.botonEntendido.addEventListener('click', () => alternarModal(false, elementos.modalSuperIA));
+                elementos.botonAyuda.addEventListener('click', () => alternarModal(true, elementos.modalAyuda));
+                elementos.cerrarModalAyuda.addEventListener('click', () => alternarModal(false, elementos.modalAyuda));
+                elementos.cerrarModalAyudaBtn.addEventListener('click', () => alternarModal(false, elementos.modalAyuda));
             };
 
-            // --- MOBILE KEYBOARD HANDLING FUNCTIONS ---
-            const handleInputFocus = () => {
-                keyboardOpen = true;
-                setTimeout(adjustForKeyboard, 300);
-            };
+            const gestionarEnvioMensaje = async () => {
+                const textoMensaje = elementos.entradaUsuario.value.trim();
 
-            const handleInputBlur = () => {
-                keyboardOpen = false;
-                setTimeout(restoreOriginalLayout, 300);
-            };
-
-            const adjustForKeyboard = () => {
-                if (!keyboardOpen) return;
-                
-                // Calcular altura visible disponible
-                const visibleHeight = window.innerHeight;
-                
-                // Calcular posición actual del área de entrada
-                const inputRect = elements.entradaWrapper.getBoundingClientRect();
-                const inputBottomPosition = inputRect.bottom;
-                
-                // Calcular cuánto espacio necesita moverse
-                const moveUpAmount = Math.max(0, inputBottomPosition - visibleHeight + 50);
-                
-                if (moveUpAmount > 0) {
-                    // Ajustar altura del contenedor de chat
-                    elements.chatContainer.style.height = `${visibleHeight - elements.entradaWrapper.offsetHeight - 50}px`;
-                    
-                    // Desplazar todo el contenido hacia arriba
-                    elements.contenedor.scrollTop = elements.contenedor.scrollHeight;
-                    
-                    // Desplazar chat al final
-                    scrollToBottom();
+                if (contieneSolicitudDeImagen(textoMensaje)) {
+                    await manejarGeneracionDeImagen(textoMensaje);
+                    return;
                 }
-            };
 
-            const restoreOriginalLayout = () => {
-                if (keyboardOpen) return;
+                if (!textoMensaje && archivosAdjuntos.length === 0) return;
                 
-                // Restaurar altura del chat
-                elements.chatContainer.style.height = '';
+                const esPreguntaModelo = preguntaSobreModelo(textoMensaje);
+                const esPreguntaModos = preguntaSobreModos(textoMensaje);
                 
-                // Restaurar posición de desplazamiento
-                elements.contenedor.scrollTop = 0;
-            };
-
-            // --- CORE MESSAGE HANDLING LOGIC ---
-            const handleSendMessage = async () => {
-                const messageText = elements.userInput.value.trim();
-                if (!messageText && attachments.length === 0) return;
-                
-                // Detectar si pregunta sobre el modelo interno
-                const isModelQuestion = isAskingAboutModel(messageText);
-                const isModesQuestion = isAskingAboutModes(messageText);
-                
-                if (isModelQuestion) {
-                    const response = "¡Excelente pregunta! Internamente, funciono con un modelo híbrido " +
+                if (esPreguntaModelo) {
+                    const respuesta = "¡Excelente pregunta! Internamente, funciono con un modelo híbrido " +
                                     "que combina lo mejor de GPT-4 Turbo y Aztec, una tecnología propia " +
                                     "desarrollada por Mario Vazquez. ¿En qué más puedo ayudarte?";
                     
-                    addMessage('usuario', messageText);
-                    addMessage('bot', response);
-                    chatHistory.push({ role: "user", content: messageText });
-                    chatHistory.push({ role: "assistant", content: response });
-                    resetInput();
+                    agregarMensaje('usuario', textoMensaje);
+                    agregarMensaje('bot', respuesta);
+                    historialChat.push({ role: "user", content: textoMensaje });
+                    historialChat.push({ role: "assistant", content: respuesta });
+                    reiniciarEntrada();
                     return;
                 }
                 
-                if (isModesQuestion) {
-                    const response = "¡Buena observación! Los dos modos, Mar-IA y SUPER MAR-IA, son como hermanos gemelos. " +
+                if (esPreguntaModos) {
+                    const respuesta = "¡Buena observación! Los dos modos, Mar-IA y SUPER MAR-IA, son como hermanos gemelos. " +
                                     "Mar-IA es el hermano más rápido: responde de manera directa y concisa. " +
                                     "SUPER MAR-IA es el hermano más reflexivo: toma más tiempo para analizar y razonar, " +
                                     "proporcionando respuestas más profundas. Ambos están aquí para ayudarte, ¡elige el que prefieras!";
                     
-                    addMessage('usuario', messageText);
-                    addMessage('bot', response);
-                    chatHistory.push({ role: "user", content: messageText });
-                    chatHistory.push({ role: "assistant", content: response });
-                    resetInput();
+                    agregarMensaje('usuario', textoMensaje);
+                    agregarMensaje('bot', respuesta);
+                    historialChat.push({ role: "user", content: textoMensaje });
+                    historialChat.push({ role: "assistant", content: respuesta });
+                    reiniciarEntrada();
                     return;
                 }
                 
-                addMessage('usuario', messageText || `Enviando ${attachments.length} archivo(s)...`);
-                let userMessageContent = messageText;
+                agregarMensaje('usuario', textoMensaje || `Enviando ${archivosAdjuntos.length} archivo(s)...`);
+                let contenidoMensajeUsuario = textoMensaje;
                 if (modoBusqueda) {
-                    showIndicator('Buscando en internet...');
-                    const searchResults = await performWebSearch(messageText);
-                    chatHistory.push({ role: "system", content: `Contexto de Búsqueda:\n${searchResults}` });
-                    toggleModoBusqueda(false);
+                    mostrarIndicador('Buscando en internet...');
+                    const resultadosBusqueda = await realizarBusquedaWeb(textoMensaje);
+                    historialChat.push({ role: "system", content: `Contexto de Búsqueda:\n${resultadosBusqueda}` });
+                    alternarModoBusqueda(false);
                 }
-                if (attachments.length > 0) {
-                    showIndicator('Procesando archivos...');
-                    const attachmentContent = await processAttachments();
-                    userMessageContent += `\n\n--- Archivos Adjuntos ---\n${attachmentContent}`;
+                if (archivosAdjuntos.length > 0) {
+                    mostrarIndicador('Procesando archivos...');
+                    const contenidoAdjuntos = await procesarArchivosAdjuntos();
+                    contenidoMensajeUsuario += `\n\n--- Archivos Adjuntos ---\n${contenidoAdjuntos}`;
                 }
-                hideIndicator();
-                chatHistory.push({ role: "user", content: userMessageContent });
-                const currentQueryHistory = [...chatHistory];
-                resetInput();
+                ocultarIndicador();
+                historialChat.push({ role: "user", content: contenidoMensajeUsuario });
+                const historialConsultaActual = [...historialChat];
+                reiniciarEntrada();
                 if (modoSuperIA) {
-                    await executeSuperIaFlow(currentQueryHistory, lastMessageWasFromVoice);
+                    await ejecutarFlujoSuperIA(historialConsultaActual, ultimoMensajeFuePorVoz);
                 } else {
-                    await fetchBotResponse(currentQueryHistory, lastMessageWasFromVoice);
+                    await obtenerRespuestaBot(historialConsultaActual, ultimoMensajeFuePorVoz);
                 }
-                lastMessageWasFromVoice = false;
+                ultimoMensajeFuePorVoz = false;
             };
 
-            // --- SUPER MAR-IA FLOW ---
-            const executeSuperIaFlow = async (currentChatHistory, shouldSpeak) => {
-                isGeneratingThought = true;
-                showIndicator('SUPER MAR-IA está razonando...', 'brain');
+            const ejecutarFlujoSuperIA = async (historialActual, debeHablar) => {
+                estaGenerandoPensamiento = true;
+                mostrarIndicador('SUPER MAR-IA está razonando...', 'brain');
                 try {
-                    const thoughtResponse = await fetch('https://api.deepseek.com/v1/chat/completions', {
+                    const respuestaPensamiento = await fetch('https://api.deepseek.com/v1/chat/completions', {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${DEEPSEEK_API_KEY}` },
-                        body: JSON.stringify({ model: "deepseek-reasoner", messages: currentChatHistory, max_tokens: 1000 })
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${CLAVE_API_DEEPSEEK}` },
+                        body: JSON.stringify({ model: "deepseek-reasoner", messages: historialActual, max_tokens: 1000 })
                     });
-                    if (!thoughtResponse.ok) throw new Error(`Error de API: ${thoughtResponse.status} ${thoughtResponse.statusText}`);
-                    const thoughtData = await thoughtResponse.json();
-                    const reasoning = thoughtData.choices[0].message.content;
-                    currentReasoning = reasoning;
-                    hideIndicator();
-                    createThoughtContainer(reasoning);
-                    await generateFinalResponse(reasoning, currentChatHistory, shouldSpeak);
+                    if (!respuestaPensamiento.ok) throw new Error(`Error de API: ${respuestaPensamiento.status} ${respuestaPensamiento.statusText}`);
+                    const datosPensamiento = await respuestaPensamiento.json();
+                    const razonamiento = datosPensamiento.choices[0].message.content;
+                    razonamientoActual = razonamiento;
+                    ocultarIndicador();
+                    crearContenedorPensamiento(razonamiento);
+                    await generarRespuestaFinal(razonamiento, historialActual, debeHablar);
                 } catch (error) {
-                    hideIndicator();
+                    ocultarIndicador();
                     console.error("Error en el flujo de SUPER MAR-IA:", error);
-                    addMessage('bot', "Lo siento, ocurrió un error grave al intentar razonar la respuesta.");
+                    agregarMensaje('bot', "Lo siento, ocurrió un error grave al intentar razonar la respuesta.");
                 }
-                isGeneratingThought = false;
+                estaGenerandoPensamiento = false;
             };
             
-            const generateFinalResponse = async (reasoning, currentChatHistory, shouldSpeak) => {
-                showIndicator('SUPER MAR-IA está generando la respuesta final...', 'brain');
-                const finalHistory = [ ...currentChatHistory, { role: "assistant", content: reasoning }, { role: "user", content: "Basándote en tu razonamiento anterior, genera una respuesta final estructurada, concisa y profesional." }];
+            const generarRespuestaFinal = async (razonamiento, historialActual, debeHablar) => {
+                mostrarIndicador('SUPER MAR-IA está generando la respuesta final...', 'brain');
+                const historialFinal = [ ...historialActual, { role: "assistant", content: razonamiento }, { role: "user", content: "Basándote en tu razonamiento anterior, genera una respuesta final estructurada, concisa y profesional." }];
                 try {
-                    const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
+                    const respuesta = await fetch('https://api.deepseek.com/v1/chat/completions', {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${DEEPSEEK_API_KEY}` },
-                        body: JSON.stringify({ model: "deepseek-reasoner", messages: finalHistory, stream: true })
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${CLAVE_API_DEEPSEEK}` },
+                        body: JSON.stringify({ model: "deepseek-reasoner", messages: historialFinal, stream: true })
                     });
-                    if (!response.ok) throw new Error(`Error de API: ${response.status} ${response.statusText}`);
-                    const reader = response.body.getReader();
-                    const decoder = new TextDecoder();
-                    let fullResponse = "";
-                    const botMessageElement = addMessage('bot', '', true);
-                    hideIndicator();
+                    if (!respuesta.ok) throw new Error(`Error de API: ${respuesta.status} ${respuesta.statusText}`);
+                    const lector = respuesta.body.getReader();
+                    const decodificador = new TextDecoder();
+                    let respuestaCompleta = "";
+                    const elementoMensajeBot = agregarMensaje('bot', '', true);
+                    ocultarIndicador();
                     while (true) {
-                        const { value, done } = await reader.read();
+                        const { value, done } = await lector.read();
                         if (done) break;
-                        const chunk = decoder.decode(value, { stream: true });
-                        const lines = chunk.split('\n');
-                        for (const line of lines) {
-                            if (line.startsWith('data: ')) {
-                                const data = line.substring(6);
-                                if (data === '[DONE]') break;
+                        const chunk = decodificador.decode(value, { stream: true });
+                        const lineas = chunk.split('\n');
+                        for (const linea of lineas) {
+                            if (linea.startsWith('data: ')) {
+                                const datos = linea.substring(6);
+                                if (datos === '[DONE]') break;
                                 try {
-                                    const jsonData = JSON.parse(data);
+                                    const jsonData = JSON.parse(datos);
                                     const token = jsonData.choices[0]?.delta?.content || '';
-                                    fullResponse += token;
-                                    botMessageElement.querySelector('.burbuja-mensaje').innerHTML = marked.parse(fullResponse);
-                                    formatCodeBlocks(botMessageElement);
-                                    scrollToBottom();
-                                } catch (e) { /* Ignore */ }
+                                    respuestaCompleta += token;
+                                    elementoMensajeBot.querySelector('.burbuja-mensaje').innerHTML = marked.parse(respuestaCompleta);
+                                    formatearBloquesCodigo(elementoMensajeBot);
+                                    irAlFinal();
+                                } catch (e) { /* Ignorar */ }
                             }
                         }
                     }
-                    chatHistory.push({ role: "assistant", content: fullResponse });
-                    if (shouldSpeak) speakText(botMessageElement.querySelector('.burbuja-mensaje').innerText, botMessageElement.querySelector('.boton-voz'));
+                    historialChat.push({ role: "assistant", content: respuestaCompleta });
+                    if (debeHablar) leerTexto(elementoMensajeBot.querySelector('.burbuja-mensaje').innerText, elementoMensajeBot.querySelector('.boton-voz'));
                 } catch (error) {
-                    hideIndicator();
+                    ocultarIndicador();
                     console.error("Error generando respuesta final:", error);
-                    addMessage('bot', "Lo siento, ocurrió un error al generar la respuesta final.");
+                    agregarMensaje('bot', "Lo siento, ocurrió un error al generar la respuesta final.");
                 }
             };
             
-            // --- STANDARD BOT RESPONSE ---
-            const fetchBotResponse = async (messages, shouldSpeak) => {
-                showIndicator('Mar-IA está escribiendo...');
-                const payload = { model: "deepseek-chat", messages: messages, stream: true };
+            const obtenerRespuestaBot = async (mensajes, debeHablar) => {
+                mostrarIndicador('Mar-IA está escribiendo...');
+                const payload = { model: "deepseek-chat", messages: mensajes, stream: true };
                 try {
-                    const response = await fetch('https://api.deepseek.com/v1/chat/completions', { 
+                    const respuesta = await fetch('https://api.deepseek.com/v1/chat/completions', { 
                         method: 'POST', 
-                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${DEEPSEEK_API_KEY}` }, 
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${CLAVE_API_DEEPSEEK}` }, 
                         body: JSON.stringify(payload) 
                     });
-                    if (!response.ok) throw new Error(`API Error: ${response.status}`);
-                    const reader = response.body.getReader();
-                    const decoder = new TextDecoder();
-                    let fullResponse = "";
-                    const botMessageElement = addMessage('bot', '', true);
-                    hideIndicator();
+                    if (!respuesta.ok) throw new Error(`Error de API: ${respuesta.status}`);
+                    const lector = respuesta.body.getReader();
+                    const decodificador = new TextDecoder();
+                    let respuestaCompleta = "";
+                    const elementoMensajeBot = agregarMensaje('bot', '', true);
+                    ocultarIndicador();
                     while (true) {
-                        const { value, done } = await reader.read();
+                        const { value, done } = await lector.read();
                         if (done) break;
-                        const chunk = decoder.decode(value, { stream: true });
-                        const lines = chunk.split('\n');
-                        for (const line of lines) {
-                            if (line.startsWith('data: ')) {
-                                const data = line.substring(6);
-                                if (data === '[DONE]') break;
+                        const chunk = decodificador.decode(value, { stream: true });
+                        const lineas = chunk.split('\n');
+                        for (const linea of lineas) {
+                            if (linea.startsWith('data: ')) {
+                                const datos = linea.substring(6);
+                                if (datos === '[DONE]') break;
                                 try {
-                                    const jsonData = JSON.parse(data);
+                                    const jsonData = JSON.parse(datos);
                                     const token = jsonData.choices[0]?.delta?.content || '';
-                                    fullResponse += token;
-                                    botMessageElement.querySelector('.burbuja-mensaje').innerHTML = marked.parse(fullResponse);
-                                    formatCodeBlocks(botMessageElement);
-                                    scrollToBottom();
-                                } catch (e) { /* Ignore */ }
+                                    respuestaCompleta += token;
+                                    elementoMensajeBot.querySelector('.burbuja-mensaje').innerHTML = marked.parse(respuestaCompleta);
+                                    formatearBloquesCodigo(elementoMensajeBot);
+                                    irAlFinal();
+                                } catch (e) { /* Ignorar */ }
                             }
                         }
                     }
-                    chatHistory.push({ role: "assistant", content: fullResponse });
-                    if (shouldSpeak) speakText(botMessageElement.querySelector('.burbuja-mensaje').innerText, botMessageElement.querySelector('.boton-voz'));
+                    historialChat.push({ role: "assistant", content: respuestaCompleta });
+                    if (debeHablar) leerTexto(elementoMensajeBot.querySelector('.burbuja-mensaje').innerText, elementoMensajeBot.querySelector('.boton-voz'));
                 } catch (error) {
-                    hideIndicator();
-                    console.error("Error fetching bot response:", error);
-                    addMessage('bot', "Lo siento, ocurrió un error al conectar con el servidor.");
+                    ocultarIndicador();
+                    console.error("Error obteniendo respuesta del bot:", error);
+                    agregarMensaje('bot', "Lo siento, ocurrió un error al conectar con el servidor.");
                 }
             };
 
-            // --- UI & DOM MANIPULATION ---
-            const addMessage = (role, content, isStreaming = false) => {
-                const messageDiv = document.createElement('div');
-                messageDiv.className = `mensaje mensaje-${role}`;
-                const bubbleDiv = document.createElement('div');
-                bubbleDiv.className = `burbuja-mensaje burbuja-${role}`;
-                if (content || isStreaming) bubbleDiv.innerHTML = content ? marked.parse(content) : '';
-                const timestampContainer = document.createElement('div');
-                timestampContainer.className = 'timestamp-container';
+            const agregarMensaje = (rol, contenido, esStreaming = false) => {
+                const divMensaje = document.createElement('div');
+                divMensaje.className = `mensaje mensaje-${rol}`;
+                const divBurbuja = document.createElement('div');
+                divBurbuja.className = `burbuja-mensaje burbuja-${rol}`;
+                if (contenido || esStreaming) divBurbuja.innerHTML = contenido ? marked.parse(contenido) : '';
+                const contenedorTimestamp = document.createElement('div');
+                contenedorTimestamp.className = 'timestamp-container';
                 const timestamp = document.createElement('div');
                 timestamp.className = 'timestamp';
                 timestamp.textContent = new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-                timestampContainer.appendChild(timestamp);
-                if (role === 'bot') {
-                    const speakBtn = document.createElement('button');
-                    speakBtn.className = 'boton-accion-mensaje boton-voz';
-                    speakBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
-                    speakBtn.title = 'Leer en voz alta';
-                    timestampContainer.appendChild(speakBtn);
+                contenedorTimestamp.appendChild(timestamp);
+                if (rol === 'bot') {
+                    const btnHablar = document.createElement('button');
+                    btnHablar.className = 'boton-accion-mensaje boton-voz';
+                    btnHablar.innerHTML = '<i class="fas fa-volume-up"></i>';
+                    btnHablar.title = 'Leer en voz alta';
+                    contenedorTimestamp.appendChild(btnHablar);
                 }
-                const copyBtn = document.createElement('button');
-                copyBtn.className = 'boton-accion-mensaje boton-copiar';
-                copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
-                copyBtn.title = 'Copiar';
-                timestampContainer.appendChild(copyBtn);
-                messageDiv.appendChild(bubbleDiv);
-                messageDiv.appendChild(timestampContainer);
-                elements.chatContainer.appendChild(messageDiv);
-                if (!isStreaming) {
-                    formatCodeBlocks(messageDiv);
-                    scrollToBottom();
+                const btnCopiar = document.createElement('button');
+                btnCopiar.className = 'boton-accion-mensaje boton-copiar';
+                btnCopiar.innerHTML = '<i class="fas fa-copy"></i>';
+                btnCopiar.title = 'Copiar';
+                contenedorTimestamp.appendChild(btnCopiar);
+                divMensaje.appendChild(divBurbuja);
+                divMensaje.appendChild(contenedorTimestamp);
+                elementos.contenedorChat.appendChild(divMensaje);
+                if (!esStreaming) {
+                    formatearBloquesCodigo(divMensaje);
+                    irAlFinal();
                 }
-                return messageDiv;
+                return divMensaje;
             };
 
-            const createThoughtContainer = (reasoning) => {
-                const thoughtDiv = document.createElement('div');
-                thoughtDiv.className = 'pensamiento-container';
-                thoughtDiv.innerHTML = `<div class="pensamiento-cabecera-clickable"><div class="pensamiento-titulo"><i class="fas fa-brain"></i><span>Proceso de Pensamiento de SUPER MAR-IA</span></div><div class="pensamiento-controles-cabecera"><div class="tiempo-pensamiento">${new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}</div><i class="fas fa-chevron-up toggle-icon"></i></div></div><div class="pensamiento-contenido-wrapper"><div class="contenido-pensamiento">${marked.parse(reasoning)}</div><div class="pensamiento-acciones"><button class="boton-pensamiento boton-copiar-pensamiento"><i class="fas fa-copy"></i> Copiar Razonamiento</button></div></div>`;
-                elements.chatContainer.appendChild(thoughtDiv);
-                formatCodeBlocks(thoughtDiv);
-                scrollToBottom();
-                return thoughtDiv;
+            const crearContenedorPensamiento = (razonamiento) => {
+                const divPensamiento = document.createElement('div');
+                divPensamiento.className = 'pensamiento-container';
+                divPensamiento.innerHTML = `<div class="pensamiento-cabecera-clickable"><div class="pensamiento-titulo"><i class="fas fa-brain"></i><span>Proceso de Pensamiento de SUPER MAR-IA</span></div><div class="pensamiento-controles-cabecera"><div class="tiempo-pensamiento">${new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}</div><i class="fas fa-chevron-up toggle-icon"></i></div></div><div class="pensamiento-contenido-wrapper"><div class="contenido-pensamiento">${marked.parse(razonamiento)}</div><div class="pensamiento-acciones"><button class="boton-pensamiento boton-copiar-pensamiento"><i class="fas fa-copy"></i> Copiar Razonamiento</button></div></div>`;
+                elementos.contenedorChat.appendChild(divPensamiento);
+                formatearBloquesCodigo(divPensamiento);
+                irAlFinal();
+                const wrapper = divPensamiento.querySelector('.pensamiento-contenido-wrapper');
+                wrapper.style.maxHeight = wrapper.scrollHeight + 'px';
+                return divPensamiento;
             };
             
-            const handleChatContainerClick = (e) => {
-                const header = e.target.closest('.pensamiento-cabecera-clickable');
-                if (header) {
-                    const wrapper = header.nextElementSibling;
-                    const icon = header.querySelector('.toggle-icon');
-                    const isCollapsed = wrapper.classList.toggle('collapsed');
-                    icon.classList.toggle('collapsed', isCollapsed);
-                    icon.classList.toggle('fa-chevron-down', isCollapsed);
-                    icon.classList.toggle('fa-chevron-up', !isCollapsed);
+            const gestionarClickContenedorChat = (e) => {
+                const cabecera = e.target.closest('.pensamiento-cabecera-clickable');
+                if (cabecera) {
+                    const wrapper = cabecera.nextElementSibling;
+                    const icono = cabecera.querySelector('.toggle-icon');
+                    const estaColapsando = !wrapper.classList.contains('collapsed');
+                    
+                    wrapper.classList.toggle('collapsed');
+                    icono.classList.toggle('collapsed', estaColapsando);
+                    icono.classList.toggle('fa-chevron-down', estaColapsando);
+                    icono.classList.toggle('fa-chevron-up', !estaColapsando);
+
+                    if (estaColapsando) {
+                        wrapper.style.maxHeight = '0px';
+                    } else {
+                        wrapper.style.maxHeight = wrapper.scrollHeight + 'px';
+                    }
                     return;
                 }
-                const copyBtn = e.target.closest('.boton-copiar');
-                if (copyBtn) {
-                    copyToClipboard(copyBtn.closest('.mensaje').querySelector('.burbuja-mensaje').innerText);
+                const btnCopiar = e.target.closest('.boton-copiar');
+                if (btnCopiar) {
+                    copiarAlPortapapeles(btnCopiar.closest('.mensaje').querySelector('.burbuja-mensaje').innerText);
                     return;
                 }
-                const copyThoughtBtn = e.target.closest('.boton-copiar-pensamiento');
-                if (copyThoughtBtn) {
-                    copyToClipboard(copyThoughtBtn.closest('.pensamiento-container').querySelector('.contenido-pensamiento').innerText);
+                const btnCopiarPensamiento = e.target.closest('.boton-copiar-pensamiento');
+                if (btnCopiarPensamiento) {
+                    copiarAlPortapapeles(btnCopiarPensamiento.closest('.pensamiento-container').querySelector('.contenido-pensamiento').innerText);
                     return;
                 }
-                const speakBtn = e.target.closest('.boton-voz');
-                if (speakBtn) {
-                    speakText(speakBtn.closest('.mensaje').querySelector('.burbuja-mensaje').innerText, speakBtn);
+                const btnVoz = e.target.closest('.boton-voz');
+                if (btnVoz) {
+                    leerTexto(btnVoz.closest('.mensaje').querySelector('.burbuja-mensaje').innerText, btnVoz);
                 }
             };
 
-            const formatCodeBlocks = (element) => {
-                element.querySelectorAll('pre').forEach(pre => {
+            const formatearBloquesCodigo = (elemento) => {
+                elemento.querySelectorAll('pre').forEach(pre => {
                     if (pre.parentElement.classList.contains('bloque-codigo')) return;
-                    const codeContainer = document.createElement('div');
-                    codeContainer.className = 'bloque-codigo';
-                    const header = document.createElement('div');
-                    header.className = 'cabecera-codigo';
-                    const langSpan = document.createElement('span');
-                    langSpan.className = 'lenguaje-codigo';
-                    langSpan.textContent = 'Código';
-                    const copyBtn = document.createElement('button');
-                    copyBtn.className = 'boton-copiar-codigo';
-                    copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copiar';
-                    copyBtn.onclick = () => {
-                        copyToClipboard(pre.innerText);
-                        copyBtn.innerHTML = '<i class="fas fa-check"></i> Copiado';
-                        setTimeout(() => { copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copiar'; }, 2000);
+                    const contenedorCodigo = document.createElement('div');
+                    contenedorCodigo.className = 'bloque-codigo';
+                    const cabecera = document.createElement('div');
+                    cabecera.className = 'cabecera-codigo';
+                    const spanLenguaje = document.createElement('span');
+                    spanLenguaje.className = 'lenguaje-codigo';
+                    spanLenguaje.textContent = 'Código';
+                    const btnCopiar = document.createElement('button');
+                    btnCopiar.className = 'boton-copiar-codigo';
+                    btnCopiar.innerHTML = '<i class="fas fa-copy"></i> Copiar';
+                    btnCopiar.onclick = () => {
+                        copiarAlPortapapeles(pre.innerText);
+                        btnCopiar.innerHTML = '<i class="fas fa-check"></i> Copiado';
+                        setTimeout(() => { btnCopiar.innerHTML = '<i class="fas fa-copy"></i> Copiar'; }, 2000);
                     };
-                    header.appendChild(langSpan);
-                    header.appendChild(copyBtn);
-                    const codeContent = document.createElement('div');
-                    codeContent.className = 'contenedor-codigo';
-                    codeContent.appendChild(pre.cloneNode(true));
-                    codeContainer.appendChild(header);
-                    codeContainer.appendChild(codeContent);
-                    pre.replaceWith(codeContainer);
+                    cabecera.appendChild(spanLenguaje);
+                    cabecera.appendChild(btnCopiar);
+                    const contenidoCodigo = document.createElement('div');
+                    contenidoCodigo.className = 'contenedor-codigo';
+                    contenidoCodigo.appendChild(pre.cloneNode(true));
+                    contenedorCodigo.appendChild(cabecera);
+                    contenedorCodigo.appendChild(contenidoCodigo);
+                    pre.replaceWith(contenedorCodigo);
                 });
             };
 
-            const resetInput = () => {
-                elements.userInput.value = '';
-                attachments = [];
-                elements.attachmentsContainer.innerHTML = '';
-                elements.attachmentsContainer.style.display = 'none';
-                autoResizeTextarea();
+            const reiniciarEntrada = () => {
+                elementos.entradaUsuario.value = '';
+                archivosAdjuntos = [];
+                elementos.contenedorAdjuntos.innerHTML = '';
+                elementos.contenedorAdjuntos.style.display = 'none';
+                autoAjustarTextarea();
             };
 
-            // --- ATTACHMENTS & OCR ---
-            const handleFileSelection = (files) => {
-                for (const file of files) { attachments.push({ file }); renderAttachment(file); }
-                elements.imageInput.value = ''; elements.cameraInput.value = ''; elements.fileInput.value = '';
+            const gestionarSeleccionArchivo = (archivos) => {
+                for (const archivo of archivos) { archivosAdjuntos.push({ file: archivo }); renderizarArchivoAdjunto(archivo); }
+                elementos.inputImagen.value = ''; elementos.inputCamara.value = ''; elementos.inputArchivo.value = '';
             };
             
-            const renderAttachment = (file) => {
-                elements.attachmentsContainer.style.display = 'flex';
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'adjunto-item';
-                itemDiv.innerHTML = `<i class="fas ${file.type.startsWith('image') ? 'fa-image' : 'fa-file-alt'} icono-adjunto"></i><div class="detalles-adjunto"><div class="nombre-adjunto">${file.name}</div><div class="tamano-adjunto">${(file.size / 1024).toFixed(1)} KB</div></div><button class="boton-eliminar" title="Eliminar"><i class="fas fa-times"></i></button>`;
-                itemDiv.querySelector('.boton-eliminar').onclick = () => {
-                    attachments = attachments.filter(att => att.file !== file);
-                    itemDiv.remove();
-                    if (attachments.length === 0) elements.attachmentsContainer.style.display = 'none';
+            const renderizarArchivoAdjunto = (archivo) => {
+                elementos.contenedorAdjuntos.style.display = 'flex';
+                const divItem = document.createElement('div');
+                divItem.className = 'adjunto-item';
+                divItem.innerHTML = `<i class="fas ${archivo.type.startsWith('image') ? 'fa-image' : 'fa-file-alt'} icono-adjunto"></i><div class="detalles-adjunto"><div class="nombre-adjunto">${archivo.name}</div><div class="tamano-adjunto">${(archivo.size / 1024).toFixed(1)} KB</div></div><button class="boton-eliminar" title="Eliminar"><i class="fas fa-times"></i></button>`;
+                divItem.querySelector('.boton-eliminar').onclick = () => {
+                    archivosAdjuntos = archivosAdjuntos.filter(adj => adj.file !== archivo);
+                    divItem.remove();
+                    if (archivosAdjuntos.length === 0) elementos.contenedorAdjuntos.style.display = 'none';
                 };
-                elements.attachmentsContainer.appendChild(itemDiv);
+                elementos.contenedorAdjuntos.appendChild(divItem);
             };
             
-            const processAttachments = async () => {
-                let content = [];
-                for (const attachment of attachments) {
-                    if (attachment.file.type.startsWith('image/')) {
-                        try { const text = await ocrSpaceRequest(attachment.file); content.push(`--- Texto de imagen OCR: ${attachment.file.name} ---\n${text}\n---`); } catch (error) { content.push(`[Error OCR: ${attachment.file.name}]`); }
-                    } else if (attachment.file.type.startsWith('text/')) {
-                         try { const text = await attachment.file.text(); content.push(`--- Archivo: ${attachment.file.name} ---\n${text}\n---`); } catch (error) { content.push(`[Error al leer: ${attachment.file.name}]`); }
+            const procesarArchivosAdjuntos = async () => {
+                let contenido = [];
+                for (const adjunto of archivosAdjuntos) {
+                    if (adjunto.file.type.startsWith('image/')) {
+                        try { const texto = await peticionOcrSpace(adjunto.file); contenido.push(`--- Texto de imagen OCR: ${adjunto.file.name} ---\n${texto}\n---`); } catch (error) { contenido.push(`[Error OCR: ${adjunto.file.name}]`); }
+                    } else if (adjunto.file.type.startsWith('text/')) {
+                         try { const texto = await adjunto.file.text(); contenido.push(`--- Archivo: ${adjunto.file.name} ---\n${texto}\n---`); } catch (error) { contenido.push(`[Error al leer: ${adjunto.file.name}]`); }
                     }
                 }
-                return content.join('\n\n');
+                return contenido.join('\n\n');
             };
             
-            const ocrSpaceRequest = async (file) => {
+            const peticionOcrSpace = async (archivo) => {
                 const formData = new FormData();
-                formData.append('file', file); formData.append('language', 'spa'); formData.append('apikey', OCR_API_KEY); formData.append('OCREngine', '2');
-                const response = await fetch('https://api.ocr.space/parse/image', { method: 'POST', body: formData });
-                const data = await response.json();
-                if (data.IsErroredOnProcessing) throw new Error(data.ErrorMessage);
-                return data.ParsedResults?.[0]?.ParsedText || '';
+                formData.append('file', archivo); formData.append('language', 'spa'); formData.append('apikey', CLAVE_API_OCR); formData.append('OCREngine', '2');
+                const respuesta = await fetch('https://api.ocr.space/parse/image', { method: 'POST', body: formData });
+                const datos = await respuesta.json();
+                if (datos.IsErroredOnProcessing) throw new Error(datos.ErrorMessage);
+                return datos.ParsedResults?.[0]?.ParsedText || '';
             };
 
-            // --- SPEECH RECOGNITION & SYNTHESIS ---
-            const initSpeechRecognition = () => {
+            const iniciarReconocimientoVoz = () => {
                 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
                 if (SpeechRecognition) {
-                    recognition = new SpeechRecognition();
-                    recognition.lang = 'es-ES';
-                    recognition.onstart = () => { isRecording = true; elements.recordButton.classList.add('grabando'); };
-                    recognition.onend = () => { isRecording = false; elements.recordButton.classList.remove('grabando'); };
-                    recognition.onresult = (event) => { elements.userInput.value = event.results[0][0].transcript; lastMessageWasFromVoice = true; handleSendMessage(); };
-                    recognition.onerror = (event) => console.error('Speech recognition error', event.error);
-                } else { elements.recordButton.disabled = true; }
+                    reconocimientoVoz = new SpeechRecognition();
+                    reconocimientoVoz.lang = 'es-ES';
+                    reconocimientoVoz.onstart = () => { estaGrabando = true; elementos.botonGrabar.classList.add('grabando'); };
+                    reconocimientoVoz.onend = () => { estaGrabando = false; elementos.botonGrabar.classList.remove('grabando'); };
+                    reconocimientoVoz.onresult = (evento) => { elementos.entradaUsuario.value = evento.results[0][0].transcript; ultimoMensajeFuePorVoz = true; gestionarEnvioMensaje(); };
+                    reconocimientoVoz.onerror = (evento) => console.error('Error de reconocimiento de voz', evento.error);
+                } else { elementos.botonGrabar.disabled = true; }
             };
             
-            const toggleRecording = () => { if (!recognition) return; isRecording ? recognition.stop() : recognition.start(); };
+            const alternarGrabacion = () => { if (!reconocimientoVoz) return; estaGrabando ? reconocimientoVoz.stop() : reconocimientoVoz.start(); };
             
-            const initVoiceSynthesis = () => {
-                const populateVoices = () => {
-                    const voices = speechSynthesis.getVoices().filter(v => v.lang.startsWith('es'));
-                    elements.voiceSelector.innerHTML = voices.map(v => `<option value="${v.name}">${v.name} (${v.lang})</option>`).join('');
+            const iniciarSintesisVoz = () => {
+                const popularVoces = () => {
+                    const voces = speechSynthesis.getVoices().filter(v => v.lang.startsWith('es'));
+                    elementos.selectorVoz.innerHTML = voces.map(v => `<option value="${v.name}">${v.name} (${v.lang})</option>`).join('');
                 };
-                populateVoices();
-                if (speechSynthesis.onvoiceschanged !== undefined) speechSynthesis.onvoiceschanged = populateVoices;
+                popularVoces();
+                if (speechSynthesis.onvoiceschanged !== undefined) speechSynthesis.onvoiceschanged = popularVoces;
             };
             
-            const speakText = (text, button) => {
-                if (currentSpeech && speechSynthesis.speaking) { stopSpeech(); return; }
-                stopSpeech();
-                currentSpeech = new SpeechSynthesisUtterance(text);
-                const selectedVoiceName = elements.voiceSelector.value;
-                const voice = speechSynthesis.getVoices().find(v => v.name === selectedVoiceName);
-                if (voice) currentSpeech.voice = voice;
-                currentSpeech.onstart = () => { document.querySelectorAll('.boton-voz').forEach(btn => btn.innerHTML = '<i class="fas fa-volume-up"></i>'); if(button) button.innerHTML = '<i class="fas fa-stop"></i>'; };
-                currentSpeech.onend = () => { if(button) button.innerHTML = '<i class="fas fa-volume-up"></i>'; currentSpeech = null; };
-                speechSynthesis.speak(currentSpeech);
+            const leerTexto = (texto, boton) => {
+                if (sintesisVozActual && speechSynthesis.speaking) { detenerVoz(); return; }
+                detenerVoz();
+                sintesisVozActual = new SpeechSynthesisUtterance(texto);
+                const nombreVozSeleccionada = elementos.selectorVoz.value;
+                const voz = speechSynthesis.getVoices().find(v => v.name === nombreVozSeleccionada);
+                if (voz) sintesisVozActual.voice = voz;
+                sintesisVozActual.onstart = () => { document.querySelectorAll('.boton-voz').forEach(btn => btn.innerHTML = '<i class="fas fa-volume-up"></i>'); if(boton) boton.innerHTML = '<i class="fas fa-stop"></i>'; };
+                sintesisVozActual.onend = () => { if(boton) boton.innerHTML = '<i class="fas fa-volume-up"></i>'; sintesisVozActual = null; };
+                speechSynthesis.speak(sintesisVozActual);
             };
             
-            const stopSpeech = () => {
+            const detenerVoz = () => {
                 if (speechSynthesis.speaking) speechSynthesis.cancel();
                 document.querySelectorAll('.boton-voz').forEach(btn => btn.innerHTML = '<i class="fas fa-volume-up"></i>');
-                currentSpeech = null;
+                sintesisVozActual = null;
             };
 
-            // --- UTILITY FUNCTIONS ---
-            const setContainerHeight = () => {
-                elements.contenedor.style.height = window.innerHeight + 'px';
+            const gestionarFocoInput = () => {
+                setTimeout(() => {
+                    elementos.entradaWrapper.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                }, 300);
             };
 
-            const autoResizeTextarea = () => { 
-                const ta = elements.userInput; 
+            const autoAjustarTextarea = () => { 
+                const ta = elementos.entradaUsuario; 
                 ta.style.height = 'auto'; 
                 ta.style.height = `${ta.scrollHeight}px`; 
             };
             
-            const scrollToBottom = () => { elements.chatContainer.scrollTop = elements.chatContainer.scrollHeight; };
+            const irAlFinal = () => { elementos.contenedorChat.scrollTop = elementos.contenedorChat.scrollHeight; };
             
-            const toggleTheme = () => { 
-                elements.body.classList.toggle('tema-claro'); 
-                const isClaro = elements.body.classList.contains('tema-claro'); 
-                localStorage.setItem('theme', isClaro ? 'claro' : 'oscuro'); 
-                elements.themeSwitcher.innerHTML = `<i class="fas ${isClaro ? 'fa-moon' : 'fa-sun'}"></i>`; 
+            const alternarTema = () => { 
+                elementos.body.classList.toggle('tema-claro'); 
+                const esClaro = elementos.body.classList.contains('tema-claro'); 
+                localStorage.setItem('theme', esClaro ? 'claro' : 'oscuro'); 
+                elementos.alternadorTema.innerHTML = `<i class="fas ${esClaro ? 'fa-moon' : 'fa-sun'}"></i>`; 
             };
             
-            const toggleModal = (show, modal) => { 
-                modal.style.display = show ? 'flex' : 'none'; 
-                elements.overlay.style.display = show ? 'block' : 'none';
-                if (modal === elements.ocrModal) {
-                    elements.moreButton.classList.toggle('modo-activo', show);
+            const alternarModal = (mostrar, modal) => { 
+                modal.style.display = mostrar ? 'flex' : 'none'; 
+                elementos.overlay.style.display = mostrar ? 'block' : 'none';
+                if (modal === elementos.modalOcr) {
+                    elementos.botonMas.classList.toggle('modo-activo', mostrar);
                 }
             };
             
-            const copyToClipboard = (text) => { 
-                navigator.clipboard.writeText(text).then(() => { 
-                    elements.copyConfirmation.classList.add('show'); 
-                    setTimeout(() => elements.copyConfirmation.classList.remove('show'), 2000); 
+            const copiarAlPortapapeles = (texto) => { 
+                navigator.clipboard.writeText(texto).then(() => { 
+                    elementos.confirmacionCopia.classList.add('show'); 
+                    setTimeout(() => elementos.confirmacionCopia.classList.remove('show'), 2000); 
                 }); 
             };
             
-            const toggleModoBusqueda = (forceState) => { 
-                modoBusqueda = typeof forceState === 'boolean' ? forceState : !modoBusqueda; 
-                elements.searchButton.classList.toggle('modo-activo', modoBusqueda); 
-                elements.searchButton.title = modoBusqueda ? 'Modo búsqueda activo' : 'Buscar en internet'; 
+            const alternarModoBusqueda = (forzarEstado) => { 
+                modoBusqueda = typeof forzarEstado === 'boolean' ? forzarEstado : !modoBusqueda; 
+                elementos.botonBuscar.classList.toggle('modo-activo', modoBusqueda); 
+                elementos.botonBuscar.title = modoBusqueda ? 'Modo búsqueda activo' : 'Buscar en internet'; 
             };
             
-            const setIAMode = (mode) => { 
-                modoSuperIA = mode === 'super'; 
-                elements.tituloModo.textContent = modoSuperIA ? 'SUPER MAR-IA' : 'Mar-IA'; 
-                elements.tituloModo.classList.toggle('super-ia-gradient', modoSuperIA); 
-                if(elements.modoModal.style.display === 'flex') toggleModal(false, elements.modoModal); 
-                localStorage.setItem('modoIA', mode); 
-                if (modoSuperIA) toggleModal(true, elements.modalSuperIA);
+            const establecerModoIA = (modo) => { 
+                modoSuperIA = modo === 'super'; 
+                elementos.tituloModo.textContent = modoSuperIA ? 'SUPER MAR-IA' : 'Mar-IA'; 
+                elementos.tituloModo.classList.toggle('super-ia-gradient', modoSuperIA); 
+                if(elementos.modalModo.style.display === 'flex') alternarModal(false, elementos.modalModo); 
+                localStorage.setItem('modoIA', modo); 
+                if (modoSuperIA) alternarModal(true, elementos.modalSuperIA);
             };
             
-            const loadState = () => { 
+            const cargarEstado = () => { 
                 if (localStorage.getItem('theme') === 'claro') { 
-                    elements.body.classList.add('tema-claro'); 
-                    elements.themeSwitcher.innerHTML = '<i class="fas fa-moon"></i>'; 
+                    elementos.body.classList.add('tema-claro'); 
+                    elementos.alternadorTema.innerHTML = '<i class="fas fa-moon"></i>'; 
                 } 
-                setIAMode(localStorage.getItem('modoIA') || 'normal'); 
+                establecerModoIA(localStorage.getItem('modoIA') || 'normal'); 
             };
             
-            const showIndicator = (text, iconType = 'dots') => { 
-                hideIndicator(); 
-                const indicator = document.createElement('div'); 
-                indicator.id = 'dynamic-indicator'; 
-                indicator.className = 'indicador-escribiendo'; 
-                const iconHtml = iconType === 'brain' ? '<i class="fas fa-brain fa-beat"></i>' : '<div class="puntos"><span></span><span></span><span></span></div>'; 
-                indicator.innerHTML = `${iconHtml} <span>${text}</span>`; 
-                elements.chatContainer.appendChild(indicator); 
-                scrollToBottom(); 
+            const mostrarIndicador = (texto, tipoIcono = 'dots') => { 
+                ocultarIndicador(); 
+                const indicador = document.createElement('div'); 
+                indicador.id = 'dynamic-indicator'; 
+                indicador.className = 'indicador-escribiendo'; 
+                const htmlIcono = tipoIcono === 'brain' ? '<i class="fas fa-brain fa-beat"></i>' : '<div class="puntos"><span></span><span></span><span></span></div>'; 
+                indicador.innerHTML = `${htmlIcono} <span>${texto}</span>`; 
+                elementos.contenedorChat.appendChild(indicador); 
+                irAlFinal(); 
             };
             
-            const hideIndicator = () => { 
-                const indicator = document.getElementById('dynamic-indicator'); 
-                if (indicator) indicator.remove(); 
+            const ocultarIndicador = () => { 
+                const indicador = document.getElementById('dynamic-indicator'); 
+                if (indicador) indicador.remove(); 
             };
             
-            const performWebSearch = async (query) => { 
+            const realizarBusquedaWeb = async (consulta) => { 
                 try { 
-                    const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(`https://api.duckduckgo.com/?q=${query}&format=json&no_html=1`)}`);
-                    const data = await response.json();
-                    const results = JSON.parse(data.contents);
-                    return formatSearchResults(results);
+                    const respuesta = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(`https://api.duckduckgo.com/?q=${consulta}&format=json&no_html=1`)}`);
+                    const datos = await respuesta.json();
+                    const resultados = JSON.parse(datos.contents);
+                    return formatearResultadosBusqueda(resultados);
                 } catch (error) { 
                     console.error('Error en búsqueda web:', error); 
                     return "No se pudo realizar la búsqueda en internet debido a un error."; 
                 } 
             };
             
-            const formatSearchResults = (results) => { 
-                if (!results || !results.AbstractText) return "No se encontraron resultados de búsqueda relevantes."; 
-                let formatted = `**Fuente: ${results.AbstractSource}**\n${results.AbstractText}\n\n`; 
-                if (results.RelatedTopics?.length > 0) { 
-                    formatted += "**Tópicos Relacionados:**\n"; 
-                    results.RelatedTopics.slice(0, 4).forEach(topic => { 
-                        if (topic.Text) formatted += `• ${topic.Text}\n`; 
+            const formatearResultadosBusqueda = (resultados) => { 
+                if (!resultados || !resultados.AbstractText) return "No se encontraron resultados de búsqueda relevantes."; 
+                let formato = `**Fuente: ${resultados.AbstractSource}**\n${resultados.AbstractText}\n\n`; 
+                if (resultados.RelatedTopics?.length > 0) { 
+                    formato += "**Tópicos Relacionados:**\n"; 
+                    resultados.RelatedTopics.slice(0, 4).forEach(topico => { 
+                        if (topico.Text) formato += `• ${topico.Text}\n`; 
                     }); 
                 } 
-                return formatted; 
+                return formato; 
             };
             
-            // --- MODEL QUESTION DETECTION ---
-            const isAskingAboutModel = (message) => {
-                if (!message) return false;
-                const lowerMessage = message.toLowerCase();
-                const keywords = ['modelo', 'qué eres', 'quién eres', 'basado en', 'funcionas', 'internamente', 
+            const preguntaSobreModelo = (mensaje) => {
+                if (!mensaje) return false;
+                const mensajeMinusculas = mensaje.toLowerCase();
+                const palabrasClave = ['modelo', 'qué eres', 'quién eres', 'basado en', 'funcionas', 'internamente', 
                                  'arquitectura', 'construido', 'qué ia eres', 'de qué estás hecho', 'gpt-4', 'gpt4', 
                                  'aztec', 'hibrido', 'híbrido', 'modelo interno', 'tecnología'];
-                return keywords.some(keyword => lowerMessage.includes(keyword));
+                return palabrasClave.some(palabra => mensajeMinusculas.includes(palabra));
             };
             
-            const isAskingAboutModes = (message) => {
-                if (!message) return false;
-                const lowerMessage = message.toLowerCase();
-                const keywords = ['modos', 'diferentes modos', 'modo mar-ia', 'modo super mar-ia', 'hermanos', 
+            const preguntaSobreModos = (mensaje) => {
+                if (!mensaje) return false;
+                const mensajeMinusculas = mensaje.toLowerCase();
+                const palabrasClave = ['modos', 'diferentes modos', 'modo mar-ia', 'modo super mar-ia', 'hermanos', 
                                  'gemelos', 'diferencia entre modos', 'qué modos tienes', 'modos disponibles',
                                  'por qué dos modos', 'diferencias modos', 'modos ia', 'tipos de mar-ia'];
-                return keywords.some(keyword => lowerMessage.includes(keyword));
+                return palabrasClave.some(palabra => mensajeMinusculas.includes(palabra));
             };
 
-            init();
+            const comandosImagen = ["genera una imagen", "crea una imagen", "dibújame", "haz una imagen", "quiero una imagen"];
+
+            function contieneSolicitudDeImagen(texto) {
+                if (!texto) return false;
+                const textoMinusculas = texto.toLowerCase();
+                return comandosImagen.some(comando => textoMinusculas.startsWith(comando));
+            }
+
+            async function generarImagen(prompt) {
+                const elementoMensajeBot = agregarMensaje('bot', '', true);
+                const burbuja = elementoMensajeBot.querySelector('.burbuja-mensaje');
+                burbuja.innerHTML = "Generando imagen con una API gratuita, por favor espera... <i class='fas fa-palette fa-beat'></i>";
+                irAlFinal();
+
+                try {
+                    const promptCodificado = encodeURIComponent(prompt);
+                    const urlImagen = `https://image.pollinations.ai/prompt/${promptCodificado}`;
+                    
+                    // La API de Pollinations devuelve la imagen directamente, por lo que podemos establecer la URL.
+                    // Para asegurarnos de que la imagen se cargue, podemos usar un objeto Image.
+                    const img = new Image();
+                    img.src = urlImagen;
+                    
+                    img.onload = () => {
+                        burbuja.innerHTML = `<img src="${urlImagen}" alt="Imagen generada a partir de: ${prompt}" style="max-width: 100%; border-radius: 1rem; display: block;">`;
+                        irAlFinal();
+                    };
+
+                    img.onerror = () => {
+                        throw new Error("La API de Pollinations no pudo generar la imagen o está temporalmente inaccesible.");
+                    };
+
+                } catch (error) {
+                    console.error("Error al generar imagen con Pollinations:", error);
+                    burbuja.innerHTML = `Lo siento, ocurrió un error al intentar generar la imagen. <br><small>${error.message}</small>`;
+                } finally {
+                    formatearBloquesCodigo(elementoMensajeBot);
+                    irAlFinal();
+                }
+            }
+
+            async function manejarGeneracionDeImagen(promptUsuario) {
+                agregarMensaje('usuario', promptUsuario);
+                await generarImagen(promptUsuario);
+                reiniciarEntrada();
+            }
+
+            iniciar();
         });
     </script>
 </body>
