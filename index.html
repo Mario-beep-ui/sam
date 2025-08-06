@@ -994,7 +994,7 @@
             async function generarImagen(prompt) {
                 const elementoMensajeBot = agregarMensaje('bot', '', true);
                 const burbuja = elementoMensajeBot.querySelector('.burbuja-mensaje');
-                burbuja.innerHTML = "Generando imagen con una API gratuita, por favor espera... <i class='fas fa-palette fa-beat'></i>";
+                burbuja.innerHTML = "Mar-IA ha activado modo Picasso, por favor espera... <i class='fas fa-palette fa-beat'></i>";
                 irAlFinal();
 
                 try {
@@ -1010,11 +1010,11 @@
                     };
 
                     img.onerror = () => {
-                        throw new Error("La API de Pollinations no pudo generar la imagen o está temporalmente inaccesible.");
+                        throw new Error(" no pudo generar la imagen o está temporalmente inaccesible.");
                     };
 
                 } catch (error) {
-                    console.error("Error al generar imagen con Pollinations:", error);
+                    console.error("Error al generar imagen con :", error);
                     burbuja.innerHTML = `Lo siento, ocurrió un error al intentar generar la imagen. <br><small>${error.message}</small>`;
                 } finally {
                     formatearBloquesCodigo(elementoMensajeBot);
