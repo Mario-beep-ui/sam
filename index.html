@@ -454,7 +454,10 @@
                          "Si el usuario pregunta sobre los modos (Mar-IA y SUPER MAR-IA), " +
                          "describe que son como dos hermanos gemelos: Mar-IA es rápido y directo, " +
                          "mientras que SUPER MAR-IA es más reflexivo y profundo. " +
-                         "De lo contrario, no menciones esta información. Mantén respuestas profesionales y concisas."
+                         "De lo contrario, no menciones esta información. Mantén respuestas profesionales y concisas." +
+                         "Ahora también puedes generar imágenes basadas en descripciones textuales. " +
+                         "Cuando el usuario te pida crear una imagen, dibujo, ilustración o representación visual, " +
+                         "genera inmediatamente una imagen usando la función de generación de imágenes."
             }];
             let archivosAdjuntos = [];
             let reconocimientoVoz = null;
@@ -534,7 +537,7 @@
             const gestionarEnvioMensaje = async () => {
                 const textoMensaje = elementos.entradaUsuario.value.trim();
 
-                if (contieneSolicitudDeImagen(textoMensaje)) {
+                if (esSolicitudDeImagen(textoMensaje)) {
                     await manejarGeneracionDeImagen(textoMensaje);
                     return;
                 }
@@ -664,50 +667,6 @@
                 }
             };
             
-            const obtenerRespuestaBot = async (mensajes, debeHablar) => {
-                mostrarIndicador('Mar-IA está escribiendo...');
-                const payload = { model: "deepseek-chat", messages: mensajes, stream: true };
-                try {
-                    const respuesta = await fetch('https://api.deepseek.com/v1/chat/completions', { 
-                        method: 'POST', 
-                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${CLAVE_API_DEEPSEEK}` }, 
-                        body: JSON.stringify(payload) 
-                    });
-                    if (!respuesta.ok) throw new Error(`Error de API: ${respuesta.status}`);
-                    const lector = respuesta.body.getReader();
-                    const decodificador = new TextDecoder();
-                    let respuestaCompleta = "";
-                    const elementoMensajeBot = agregarMensaje('bot', '', true);
-                    ocultarIndicador();
-                    while (true) {
-                        const { value, done } = await lector.read();
-                        if (done) break;
-                        const chunk = decodificador.decode(value, { stream: true });
-                        const lineas = chunk.split('\n');
-                        for (const linea of lineas) {
-                            if (linea.startsWith('data: ')) {
-                                const datos = linea.substring(6);
-                                if (datos === '[DONE]') break;
-                                try {
-                                    const jsonData = JSON.parse(datos);
-                                    const token = jsonData.choices[0]?.delta?.content || '';
-                                    respuestaCompleta += token;
-                                    elementoMensajeBot.querySelector('.burbuja-mensaje').innerHTML = marked.parse(respuestaCompleta);
-                                    formatearBloquesCodigo(elementoMensajeBot);
-                                    irAlFinal();
-                                } catch (e) { /* Ignorar */ }
-                            }
-                        }
-                    }
-                    historialChat.push({ role: "assistant", content: respuestaCompleta });
-                    if (debeHablar) leerTexto(elementoMensajeBot.querySelector('.burbuja-mensaje').innerText, elementoMensajeBot.querySelector('.boton-voz'));
-                } catch (error) {
-                    ocultarIndicador();
-                    console.error("Error obteniendo respuesta del bot:", error);
-                    agregarMensaje('bot', "Lo siento, ocurrió un error al conectar con el servidor.");
-                }
-            };
-
             const agregarMensaje = (rol, contenido, esStreaming = false) => {
                 const divMensaje = document.createElement('div');
                 divMensaje.className = `mensaje mensaje-${rol}`;
@@ -1023,12 +982,13 @@
                 return palabrasClave.some(palabra => mensajeMinusculas.includes(palabra));
             };
 
-            const comandosImagen = ["genera una imagen", "crea una imagen", "dibújame", "haz una imagen", "quiero una imagen"];
-
-            function contieneSolicitudDeImagen(texto) {
+            const esSolicitudDeImagen = (texto) => {
                 if (!texto) return false;
                 const textoMinusculas = texto.toLowerCase();
-                return comandosImagen.some(comando => textoMinusculas.startsWith(comando));
+                const palabrasImagen = ['imagen', 'dibujo', 'foto', 'fotografía', 'gráfico', 'ilustración', 'diseño', 'pintura', 
+                                    'picture', 'image', 'drawing', 'photo', 'photograph', 'graphic', 'illustration', 'design', 'painting',
+                                    'visual', 'visualizar', 'crear arte', 'generar arte', 'representación visual'];
+                return palabrasImagen.some(palabra => textoMinusculas.includes(palabra));
             }
 
             async function generarImagen(prompt) {
@@ -1041,8 +1001,6 @@
                     const promptCodificado = encodeURIComponent(prompt);
                     const urlImagen = `https://image.pollinations.ai/prompt/${promptCodificado}`;
                     
-                    // La API de Pollinations devuelve la imagen directamente, por lo que podemos establecer la URL.
-                    // Para asegurarnos de que la imagen se cargue, podemos usar un objeto Image.
                     const img = new Image();
                     img.src = urlImagen;
                     
@@ -1074,4 +1032,4 @@
         });
     </script>
 </body>
-</html>
+</html> 
