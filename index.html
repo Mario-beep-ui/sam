@@ -111,6 +111,10 @@
             flex-direction: column; 
             gap: 2rem; 
             scroll-behavior: smooth; 
+            transition: transform 0.3s ease-in-out;
+        }
+        .contenedor-chat.desplazado {
+            transform: translateX(320px);
         }
         .contenedor-entrada-wrapper { 
             flex-shrink: 0;
@@ -120,8 +124,8 @@
         }
         .cabecera .titulo { display: flex; align-items: center; gap: 1rem; }
         .cabecera .titulo h1 { font-size: 1.8rem; margin: 0; cursor: pointer; transition: all 0.3s; position: relative; color: var(--color-destacado); }
-        .super-ia-gradient { background: linear-gradient(90deg, #8A2BE2, #FFD700, #87CEEB); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; -webkit-text-fill-color: transparent; animation: gradient-animation 5s ease infinite; background-size: 200% 200%; }
-        .mini-ia-gradient { background: linear-gradient(90deg, #FF9800, #FFEB3B, #FF9800); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; -webkit-text-fill-color: transparent; animation: gradient-animation 3s ease infinite; background-size: 200% 200%; }
+        .super-ia-gradient { background: linear-gradient(90deg, #8A2BE2, #FFD700, #87CEEB); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; -webkit-text-fill-color: transparent; animation: gradient-animation 5s ease-infinite; background-size: 200% 200%; }
+        .mini-ia-gradient { background: linear-gradient(90deg, #FF9800, #FFEB3B, #FF9800); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; -webkit-text-fill-color: transparent; animation: gradient-animation 3s ease-infinite; background-size: 200% 200%; }
         @keyframes gradient-animation { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         .cabecera .titulo i { color: var(--color-destacado); font-size: 2rem; }
         .cabecera .subtitle { font-size: 1.2rem; opacity: 0.8; color: #aaa; margin-top: 0.2rem; }
@@ -221,6 +225,7 @@
             resize: none; 
             max-height: 15rem; 
             overflow-y: auto; 
+            
         }
         .input-area-botones {
             display: flex;
@@ -260,7 +265,7 @@
             animation: none !important;
         }
         @keyframes pulsate { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
-        .indicador-escribiendo { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem; background: var(--fondo-burbuja-bot); border-radius: 1.8rem; width: fit-content; color: var(--texto-burbuja-bot); align-self: flex-start; animation: fadeIn 0.3s ease; }
+        .indicador-escribiendo { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem; background: var(--fondo-burbuja-bot); border-radius: 1.8rem; width: fit-content; align-self: flex-start; animation: fadeIn 0.3s ease; }
         .indicador-escribiendo .puntos span { height: 0.8rem; width: 0.8rem; background: var(--color-timestamp); border-radius: 50%; display: inline-block; margin: 0 0.2rem; animation: bounce 1.3s infinite; }
         .indicador-escribiendo .puntos span:nth-child(2) { animation-delay: 0.2s; }
         .indicador-escribiendo .puntos span:nth-child(3) { animation-delay: 0.4s; }
@@ -482,18 +487,350 @@
                 opacity: 1;
             }
         }
-        @media (max-width: 600px) { .comparacion-modos { flex-direction: column; } }
+        
+        .panel-historial {
+            position: fixed;
+            top: 0;
+            left: -350px;
+            width: 320px;
+            height: 100vh;
+            background: var(--color-contenedor);
+            z-index: 2000;
+            overflow-y: auto;
+            transition: transform 0.3s ease-in-out;
+            box-shadow: 5px 0 15px rgba(0,0,0,0.2);
+            border-right: 1px solid var(--borde-superior-entrada);
+            border-top-right-radius: 16px;
+            border-bottom-right-radius: 16px;
+        }
+
+        .panel-historial.abierto {
+            transform: translateX(350px);
+        }
+
+        .cabecera-panel-historial {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--borde-superior-entrada);
+            position: sticky;
+            top: 0;
+            background: var(--color-contenedor);
+            z-index: 10;
+            border-top-right-radius: 16px;
+        }
+
+        .cabecera-panel-historial h2 {
+            margin: 0;
+            font-size: 1.8rem;
+            color: var(--color-destacado);
+        }
+
+        .boton-cerrar-historial {
+            background: transparent;
+            border: none;
+            color: var(--color-texto);
+            font-size: 2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .boton-cerrar-historial:hover {
+            background: var(--fondo-pensamiento);
+            color: var(--color-destacado);
+        }
+
+        .buscar-historial {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--borde-superior-entrada);
+        }
+
+        .input-buscar-historial {
+            width: 100%;
+            padding: 12px 15px;
+            background: var(--fondo-campo-entrada);
+            border: 1px solid var(--borde-adjunto);
+            border-radius: 24px;
+            color: var(--texto-entrada);
+            font-size: 1.4rem;
+        }
+
+        .input-buscar-historial::placeholder {
+            color: var(--texto-placeholder);
+        }
+
+        .lista-historial {
+            padding: 10px 0;
+        }
+
+        .item-historial {
+            padding: 12px 20px;
+            border-bottom: 1px solid var(--borde-superior-entrada);
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            flex-direction: column;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .item-historial:hover {
+            background: var(--fondo-pensamiento);
+        }
+
+        .item-historial.seleccionado {
+            background: var(--resaltado-pensamiento);
+            border-left: 3px solid var(--color-destacado);
+        }
+
+        .titulo-conversacion {
+            font-weight: 500;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 1.6rem;
+        }
+
+        .fecha-conversacion {
+            font-size: 1.2rem;
+            color: var(--color-timestamp);
+        }
+
+        .preview-conversacion {
+            font-size: 1.3rem;
+            margin-top: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: var(--color-timestamp);
+        }
+
+        .acciones-item-historial {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 8px;
+            gap: 10px;
+        }
+
+        .boton-accion-item {
+            background: transparent;
+            border: none;
+            color: var(--color-timestamp);
+            font-size: 1.4rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            padding: 5px;
+            border-radius: 4px;
+        }
+
+        .boton-accion-item:hover {
+            color: var(--color-destacado);
+            background: rgba(138, 43, 226, 0.1);
+        }
+
+        .boton-nueva-conversacion {
+            display: block;
+            width: calc(100% - 40px);
+            margin: 15px 20px;
+            padding: 12px;
+            background: var(--fondo-boton-enviar);
+            color: white;
+            border: none;
+            border-radius: 24px;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .boton-nueva-conversacion:hover {
+            background: #6d1dc4;
+            transform: translateY(-2px);
+        }
+
+        .sin-conversaciones {
+            text-align: center;
+            padding: 30px 20px;
+            color: var(--color-timestamp);
+            font-style: italic;
+        }
+
+        .boton-menu-historial {
+            position: relative;
+        }
+
+        .contador-historial {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--fondo-boton-grabando);
+            color: white;
+            font-size: 1rem;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .overlay-historial {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1500;
+            display: none;
+        }
+
         @media (max-width: 768px) {
-            .contenedor-chat { padding: 1rem; }
-            .burbuja-mensaje { max-width: 95%; }
-            .contenedor-entrada-wrapper { padding: 0.5rem; }
-            .modal-imagen img { max-width: 95%; }
-            .input-area-botones { gap: 0.3rem; }
-            .boton-input, .boton-generar-imagen {
-                width: 4.2rem;
-                height: 4.2rem;
-                font-size: 1.8rem;
+            .panel-historial {
+                width: 90%;
+                left: 0; 
+                transform: translateX(-100%); 
+                border-radius: 0 24px 24px 0; 
             }
+            
+            .panel-historial.abierto {
+                transform: translateX(0); 
+            }
+            
+            .contenedor-chat.desplazado {
+                transform: translateX(90%); 
+            }
+            
+            .cabecera-panel-historial {
+                padding: 15px;
+            }
+            
+            .cabecera-panel-historial h2 {
+                font-size: 1.7rem;
+            }
+            
+            .buscar-historial {
+                padding: 12px 15px;
+            }
+            
+            .input-buscar-historial {
+                padding: 12px;
+                font-size: 1.5rem;
+            }
+            
+            .item-historial {
+                padding: 12px 15px;
+                border-radius: 0 10px 10px 0;
+            }
+            
+            .titulo-conversacion {
+                font-size: 1.6rem;
+            }
+            
+            .fecha-conversacion, 
+            .preview-conversacion {
+                font-size: 1.4rem;
+            }
+            
+            .boton-accion-item {
+                font-size: 1.6rem;
+                padding: 6px;
+            }
+            
+            .boton-nueva-conversacion {
+                padding: 14px;
+                font-size: 1.6rem;
+                margin: 15px 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .panel-historial {
+                width: 95%;
+            }
+            
+            .panel-historial.abierto {
+                transform: translateX(0); 
+            }
+            
+            .contenedor-chat.desplazado {
+                transform: translateX(95%); 
+            }
+            
+            .cabecera-panel-historial {
+                padding: 12px 15px;
+            }
+            
+            .cabecera-panel-historial h2 {
+                font-size: 1.6rem;
+            }
+            
+            .item-historial {
+                padding: 10px 12px;
+                border-radius: 0 8px 8px 0;
+            }
+            
+            .titulo-conversacion {
+                font-size: 1.5rem;
+            }
+            
+            .preview-conversacion {
+                font-size: 1.3rem;
+            }
+            
+            .boton-nueva-conversacion {
+                padding: 12px;
+                font-size: 1.5rem;
+            }
+        }
+        
+        .boton-nueva-conversacion:hover {
+            background: #6d1dc4;
+            transform: translateY(-2px);
+        }
+        
+        .sin-conversaciones {
+            text-align: center;
+            padding: 30px 20px;
+            color: var(--color-timestamp);
+            font-style: italic;
+        }
+        
+        .boton-menu-historial {
+            position: relative;
+        }
+        
+        .contador-historial {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--fondo-boton-grabando);
+            color: white;
+            font-size: 1rem;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .overlay-historial {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1500;
+            display: none;
         }
     </style>
 </head>
@@ -502,6 +839,29 @@
         <i class="fas fa-exclamation-triangle"></i>
         <span>Este modo (Mar-IA mini) está en desarrollo y puede presentar errores.</span>
     </div>
+    
+    <div class="panel-historial" id="panel-historial">
+        <div class="cabecera-panel-historial">
+            <h2><i class="fas fa-history"></i> Historial</h2>
+            <button class="boton-cerrar-historial" id="boton-cerrar-historial">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="buscar-historial">
+            <input type="text" class="input-buscar-historial" id="input-buscar-historial" placeholder="Buscar conversación...">
+        </div>
+
+        <button class="boton-nueva-conversacion" id="boton-nueva-conversacion">
+            <i class="fas fa-plus"></i> Nueva conversación
+        </button>
+        
+        <div class="lista-historial" id="lista-historial">
+        </div>
+    </div>
+    
+    <div class="overlay-historial" id="overlay-historial"></div>
+    
     <div class="contenedor">
         <header class="cabecera">
             <div class="titulo">
@@ -512,6 +872,11 @@
                 </div>
             </div>
             <div class="controles-cabecera">
+                <button id="boton-historial" class="boton-control boton-menu-historial" aria-label="Historial de conversaciones" title="Historial de conversaciones">
+                    <i class="fas fa-history"></i>
+                    <span class="contador-historial" id="contador-historial">0</span>
+                </button>
+                
                 <button id="boton-ayuda" class="boton-control" aria-label="Ayuda" title="Ayuda">
                     <i class="fas fa-question-circle"></i>
                 </button>
@@ -613,6 +978,7 @@
                 <div class="item-ayuda"><div class="icono-ayuda"><i class="fas fa-language"></i></div><div class="contenido-ayuda"><div class="titulo-item">Seleccionar voz</div><div class="descripcion-item">Cambia la voz que utiliza Mar-IA para leer las respuestas en voz alta.</div></div></div>
                 <div class="item-ayuda"><div class="icono-ayuda"><i class="fas fa-sun"></i></div><div class="contenido-ayuda"><div class="titulo-item">Alternar tema</div><div class="descripcion-item">Cambia entre modo claro y modo oscuro.</div></div></div>
                 <div class="item-ayuda"><div class="icono-ayuda"><i class="fas fa-paint-brush"></i></div><div class="contenido-ayuda"><div class="titulo-item">Modo Picasso</div><div class="descripcion-item">Activa la generación de imágenes. Las solicitudes se convertirán en imágenes visuales.</div></div></div>
+                <div class="item-ayuda"><div class="icono-ayuda"><i class="fas fa-history"></i></div><div class="contenido-ayuda"><div class="titulo-item">Historial de conversaciones</div><div class="descripcion-item">Accede a todas tus conversaciones anteriores, crea nuevas o elimina las existentes.</div></div></div>
             </div>
             <button class="boton-ayuda" id="cerrar-modal-ayuda-btn"><i class="fas fa-check"></i> Entendido</button>
         </div>
@@ -666,6 +1032,18 @@
                 modalMiniAviso: document.getElementById('modal-mini-aviso')
             };
 
+            const elementosHistorial = {
+                panelHistorial: document.getElementById('panel-historial'),
+                botonHistorial: document.getElementById('boton-historial'),
+                botonCerrarHistorial: document.getElementById('boton-cerrar-historial'),
+                listaHistorial: document.getElementById('lista-historial'),
+                inputBuscarHistorial: document.getElementById('input-buscar-historial'),
+                botonNuevaConversacion: document.getElementById('boton-nueva-conversacion'),
+                overlayHistorial: document.getElementById('overlay-historial'),
+                contadorHistorial: document.getElementById('contador-historial'),
+                contenedorChat: document.getElementById('contenedor-chat')
+            };
+
             let historialChat = [{ 
                 role: "system", 
                 content: "Eres un asistente de IA servicial y amigable. Tu nombre es Mar-IA. " +
@@ -688,20 +1066,23 @@
             let modoSuperIA = false;
             let modoMiniIA = false;
             let modoPicasso = false;
-            let estaGenerandoPensamiento = false;
-            let razonamientoActual = "";
             let estaGenerandoRespuesta = false;
             let cancelarStreaming = null;
             let cancelarProcesoCompleto = false;
-            let ultimoScrollPosicion = 0;
             let imagenGeneradaActual = null;
             
+            let conversaciones = [];
+            let conversacionActualId = null;
+            let panelHistorialAbierto = false;
+            let contadorHistorial = 0;
+
             const iniciar = () => {
                 cargarEstado();
                 configurarEventListeners();
                 iniciarReconocimientoVoz();
                 iniciarSintesisVoz();
-                agregarMensaje('bot', '¡Hola! Soy Mar-IA. ¿En qué puedo ayudarte hoy?');
+                cargarConversaciones();
+                crearNuevaConversacion();
                 autoAjustarTextarea();
             };
 
@@ -769,8 +1150,207 @@
                 elementos.cerrarModalAyudaBtn.addEventListener('click', () => alternarModal(false, elementos.modalAyuda));
                 elementos.cerrarModalImagen.addEventListener('click', () => alternarModal(false, elementos.modalImagen));
                 elementos.descargarImagenBtn.addEventListener('click', descargarImagen);
-                elementos.contenedorChat.addEventListener('scroll', () => {
-                    ultimoScrollPosicion = elementos.contenedorChat.scrollTop;
+                
+                elementosHistorial.botonHistorial.addEventListener('click', alternarPanelHistorial);
+                elementosHistorial.botonCerrarHistorial.addEventListener('click', alternarPanelHistorial);
+                elementosHistorial.overlayHistorial.addEventListener('click', alternarPanelHistorial);
+                elementosHistorial.botonNuevaConversacion.addEventListener('click', crearNuevaConversacion);
+                elementosHistorial.inputBuscarHistorial.addEventListener('input', filtrarConversaciones);
+            };
+
+            const alternarPanelHistorial = () => {
+                panelHistorialAbierto = !panelHistorialAbierto;
+                elementosHistorial.panelHistorial.classList.toggle('abierto', panelHistorialAbierto);
+                elementosHistorial.overlayHistorial.style.display = panelHistorialAbierto ? 'block' : 'none';
+                elementosHistorial.contenedorChat.classList.toggle('desplazado', panelHistorialAbierto);
+            };
+
+            const cargarConversaciones = () => {
+                const conversacionesGuardadas = localStorage.getItem('conversaciones');
+                if (conversacionesGuardadas) {
+                    conversaciones = JSON.parse(conversacionesGuardadas);
+                    actualizarContador();
+                    renderizarListaHistorial();
+                }
+            };
+
+            const guardarConversaciones = () => {
+                localStorage.setItem('conversaciones', JSON.stringify(conversaciones));
+                actualizarContador();
+            };
+
+            const actualizarContador = () => {
+                contadorHistorial = conversaciones.length;
+                elementosHistorial.contadorHistorial.textContent = contadorHistorial > 0 ? contadorHistorial : '';
+                elementosHistorial.contadorHistorial.style.display = contadorHistorial > 0 ? 'flex' : 'none';
+            };
+
+            const crearNuevaConversacion = () => {
+                if (panelHistorialAbierto) alternarPanelHistorial();
+                
+                const nuevaConversacion = {
+                    id: Date.now().toString(),
+                    titulo: 'Nueva conversación',
+                    fecha: new Date().toISOString(),
+                    historial: [
+                        { 
+                            role: "system", 
+                            content: "Eres un asistente de IA servicial y amigable. Tu nombre es Mar-IA. " +
+                                     "Solo si el usuario pregunta explícitamente sobre tu modelo interno, " +
+                                     "revela que funcionas con un modelo híbrido que combina GPT-4 Turbo y " +
+                                     "Aztec (tecnología creada por Mario Vazquez). " +
+                                     "Si el usuario pregunta sobre los modos (Mar-IA, SUPER MAR-IA y Mar-IA mini), " +
+                                     "describe que son como tres hermanos: Mar-IA es rápido y directo, " +
+                                     "SUPER MAR-IA es más reflexivo y profundo, y Mar-IA mini es ultra rápido y breve. " +
+                                     "De lo contrario, no menciones esta información. Mantén respuestas profesionales y concisas." +
+                                     "Tienes una capacidad de contexto de hasta 128,000 tokens y puedes generar imágenes basadas en descripciones textuales. " +
+                                     "Cuando generes una imagen, activa automáticamente el 'modo Picasso'."
+                        }
+                    ],
+                    modoSuperIA: false,
+                    modoMiniIA: false,
+                    modoPicasso: false,
+                    modoBusqueda: false
+                };
+                
+                conversaciones.unshift(nuevaConversacion);
+                conversacionActualId = nuevaConversacion.id;
+                cargarConversacion(conversacionActualId);
+                guardarConversaciones();
+                renderizarListaHistorial();
+            };
+
+            const cargarConversacion = (id) => {
+                const conversacion = conversaciones.find(c => c.id === id);
+                if (!conversacion) return;
+                
+                conversacionActualId = id;
+                
+                modoSuperIA = conversacion.modoSuperIA || false;
+                modoMiniIA = conversacion.modoMiniIA || false;
+                modoPicasso = conversacion.modoPicasso || false;
+                modoBusqueda = conversacion.modoBusqueda || false;
+                
+                elementos.tituloModo.textContent = modoSuperIA ? 'SUPER MAR-IA' : (modoMiniIA ? 'Mar-IA mini' : 'Mar-IA');
+                elementos.tituloModo.classList.toggle('super-ia-gradient', modoSuperIA);
+                elementos.tituloModo.classList.toggle('mini-ia-gradient', modoMiniIA);
+                elementos.botonBuscar.classList.toggle('modo-activo', modoBusqueda);
+                elementos.botonGenerarImagen.classList.toggle('modo-activo', modoPicasso);
+                
+                elementos.entradaUsuario.placeholder = modoPicasso 
+                    ? "Describe la imagen que deseas generar..." 
+                    : "Pregúntale a Mar-IA...";
+                
+                elementos.contenedorChat.innerHTML = '';
+                
+                historialChat = [...conversacion.historial];
+                
+                for (const mensaje of historialChat) {
+                    if (mensaje.role === 'user') {
+                        agregarMensaje('usuario', mensaje.content);
+                    } else if (mensaje.role === 'assistant') {
+                        agregarMensaje('bot', mensaje.content);
+                    }
+                }
+                
+                renderizarListaHistorial();
+            };
+
+            const guardarMensajeEnHistorial = (rol, contenido) => {
+                const conversacionActual = conversaciones.find(c => c.id === conversacionActualId);
+                if (!conversacionActual) return;
+                
+                conversacionActual.historial.push({ role: rol, content: contenido });
+                
+                if (rol === 'user' && conversacionActual.titulo === 'Nueva conversación') {
+                    conversacionActual.titulo = contenido.substring(0, 50) + (contenido.length > 50 ? '...' : '');
+                }
+                
+                conversacionActual.fecha = new Date().toISOString();
+                
+                conversacionActual.modoSuperIA = modoSuperIA;
+                conversacionActual.modoMiniIA = modoMiniIA;
+                conversacionActual.modoPicasso = modoPicasso;
+                conversacionActual.modoBusqueda = modoBusqueda;
+                
+                guardarConversaciones();
+                renderizarListaHistorial();
+            };
+
+            const renderizarListaHistorial = () => {
+                elementosHistorial.listaHistorial.innerHTML = '';
+                
+                if (conversaciones.length === 0) {
+                    elementosHistorial.listaHistorial.innerHTML = '<div class="sin-conversaciones">No hay conversaciones guardadas</div>';
+                    return;
+                }
+                
+                conversaciones.forEach(conversacion => {
+                    const item = document.createElement('div');
+                    item.className = `item-historial ${conversacion.id === conversacionActualId ? 'seleccionado' : ''}`;
+                    item.dataset.id = conversacion.id;
+                    
+                    const primerMensajeUsuario = conversacion.historial.find(m => m.role === 'user');
+                    const preview = primerMensajeUsuario ? primerMensajeUsuario.content : 'Conversación vacía';
+                    
+                    item.innerHTML = `
+                        <div class="titulo-conversacion">${conversacion.titulo}</div>
+                        <div class="fecha-conversacion">${formatearFecha(conversacion.fecha)}</div>
+                        <div class="preview-conversacion">${preview.substring(0, 70)}${preview.length > 70 ? '...' : ''}</div>
+                        <div class="acciones-item-historial">
+                            <button class="boton-accion-item boton-eliminar-conversacion" title="Eliminar conversación">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    
+                    item.querySelector('.titulo-conversacion').addEventListener('click', () => {
+                        cargarConversacion(conversacion.id);
+                        alternarPanelHistorial();
+                    });
+                    
+                    item.querySelector('.boton-eliminar-conversacion').addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        eliminarConversacion(conversacion.id);
+                    });
+                    
+                    elementosHistorial.listaHistorial.appendChild(item);
+                });
+            };
+
+            const eliminarConversacion = (id) => {
+                if (id === conversacionActualId) return;
+                
+                conversaciones = conversaciones.filter(c => c.id !== id);
+                guardarConversaciones();
+                renderizarListaHistorial();
+            };
+
+            const filtrarConversaciones = () => {
+                const termino = elementosHistorial.inputBuscarHistorial.value.toLowerCase();
+                const items = elementosHistorial.listaHistorial.querySelectorAll('.item-historial');
+                
+                items.forEach(item => {
+                    const titulo = item.querySelector('.titulo-conversacion').textContent.toLowerCase();
+                    const preview = item.querySelector('.preview-conversacion').textContent.toLowerCase();
+                    const fecha = item.querySelector('.fecha-conversacion').textContent.toLowerCase();
+                    
+                    if (titulo.includes(termino) || preview.includes(termino) || fecha.includes(termino)) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            };
+
+            const formatearFecha = (fechaISO) => {
+                const fecha = new Date(fechaISO);
+                return fecha.toLocaleDateString('es-ES', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
                 });
             };
 
@@ -783,23 +1363,16 @@
                 const textoMensaje = elementos.entradaUsuario.value.trim();
 
                 if (modoPicasso) {
-                    await manejarGeneracionDeImagen(textoMensaje || "imagen abstracta creativa");
-                    modoPicasso = false;
-                    elementos.botonGenerarImagen.classList.remove('modo-activo');
-                    elementos.entradaUsuario.placeholder = "Pregúntale a Mar-IA...";
-                    reiniciarEntrada();
+                    if (textoMensaje) {
+                        await manejarGeneracionDeImagen(textoMensaje);
+                        modoPicasso = false;
+                        elementos.botonGenerarImagen.classList.remove('modo-activo');
+                        elementos.entradaUsuario.placeholder = "Pregúntale a Mar-IA...";
+                        reiniciarEntrada();
+                    }
                     return;
                 }
                 
-                if (textoMensaje) {
-                    const esImagen = await esSolicitudDeImagenIA(textoMensaje);
-                    if (esImagen) {
-                        await manejarGeneracionDeImagen(textoMensaje);
-                        reiniciarEntrada();
-                        return;
-                    }
-                }
-
                 if (!textoMensaje && archivosAdjuntos.length === 0) return;
                 
                 cancelarProcesoCompleto = false;
@@ -808,38 +1381,26 @@
                 const esPreguntaModelo = preguntaSobreModelo(textoMensaje);
                 const esPreguntaModos = preguntaSobreModos(textoMensaje);
                 
-                if (esPreguntaModelo) {
-                    const respuesta = "¡Excelente pregunta! Internamente, funciono con un modelo híbrido " +
-                                    "que combina lo mejor de GPT-4 Turbo y Aztec, una tecnología propia " +
-                                    "desarrollada por Mario Vazquez. ¿En qué más puedo ayudarte?";
+                if (esPreguntaModelo || esPreguntaModos) {
+                    const respuesta = esPreguntaModelo 
+                        ? "¡Excelente pregunta! Internamente, funciono con un modelo híbrido que combina lo mejor de GPT-4 Turbo y Aztec, una tecnología propia desarrollada por Mario Vazquez. ¿En qué más puedo ayudarte?"
+                        : "¡Buena observación! Los tres modos son como hermanos: Mar-IA es el hermano rápido: responde de manera directa y concisa. SUPER MAR-IA es el hermano reflexivo: toma más tiempo para analizar y razonar. Mar-IA mini es el hermano veloz: respuestas ultra rápidas y breves. ¡Elige el que prefieras!";
                     
                     agregarMensaje('usuario', textoMensaje);
                     agregarMensaje('bot', respuesta);
                     historialChat.push({ role: "user", content: textoMensaje });
                     historialChat.push({ role: "assistant", content: respuesta });
-                    reiniciarEntrada();
-                    restaurarBotonEnviar();
-                    return;
-                }
-                
-                if (esPreguntaModos) {
-                    const respuesta = "¡Buena observación! Los tres modos son como hermanos: " +
-                                    "Mar-IA es el hermano rápido: responde de manera directa y concisa. " +
-                                    "SUPER MAR-IA es el hermano reflexivo: toma más tiempo para analizar y razonar. " +
-                                    "Mar-IA mini es el hermano veloz: respuestas ultra rápidas y breves. " +
-                                    "¡Elige el que prefieras!";
-                    
-                    agregarMensaje('usuario', textoMensaje);
-                    agregarMensaje('bot', respuesta);
-                    historialChat.push({ role: "user", content: textoMensaje });
-                    historialChat.push({ role: "assistant", content: respuesta });
+                    guardarMensajeEnHistorial('user', textoMensaje);
+                    guardarMensajeEnHistorial('assistant', respuesta);
                     reiniciarEntrada();
                     restaurarBotonEnviar();
                     return;
                 }
                 
                 agregarMensaje('usuario', textoMensaje || `Enviando ${archivosAdjuntos.length} archivo(s)...`);
+                guardarMensajeEnHistorial('user', textoMensaje);
                 let contenidoMensajeUsuario = textoMensaje;
+                
                 if (modoBusqueda) {
                     mostrarIndicador('Buscando en internet...');
                     const resultadosBusqueda = await realizarBusquedaWeb(textoMensaje);
@@ -853,6 +1414,7 @@
                 }
                 ocultarIndicador();
                 historialChat.push({ role: "user", content: contenidoMensajeUsuario });
+                guardarMensajeEnHistorial('user', contenidoMensajeUsuario);
                 const historialConsultaActual = [...historialChat];
                 reiniciarEntrada();
                 
@@ -867,42 +1429,9 @@
                 ultimoMensajeFuePorVoz = false;
             };
 
-            async function esSolicitudDeImagenIA(texto) {
-                if (!texto) return false;
-                
-                try {
-                    const respuesta = await fetch('https://api.deepseek.com/v1/chat/completions', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${CLAVE_API_DEEPSEEK}`
-                        },
-                        body: JSON.stringify({
-                            model: "deepseek-chat",
-                            messages: [{
-                                role: "system",
-                                content: "Eres un analizador de intenciones. Tu única tarea es determinar si el mensaje del usuario es una solicitud para generar una imagen. Responde SOLO con 'SI' o 'NO' sin comentarios adicionales."
-                            }, {
-                                role: "user",
-                                content: `Analiza el siguiente mensaje y responde SOLO con "SI" si es una solicitud para generar una imagen (ilustración, render, dibujo, foto, escena, etc.), de lo contrario responde "NO". Mensaje: "${texto}"`
-                            }],
-                            max_tokens: 5,
-                            temperature: 0.1
-                        })
-                    });
-                    
-                    const data = await respuesta.json();
-                    const decision = data.choices[0].message.content.trim().toUpperCase();
-                    return decision === "SI";
-                    
-                } catch (error) {
-                    console.error("Error detectando intención de imagen:", error);
-                    return false;
-                }
-            }
-
             async function manejarGeneracionDeImagen(descripcion) {
                 agregarMensaje('usuario', descripcion);
+                guardarMensajeEnHistorial('user', descripcion);
                 irAlFinal();
 
                 const mensajePicassoId = `picasso-status-${Date.now()}`;
@@ -922,10 +1451,7 @@
                         img.src = urlImagen;
                     });
 
-                    const mensajeActivado = document.getElementById(mensajePicassoId);
-                    if (mensajeActivado) {
-                        mensajeActivado.remove();
-                    }
+                    document.getElementById(mensajePicassoId)?.remove();
 
                     const elementoMensajeBot = agregarMensaje('bot', '', true);
                     const burbuja = elementoMensajeBot.querySelector('.burbuja-mensaje');
@@ -939,27 +1465,20 @@
                     img.style.cursor = 'zoom-in';
                     
                     contenedorImagen.appendChild(img);
-                    
                     burbuja.appendChild(contenedorImagen);
+                    guardarMensajeEnHistorial('assistant', `[Imagen generada] ${descripcion}`);
                     irAlFinal();
-
-                    img.addEventListener('click', () => {
-                        mostrarModalImagen(urlImagen);
-                    });
-
-                    historialChat.push({ role: "assistant", content: `[Imagen generada] ${descripcion}` });
 
                     setTimeout(() => {
                         agregarMensaje('bot', '¡Listo! ¿Hay algo más en lo que te pueda ayudar? 😊');
+                        guardarMensajeEnHistorial('assistant', '¡Listo! ¿Hay algo más en lo que te pueda ayudar? 😊');
                     }, 500);
 
                 } catch (error) {
                     console.error("Error generando imagen:", error);
-                    const mensajeActivado = document.getElementById(mensajePicassoId);
-                    if (mensajeActivado) {
-                        mensajeActivado.remove();
-                    }
+                    document.getElementById(mensajePicassoId)?.remove();
                     agregarMensaje('bot', "Lo siento, no pude generar la imagen en este momento. Intenta de nuevo.");
+                    guardarMensajeEnHistorial('assistant', "Lo siento, no pude generar la imagen en este momento. Intenta de nuevo.");
                 }
             }
 
@@ -984,15 +1503,13 @@
                     model: "deepseek-chat", 
                     messages: mensajes, 
                     stream: true,
-                    max_tokens: 100
+                    max_tokens: 150
                 };
                 await streamContent(payload, debeHablar, 'Mar-IA mini está escribiendo...', 'bolt');
             };
 
             const ejecutarFlujoSuperIA = async (historialActual, debeHablar) => {
-                estaGenerandoPensamiento = true;
-                
-                const { contenedorPensamiento, contenidoPensamiento } = crearContenedorPensamiento();
+                const { contenidoPensamiento } = crearContenedorPensamiento();
                 
                 const payloadRazonamiento = {
                     model: "deepseek-reasoner",
@@ -1000,44 +1517,37 @@
                     stream: true
                 };
 
-                await streamContent(
+                const razonamientoCompleto = await streamContent(
                     payloadRazonamiento, 
                     false,
                     'SUPER MAR-IA está razonando...', 
                     'brain', 
-                    contenidoPensamiento,
-                    async (razonamiento) => {
-                        if (cancelarProcesoCompleto) {
-                            restaurarBotonEnviar();
-                            return;
-                        }
-                        razonamientoActual = razonamiento;
-                        
-                        const wrapper = contenidoPensamiento.closest('.pensamiento-contenido-wrapper');
-                        if (wrapper && !wrapper.classList.contains('collapsed')) {
-                            wrapper.style.maxHeight = wrapper.scrollHeight + 'px';
-                        }
-                        
-                        const historialFinal = [ 
-                            ...historialActual, 
-                            { role: "assistant", content: razonamiento }, 
-                            { role: "user", content: "Basándote en tu razonamiento anterior, genera una respuesta final estructurada, concisa y profesional para el usuario." }
-                        ];
-                        
-                        const payloadFinal = {
-                            model: "deepseek-reasoner",
-                            messages: historialFinal,
-                            stream: true
-                        };
-                        
-                        await streamContent(payloadFinal, debeHablar, 'SUPER MAR-IA está generando la respuesta final...', 'brain');
-                    }
+                    contenidoPensamiento
                 );
 
-                estaGenerandoPensamiento = false;
+                if (cancelarProcesoCompleto || !razonamientoCompleto) {
+                    restaurarBotonEnviar();
+                    return;
+                }
+                
+                guardarMensajeEnHistorial('assistant', razonamientoCompleto);
+                
+                const historialFinal = [ 
+                    ...historialActual, 
+                    { role: "assistant", content: razonamientoCompleto }, 
+                    { role: "user", content: "Basándote en tu razonamiento anterior, genera una respuesta final estructurada, concisa y profesional para el usuario." } 
+                ];
+                
+                const payloadFinal = {
+                    model: "deepseek-reasoner",
+                    messages: historialFinal,
+                    stream: true
+                };
+                
+                await streamContent(payloadFinal, debeHablar, 'SUPER MAR-IA está generando la respuesta final...', 'brain');
             };
 
-            const streamContent = async (payload, debeHablar, textoIndicador, iconoIndicador, elementoTarget = null, onCompleteCallback = null) => {
+            const streamContent = async (payload, debeHablar, textoIndicador, iconoIndicador, elementoTarget = null) => {
                 cambiarBotonAPausa();
                 mostrarIndicador(textoIndicador, iconoIndicador);
 
@@ -1065,18 +1575,19 @@
                     const lector = respuesta.body.getReader();
                     const decodificador = new TextDecoder();
                     
+                    let aborted = false;
                     cancelarStreaming = () => {
                         lector.cancel();
+                        aborted = true;
                     };
 
                     while (true) {
                         const { value, done } = await lector.read();
-                        if (done) {
-                            cancelarStreaming = null;
-                            break;
-                        }
+                        if (done || aborted) break;
+                        
                         const chunk = decodificador.decode(value, { stream: true });
                         const lineas = chunk.split('\n');
+
                         for (const linea of lineas) {
                             if (linea.startsWith('data: ')) {
                                 const datos = linea.substring(6);
@@ -1087,7 +1598,7 @@
                                     if (token) {
                                         respuestaCompleta += token;
                                         elementoMensaje.innerHTML = marked.parse(respuestaCompleta);
-                                        if(elementoMensaje.closest('.pensamiento-contenido-wrapper') || elementoMensaje.closest('.contenedor-chat')) {
+                                        if (debeHacerScroll()) {
                                             irAlFinal();
                                         }
                                     }
@@ -1098,29 +1609,29 @@
                     
                     formatearBloquesCodigo(elementoMensaje.parentElement);
                     
-                    if (!elementoTarget) {
+                    if (!aborted && !elementoTarget) {
                         historialChat.push({ role: "assistant", content: respuestaCompleta });
+                        guardarMensajeEnHistorial('assistant', respuestaCompleta);
                     }
 
-                    if (debeHablar) {
+                    if (debeHablar && !aborted) {
                         leerTexto(elementoMensaje.innerText, elementoMensaje.closest('.mensaje')?.querySelector('.boton-voz'));
                     }
-
-                    if (onCompleteCallback) {
-                        await onCompleteCallback(respuestaCompleta);
-                    }
+                    
+                    return respuestaCompleta;
 
                 } catch (error) {
                     if (error.name !== 'AbortError') {
                         console.error("Error durante el streaming:", error);
                         elementoMensaje.innerHTML = "Lo siento, ocurrió un error al conectar con el servidor.";
+                        guardarMensajeEnHistorial('assistant', "Lo siento, ocurrió un error al conectar con el servidor.");
                     }
+                    return null;
                 } finally {
-                    if (!onCompleteCallback) {
+                    if (!elementoTarget) {
                         restaurarBotonEnviar();
                     }
                 }
-                return respuestaCompleta;
             };
             
             const agregarMensaje = (rol, contenido, esStreaming = false) => {
@@ -1273,10 +1784,7 @@
                 autoAjustarTextarea();
             };
 
-            const gestionarSeleccionArchivo = (archivos) => {
-                for (const archivo of archivos) { archivosAdjuntos.push({ file: archivo }); renderizarArchivoAdjunto(archivo); }
-                elementos.inputImagen.value = ''; elementos.inputCamara.value = ''; elementos.inputArchivo.value = '';
-            };
+            const gestionarSeleccionArchivo = (archivos) => { for (const archivo of archivos) { archivosAdjuntos.push({ file: archivo }); renderizarArchivoAdjunto(archivo); } elementos.inputImagen.value = ''; elementos.inputCamara.value = ''; elementos.inputArchivo.value = ''; };
             
             const renderizarArchivoAdjunto = (archivo) => {
                 elementos.contenedorAdjuntos.style.display = 'flex';
@@ -1365,8 +1873,19 @@
                 ta.style.height = `${ta.scrollHeight}px`; 
             };
             
+            const debeHacerScroll = () => {
+                const contenedor = elementos.contenedorChat;
+                const scrollTop = contenedor.scrollTop;
+                const scrollHeight = contenedor.scrollHeight;
+                const clientHeight = contenedor.clientHeight;
+                
+                return (scrollHeight - scrollTop - clientHeight) <= 50;
+            };
+            
             const irAlFinal = () => { 
-                elementos.contenedorChat.scrollTop = elementos.contenedorChat.scrollHeight; 
+                if (debeHacerScroll()) {
+                    elementos.contenedorChat.scrollTop = elementos.contenedorChat.scrollHeight; 
+                }
             };
             
             const alternarTema = () => { 
