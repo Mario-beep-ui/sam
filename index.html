@@ -884,6 +884,64 @@
         document.addEventListener('DOMContentLoaded', () => {
             const CLAVE_API_DEEPSEEK = 'sk-646a5b86d1de4ee186dfac833541452b';
             const CLAVE_API_OCR = 'K82439722788957'; 
+            
+            const ESTILOS_DOCUMENTO = {
+                'moderno': { 
+                    titulo: 'Moderno',
+                    fuente: 'Helvetica',
+                    tamanoTitulo: 20,
+                    tamanoSubtitulo: 16,
+                    tamanoCuerpo: 11,
+                    interlineado: 1.5,
+                    colorTitulo: '#2C2C2C',
+                    colorTexto: '#333333',
+                    alineacion: 'left'
+                },
+                'clasico': {
+                    titulo: 'Clásico',
+                    fuente: 'Times New Roman',
+                    tamanoTitulo: 18,
+                    tamanoSubtitulo: 14,
+                    tamanoCuerpo: 12,
+                    interlineado: 1.15,
+                    colorTitulo: '#000000',
+                    colorTexto: '#000000',
+                    alineacion: 'center'
+                },
+                'tecnico': {
+                    titulo: 'Técnico',
+                    fuente: 'Arial',
+                    tamanoTitulo: 16,
+                    tamanoSubtitulo: 14,
+                    tamanoCuerpo: 11,
+                    interlineado: 1.2,
+                    colorTitulo: '#1E1E1E',
+                    colorTexto: '#1E1E1E',
+                    alineacion: 'left'
+                },
+                'creativo': {
+                    titulo: 'Creativo',
+                    fuente: 'Montserrat',
+                    tamanoTitulo: 22,
+                    tamanoSubtitulo: 16,
+                    tamanoCuerpo: 12,
+                    interlineado: 1.6,
+                    colorTitulo: '#8A2BE2',
+                    colorTexto: '#333333',
+                    alineacion: 'left'
+                },
+                'apa': {
+                    titulo: 'APA',
+                    fuente: 'Times New Roman',
+                    tamanoTitulo: 12,
+                    tamanoSubtitulo: 12,
+                    tamanoCuerpo: 12,
+                    interlineado: 2,
+                    colorTitulo: '#000000',
+                    colorTexto: '#000000',
+                    alineacion: 'left'
+                }
+            };
 
             const elementos = {
                 body: document.body,
@@ -959,6 +1017,11 @@
             let conversacionActualId = null;
             let panelHistorialAbierto = false;
             let contadorHistorial = 0;
+            
+            let estadoConversacion = {
+                esperandoFormato: false,
+                comandoPendiente: null
+            };
 
             const iniciar = () => {
                 cargarEstado();
@@ -1258,6 +1321,19 @@
                 }
                 
                 const textoMensaje = elementos.entradaUsuario.value.trim();
+                agregarMensaje('usuario', textoMensaje);
+                guardarMensajeEnHistorial('user', textoMensaje);
+                
+                if (estadoConversacion.esperandoFormato) {
+                    const formatoElegido = determinarFormato(textoMensaje);
+                    if (formatoElegido) {
+                        await generarDocumentoConFormato(estadoConversacion.comandoPendiente, formatoElegido);
+                    } else {
+                        agregarMensaje('bot', 'Formato no reconocido. Por favor elige un número (1-5) o nombre de estilo válido.');
+                    }
+                    reiniciarEntrada();
+                    return;
+                }
 
                 const comando = parsearComandoDocumento(textoMensaje);
                 if (comando) {
@@ -1282,7 +1358,6 @@
                 cancelarProcesoCompleto = false;
                 mostrarBotonCargando();
                 
-                agregarMensaje('usuario', textoMensaje || `Enviando ${archivosAdjuntos.length} archivo(s)...`);
                 let contenidoMensajeUsuario = textoMensaje;
                 
                 if (modoBusqueda) {
@@ -1334,7 +1409,38 @@
             };
 
             const generarYDescargarDocumento = async (comando) => {
-                agregarMensaje('bot', `Entendido. Preparando tu documento ${comando.tipo.toUpperCase()}...`);
+                if (comando.tipo === 'xlsx') {
+                    await generarExcel(comando.tema);
+                } else {
+                    estadoConversacion.esperandoFormato = true;
+                    estadoConversacion.comandoPendiente = comando;
+                    agregarMensaje('bot', 'Claro, estoy listo para crear tu documento. ¿En qué formato lo prefieres?\n\n1. Moderno\n2. Clásico\n3. Técnico\n4. Creativo\n5. APA\n\nPor favor, responde con el nombre o el número.');
+                }
+            };
+            
+            const determinarFormato = (respuesta) => {
+                const opciones = {
+                    '1': 'moderno',
+                    '2': 'clasico',
+                    '3': 'tecnico',
+                    '4': 'creativo',
+                    '5': 'apa',
+                    'moderno': 'moderno',
+                    'clásico': 'clasico',
+                    'clasico': 'clasico',
+                    'técnico': 'tecnico',
+                    'tecnico': 'tecnico',
+                    'creativo': 'creativo',
+                    'apa': 'apa'
+                };
+                return opciones[respuesta.toLowerCase()] || null;
+            };
+            
+            const generarDocumentoConFormato = async (comando, formato) => {
+                estadoConversacion.esperandoFormato = false;
+                estadoConversacion.comandoPendiente = null;
+                
+                agregarMensaje('bot', `Preparando tu documento ${comando.tipo.toUpperCase()} en formato ${ESTILOS_DOCUMENTO[formato].titulo}...`);
                 irAlFinal();
                 mostrarBotonCargando();
 
@@ -1378,11 +1484,9 @@
                     }
 
                     if (comando.tipo === 'pdf') {
-                        crearPDF(contenido);
+                        crearPDF(contenido, formato);
                     } else if (comando.tipo === 'docx') {
-                        crearDOCX(contenido);
-                    } else if (comando.tipo === 'xlsx') {
-                        crearXLSX(contenido);
+                        crearDOCX(contenido, formato);
                     }
 
                 } catch (error) {
@@ -1391,14 +1495,76 @@
                     restaurarBotonEnviar();
                 }
             };
+            
+            const generarExcel = async (tema) => {
+                agregarMensaje('bot', `Preparando tu documento Excel...`);
+                irAlFinal();
+                mostrarBotonCargando();
 
-            const crearPDF = (contenido) => {
+                try {
+                    let prompt;
+                    if (tema === 'contextual') {
+                        const ultimoMensajeBot = [...historialChat].reverse().find(m => m.role === 'assistant');
+                        if (!ultimoMensajeBot) {
+                            throw new Error("No hay información anterior para exportar.");
+                        }
+                        prompt = `Convierte el siguiente texto en un formato de array de objetos JSON para Excel: ${ultimoMensajeBot.content}`;
+                    } else {
+                        prompt = `Analiza el siguiente tema y genera los datos más relevantes en un formato de array de objetos JSON. Cada objeto del array debe representar una fila de una tabla. El tema es: ${tema}. Responde únicamente con el JSON.`;
+                    }
+                    
+                    const payload = {
+                        model: "deepseek-chat",
+                        messages: [{ role: "user", content: prompt }],
+                        max_tokens: 3000,
+                        temperature: 0.5,
+                    };
+
+                    const respuesta = await fetch('https://api.deepseek.com/v1/chat/completions', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${CLAVE_API_DEEPSEEK}` },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!respuesta.ok) {
+                        throw new Error(`Error de API: ${respuesta.status} ${await respuesta.text()}`);
+                    }
+                    const datos = await respuesta.json();
+                    const jsonString = datos.choices[0]?.message?.content.trim();
+                    if (!jsonString) {
+                        throw new Error("La IA no generó contenido.");
+                    }
+                    
+                    crearXLSX(jsonString);
+                    agregarMensaje('bot', '¡Documento listo! ¿Puedo ayudarte en algo más?');
+
+                } catch (error) {
+                    agregarMensaje('bot', `Lo siento, hubo un error al generar tu documento: ${error.message}`);
+                } finally {
+                    restaurarBotonEnviar();
+                }
+            };
+
+            const crearPDF = (contenido, formato) => {
                 const { jsPDF } = window.jspdf;
+                const estilo = ESTILOS_DOCUMENTO[formato];
                 const doc = new jsPDF();
+                
+                doc.setFont(estilo.fuente);
+                doc.setFontSize(estilo.tamanoTitulo);
+                doc.setTextColor(estilo.colorTitulo);
+                doc.text('Documento Generado', 105, 15, null, null, 'center');
+                
+                doc.setFontSize(estilo.tamanoSubtitulo);
+                doc.text(`Formato: ${estilo.titulo}`, 105, 25, null, null, 'center');
+                
+                doc.setFontSize(estilo.tamanoCuerpo);
+                doc.setTextColor(estilo.colorTexto);
+                
                 const textoLimpio = contenido.replace(/<[^>]*>/g, '');
                 const lineas = doc.splitTextToSize(textoLimpio, 180);
                 
-                let y = 10;
+                let y = 40;
                 const margenSuperior = 10;
                 const margenInferior = 10;
                 const alturaPagina = doc.internal.pageSize.height;
@@ -1408,16 +1574,36 @@
                         doc.addPage();
                         y = margenSuperior;
                     }
-                    doc.text(linea, 10, y);
-                    y += 7;
+                    doc.text(linea, 15, y, { align: estilo.alineacion });
+                    y += estilo.interlineado * 5;
                 });
                 
-                doc.save(`mar-ia-documento-${Date.now()}.pdf`);
+                const nombreArchivo = `mar-ia-documento-${Date.now()}.pdf`;
+                doc.save(nombreArchivo);
+                agregarMensaje('bot', '¡Documento listo! ¿Puedo ayudarte en algo más?');
             };
 
-            const crearDOCX = (contenido) => {
+            const crearDOCX = (contenido, formato) => {
+                const estilo = ESTILOS_DOCUMENTO[formato];
                 const textoLimpio = contenido.replace(/<[^>]*>/g, '');
-                const parrafos = textoLimpio.split('\n').map(linea => new docx.Paragraph({ text: linea }));
+                
+                const parrafos = [];
+                textoLimpio.split('\n').forEach((linea, index) => {
+                    if (linea.trim() === '') return;
+                    
+                    const esTitulo = index === 0 || (linea.length < 80 && !linea.endsWith('.'));
+                    const tamanoFuente = esTitulo ? estilo.tamanoTitulo : estilo.tamanoCuerpo;
+                    const color = esTitulo ? estilo.colorTitulo : estilo.colorTexto;
+                    const alineacion = estilo.alineacion === 'center' ? docx.AlignmentType.CENTER : docx.AlignmentType.LEFT;
+                    
+                    parrafos.push(
+                        new docx.Paragraph({
+                            children: [new docx.TextRun({ text: linea, size: tamanoFuente * 2, color: color })],
+                            alignment: alineacion,
+                            spacing: { after: estilo.interlineado * 100 }
+                        })
+                    );
+                });
 
                 const doc = new docx.Document({
                     sections: [{
@@ -1435,6 +1621,7 @@
                     a.click();
                     document.body.removeChild(a);
                     URL.revokeObjectURL(url);
+                    agregarMensaje('bot', '¡Documento listo! ¿Puedo ayudarte en algo más?');
                 });
             };
 
@@ -1448,6 +1635,7 @@
                     const wb = XLSX.utils.book_new();
                     XLSX.utils.book_append_sheet(wb, ws, "Datos Generados");
                     XLSX.writeFile(wb, `mar-ia-datos-${Date.now()}.xlsx`);
+                    agregarMensaje('bot', '¡Documento listo! ¿Puedo ayudarte en algo más?');
                 } catch (error) {
                     agregarMensaje('bot', `Error al procesar los datos para Excel: ${error.message}. Por favor, asegúrate de que la IA devuelva un JSON válido.`);
                 }
@@ -1553,115 +1741,6 @@
                 document.body.removeChild(enlace);
             }
 
-            const obtenerRespuestaMini = async (mensajes, debeHablar) => {
-                const payload = { 
-                    model: "deepseek-chat", 
-                    messages: mensajes, 
-                    stream: true, 
-                    max_tokens: 1024,
-                    temperature: 0.7,
-                    top_p: 0.9,
-                    presence_penalty: 0.5 
-                };
-                await streamContent(payload, debeHablar, 'Mar-IA mini está escribiendo...', 'bolt');
-            };
-
-            const ejecutarFlujoSuperIA = async (historialActual, debeHablar) => {
-                const { contenidoPensamiento } = crearContenedorPensamiento();
-                const payloadRazonamiento = { 
-                    model: "deepseek-reasoner", 
-                    messages: historialActual, 
-                    stream: true,
-                    temperature: 0.7,
-                    top_p: 0.9,
-                    presence_penalty: 0.5
-                };
-                const razonamientoCompleto = await streamContent(payloadRazonamiento, false, 'SUPER MAR-IA está razonando...', 'brain', contenidoPensamiento);
-                if (cancelarProcesoCompleto || !razonamientoCompleto) { restaurarBotonEnviar(); return; }
-                guardarMensajeEnHistorial('assistant', razonamientoCompleto);
-                const historialFinal = [ ...historialActual, { role: "assistant", content: razonamientoCompleto }, { role: "user", content: "Basándote en tu razonamiento anterior, genera una respuesta final estructurada, concisa y profesional para el usuario." } ];
-                const payloadFinal = { 
-                    model: "deepseek-reasoner", 
-                    messages: historialFinal, 
-                    stream: true,
-                    max_tokens: 4096,
-                    temperature: 0.7,
-                    top_p: 0.9,
-                    presence_penalty: 0.5
-                };
-                await streamContent(payloadFinal, debeHablar, 'SUPER MAR-IA está generando la respuesta final...', 'brain');
-            };
-
-            const streamContent = async (payload, debeHablar, textoIndicador, iconoIndicador, elementoTarget = null) => {
-                cambiarBotonAPausa();
-                mostrarIndicador(textoIndicador, iconoIndicador);
-                let respuestaCompleta = "";
-                let elementoMensaje;
-                if (elementoTarget) {
-                    elementoMensaje = elementoTarget;
-                } else {
-                    const mensajeContenedor = agregarMensaje('bot', '', true);
-                    elementoMensaje = mensajeContenedor.querySelector('.burbuja-mensaje');
-                }
-                ocultarIndicador();
-                try {
-                    const respuesta = await fetch('https://api.deepseek.com/v1/chat/completions', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${CLAVE_API_DEEPSEEK}` },
-                        body: JSON.stringify(payload)
-                    });
-                    if (!respuesta.ok) throw new Error(`Error de API: ${respuesta.status}`);
-                    const lector = respuesta.body.getReader();
-                    const decodificador = new TextDecoder();
-                    let aborted = false;
-                    cancelarStreaming = () => { lector.cancel(); aborted = true; };
-                    while (true) {
-                        const { value, done } = await lector.read();
-                        if (done || aborted) break;
-                        const chunk = decodificador.decode(value, { stream: true });
-                        const lineas = chunk.split('\n');
-                        for (const linea of lineas) {
-                            if (linea.startsWith('data: ')) {
-                                const datos = linea.substring(6);
-                                if (datos.trim() === '[DONE]') continue;
-                                try {
-                                    const jsonData = JSON.parse(datos);
-                                    const token = jsonData.choices[0]?.delta?.content || '';
-                                    if (token) {
-                                        respuestaCompleta += token;
-                                        elementoMensaje.innerHTML = marked.parse(respuestaCompleta);
-                                        irAlFinal();
-                                    }
-                                } catch (e) { }
-                            }
-                        }
-                    }
-                    formatearBloquesCodigo(elementoMensaje.parentElement);
-                    if (!aborted && !elementoTarget) {
-                        if (respuestaCompleta.includes('[Imagen generada]')) {
-                            const descImagen = respuestaCompleta.match(/\[Imagen generada\] (.*)/)[1];
-                            elementoMensaje.innerHTML = `<div class="contenedor-imagen-generada"><img src="${imagenGeneradaActual}" alt="${descImagen}" style="max-width: 100%; border-radius: 1rem; cursor: zoom-in;"></div>`;
-                        }
-                        historialChat.push({ role: "assistant", content: respuestaCompleta });
-                        guardarMensajeEnHistorial('assistant', respuestaCompleta);
-                    }
-                    if (debeHablar && !aborted) {
-                        leerTexto(elementoMensaje.innerText, elementoMensaje.closest('.mensaje')?.querySelector('.boton-voz'));
-                    }
-                    return respuestaCompleta;
-                } catch (error) {
-                    if (error.name !== 'AbortError') {
-                        elementoMensaje.innerHTML = "Lo siento, ocurrió un error al conectar con el servidor.";
-                        guardarMensajeEnHistorial('assistant', "Lo siento, ocurrió un error al conectar con el servidor.");
-                    }
-                    return null;
-                } finally {
-                    if (!elementoTarget) {
-                        restaurarBotonEnviar();
-                    }
-                }
-            };
-            
             const agregarMensaje = (rol, contenido, esStreaming = false) => {
                 const divMensaje = document.createElement('div');
                 divMensaje.className = `mensaje mensaje-${rol}`;
@@ -2047,6 +2126,115 @@
                     presence_penalty: 0.5 
                 };
                 await streamContent(payload, debeHablar, 'Mar-IA está escribiendo...', 'dots');
+            };
+
+            const obtenerRespuestaMini = async (mensajes, debeHablar) => {
+                const payload = { 
+                    model: "deepseek-chat", 
+                    messages: mensajes, 
+                    stream: true, 
+                    max_tokens: 1024,
+                    temperature: 0.7,
+                    top_p: 0.9,
+                    presence_penalty: 0.5 
+                };
+                await streamContent(payload, debeHablar, 'Mar-IA mini está escribiendo...', 'bolt');
+            };
+
+            const ejecutarFlujoSuperIA = async (historialActual, debeHablar) => {
+                const { contenidoPensamiento } = crearContenedorPensamiento();
+                const payloadRazonamiento = { 
+                    model: "deepseek-reasoner", 
+                    messages: historialActual, 
+                    stream: true,
+                    temperature: 0.7,
+                    top_p: 0.9,
+                    presence_penalty: 0.5
+                };
+                const razonamientoCompleto = await streamContent(payloadRazonamiento, false, 'SUPER MAR-IA está razonando...', 'brain', contenidoPensamiento);
+                if (cancelarProcesoCompleto || !razonamientoCompleto) { restaurarBotonEnviar(); return; }
+                guardarMensajeEnHistorial('assistant', razonamientoCompleto);
+                const historialFinal = [ ...historialActual, { role: "assistant", content: razonamientoCompleto }, { role: "user", content: "Basándote en tu razonamiento anterior, genera una respuesta final estructurada, concisa y profesional para el usuario." } ];
+                const payloadFinal = { 
+                    model: "deepseek-reasoner", 
+                    messages: historialFinal, 
+                    stream: true,
+                    max_tokens: 4096,
+                    temperature: 0.7,
+                    top_p: 0.9,
+                    presence_penalty: 0.5
+                };
+                await streamContent(payloadFinal, debeHablar, 'SUPER MAR-IA está generando la respuesta final...', 'brain');
+            };
+
+            const streamContent = async (payload, debeHablar, textoIndicador, iconoIndicador, elementoTarget = null) => {
+                cambiarBotonAPausa();
+                mostrarIndicador(textoIndicador, iconoIndicador);
+                let respuestaCompleta = "";
+                let elementoMensaje;
+                if (elementoTarget) {
+                    elementoMensaje = elementoTarget;
+                } else {
+                    const mensajeContenedor = agregarMensaje('bot', '', true);
+                    elementoMensaje = mensajeContenedor.querySelector('.burbuja-mensaje');
+                }
+                ocultarIndicador();
+                try {
+                    const respuesta = await fetch('https://api.deepseek.com/v1/chat/completions', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${CLAVE_API_DEEPSEEK}` },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!respuesta.ok) throw new Error(`Error de API: ${respuesta.status}`);
+                    const lector = respuesta.body.getReader();
+                    const decodificador = new TextDecoder();
+                    let aborted = false;
+                    cancelarStreaming = () => { lector.cancel(); aborted = true; };
+                    while (true) {
+                        const { value, done } = await lector.read();
+                        if (done || aborted) break;
+                        const chunk = decodificador.decode(value, { stream: true });
+                        const lineas = chunk.split('\n');
+                        for (const linea of lineas) {
+                            if (linea.startsWith('data: ')) {
+                                const datos = linea.substring(6);
+                                if (datos.trim() === '[DONE]') continue;
+                                try {
+                                    const jsonData = JSON.parse(datos);
+                                    const token = jsonData.choices[0]?.delta?.content || '';
+                                    if (token) {
+                                        respuestaCompleta += token;
+                                        elementoMensaje.innerHTML = marked.parse(respuestaCompleta);
+                                        irAlFinal();
+                                    }
+                                } catch (e) { }
+                            }
+                        }
+                    }
+                    formatearBloquesCodigo(elementoMensaje.parentElement);
+                    if (!aborted && !elementoTarget) {
+                        if (respuestaCompleta.includes('[Imagen generada]')) {
+                            const descImagen = respuestaCompleta.match(/\[Imagen generada\] (.*)/)[1];
+                            elementoMensaje.innerHTML = `<div class="contenedor-imagen-generada"><img src="${imagenGeneradaActual}" alt="${descImagen}" style="max-width: 100%; border-radius: 1rem; cursor: zoom-in;"></div>`;
+                        }
+                        historialChat.push({ role: "assistant", content: respuestaCompleta });
+                        guardarMensajeEnHistorial('assistant', respuestaCompleta);
+                    }
+                    if (debeHablar && !aborted) {
+                        leerTexto(elementoMensaje.innerText, elementoMensaje.closest('.mensaje')?.querySelector('.boton-voz'));
+                    }
+                    return respuestaCompleta;
+                } catch (error) {
+                    if (error.name !== 'AbortError') {
+                        elementoMensaje.innerHTML = "Lo siento, ocurrió un error al conectar con el servidor.";
+                        guardarMensajeEnHistorial('assistant', "Lo siento, ocurrió un error al conectar con el servidor.");
+                    }
+                    return null;
+                } finally {
+                    if (!elementoTarget) {
+                        restaurarBotonEnviar();
+                    }
+                }
             };
 
             iniciar();
